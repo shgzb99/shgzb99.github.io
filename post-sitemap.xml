@@ -9,8 +9,16 @@
 
 
     <url>
+        <loc>http://example.com/2024/06/10/Shell-Script-to-Update-Cloudflare-Ddns/</loc>
+        <lastmod>2024-06-10T12:10:56.419Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>http://example.com/2024/06/10/%E5%A6%82%E4%BD%95%E5%9C%A8Debian-12%E4%B8%8A%E5%AE%89%E8%A3%85Proxmox-VE-8/</loc>
-        <lastmod>2024-06-10T12:04:30.913Z</lastmod>
+        <lastmod>2024-06-10T12:06:14.946Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 

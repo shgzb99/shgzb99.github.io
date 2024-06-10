@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="更改Debian 12的apt安装源 1234567891011121314151617181920212223 #备份 &#x2F;et&#x2F;apt&#x2F;source.listcp &#x2F;etc&#x2F;apt&#x2F;sources.list &#x2F;etc&#x2F;apt&#x2F;sources.list-bak#选项 1: 使用官方debian 12 源tee &#x2F;etc&#x2F;apt&#x2F;sources.list &lt;&lt; &quot;EOF&amp;quo">
+  <meta name="description" content="转载 https:&#x2F;&#x2F;echowings.github.io&#x2F;zh-cn&#x2F;p&#x2F;%E5%A6%82%E4%BD%95%E5%9C%A8debian-12%E4%B8%8A%E5%AE%89%E8%A3%85proxmox-ve-8&#x2F;更改Debian 12的apt安装源 1234567891011121314151617181920212223 #备份 &#x2F;et&#x2F;apt&#x2F;source.listcp &#x2F;e">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何在Debian 12上安装Proxmox VE 8">
 <meta property="og:url" content="http://example.com/2024/06/10/%E5%A6%82%E4%BD%95%E5%9C%A8Debian-12%E4%B8%8A%E5%AE%89%E8%A3%85Proxmox-VE-8/index.html">
 <meta property="og:site_name" content="英雄本色的博客">
-<meta property="og:description" content="更改Debian 12的apt安装源 1234567891011121314151617181920212223 #备份 &#x2F;et&#x2F;apt&#x2F;source.listcp &#x2F;etc&#x2F;apt&#x2F;sources.list &#x2F;etc&#x2F;apt&#x2F;sources.list-bak#选项 1: 使用官方debian 12 源tee &#x2F;etc&#x2F;apt&#x2F;sources.list &lt;&lt; &quot;EOF&amp;quo">
+<meta property="og:description" content="转载 https:&#x2F;&#x2F;echowings.github.io&#x2F;zh-cn&#x2F;p&#x2F;%E5%A6%82%E4%BD%95%E5%9C%A8debian-12%E4%B8%8A%E5%AE%89%E8%A3%85proxmox-ve-8&#x2F;更改Debian 12的apt安装源 1234567891011121314151617181920212223 #备份 &#x2F;et&#x2F;apt&#x2F;source.listcp &#x2F;e">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-06-10T11:54:04.000Z">
-<meta property="article:modified_time" content="2024-06-10T12:04:30.913Z">
+<meta property="article:modified_time" content="2024-06-10T12:06:14.946Z">
 <meta property="article:author" content="英雄本色">
 <meta name="twitter:card" content="summary">
 
@@ -205,7 +205,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2024-06-10 19:54:04 / 修改时间：20:04:30" itemprop="dateCreated datePublished" datetime="2024-06-10T19:54:04+08:00">2024-06-10</time>
+              <time title="创建时间：2024-06-10 19:54:04 / 修改时间：20:06:14" itemprop="dateCreated datePublished" datetime="2024-06-10T19:54:04+08:00">2024-06-10</time>
             </span>
 
           
@@ -219,7 +219,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>更改Debian 12的apt安装源</p>
+        <p>转载 <a target="_blank" rel="noopener" href="https://echowings.github.io/zh-cn/p/%E5%A6%82%E4%BD%95%E5%9C%A8debian-12%E4%B8%8A%E5%AE%89%E8%A3%85proxmox-ve-8/">https://echowings.github.io/zh-cn/p/%E5%A6%82%E4%BD%95%E5%9C%A8debian-12%E4%B8%8A%E5%AE%89%E8%A3%85proxmox-ve-8/</a><br>更改Debian 12的apt安装源</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"> #备份 /et/apt/source.list</span><br><span class="line">cp /etc/apt/sources.list /etc/apt/sources.list-bak</span><br><span class="line"></span><br><span class="line">#选项 1: 使用官方debian 12 源</span><br><span class="line">tee /etc/apt/sources.list &lt;&lt; &quot;EOF&quot;</span><br><span class="line">deb http://deb.debian.org/debian bookworm main non-free-firmware</span><br><span class="line">deb-src http://deb.debian.org/debian bookworm main non-free-firmware</span><br><span class="line"></span><br><span class="line">deb http://deb.debian.org/debian-security/ bookworm-security main non-free-firmware</span><br><span class="line">deb-src http://deb.debian.org/debian-security/ bookworm-security main non-free-firmware</span><br><span class="line"></span><br><span class="line">deb http://deb.debian.org/debian bookworm-updates main non-free-firmware</span><br><span class="line">deb-src http://deb.debian.org/debian bookworm-updates main non-free-firmware</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">#选项 2:使用中科大mirrors.utsc.edu.cn源</span><br><span class="line"># Downlaod and Install debian 12 sourcelist</span><br><span class="line">curl -fsSL https://mirrors.ustc.edu.cn/repogen/conf/debian-https-4-bookworm -o  /etc/apt/sources.list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">apt update &amp;&amp; apt -y dist-upgrade</span><br><span class="line"></span><br><span class="line">apt install -y neovim net-tools</span><br></pre></td></tr></table></figure>
 
 <p>网卡更名，把网卡名字还原为ethx(可选操作)</p>
@@ -251,7 +251,10 @@
     <a href="/2024/06/10/OpenWRT%E6%90%AD%E5%BB%BAOpenVPN%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="prev" title="OpenWRT搭建OpenVPN服务器">
       <i class="fa fa-chevron-left"></i> OpenWRT搭建OpenVPN服务器
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2024/06/10/Shell-Script-to-Update-Cloudflare-Ddns/" rel="next" title="Shell Script to Update Cloudflare Ddns">
+      Shell Script to Update Cloudflare Ddns <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -323,7 +326,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
