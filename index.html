@@ -178,6 +178,132 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/10/OpenWRT%E6%90%AD%E5%BB%BAOpenVPN%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="英雄本色">
+      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="英雄本色的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/06/10/OpenWRT%E6%90%AD%E5%BB%BAOpenVPN%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">OpenWRT搭建OpenVPN服务器</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-06-10 11:44:49 / 修改时间：11:46:30" itemprop="dateCreated datePublished" datetime="2024-06-10T11:44:49+08:00">2024-06-10</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>转载 <a target="_blank" rel="noopener" href="https://www.vnf.cc/2019/11/openwrt-openvpn-server/">https://www.vnf.cc/2019/11/openwrt-openvpn-server/</a></p>
+<p>本文主要实现在OpenWRT路由器系统下搭建OpenVPN服务器方便远程连接</p>
+<p>之前一直是在OpenWRT使用Openconnect VPN,因为是SSLVPN使用起来结合CISCO的anyconnect客户端是很方便的，但是由于现在ISP连这种基于SSL的流量也有可以做识别并封公网IP，所以不得不考虑切换至基于UDP的OpenVPN了。</p>
+<p>下面主要分三步：</p>
+<p>（1）在OpenWRT安装并配置好OpenVPN</p>
+<p>（2）配置多用户方案</p>
+<p>（3）结合Luci去显示OpenVPN</p>
+<p>那么现在开始吧，目前系统是使用了最新的OpenWRT 19.07.0-rc1, 同时适用于OpenWrt 18.06.4</p>
+<p>1.在OpenWRT安装并配置好OpenVPN</p>
+<p>先安装好本次所需的全部软件</p>
+<p>opkg update<br>opkg install openvpn-easy-rsa openvpn-mbedtls luci-app-openvpn<br>配置防火墙开放相应端口</p>
+<h1 id="Configure-firewall"><a href="#Configure-firewall" class="headerlink" title="Configure firewall"></a>Configure firewall</h1><p>uci rename firewall.@zone[0]&#x3D;”lan”<br>uci rename firewall.@zone[1]&#x3D;”wan”<br>uci rename firewall.@forwarding[0]&#x3D;”lan_wan”<br>uci del_list firewall.lan.device&#x3D;”tun0”<br>uci add_list firewall.lan.device&#x3D;”tun0”<br>uci -q delete firewall.vpn<br>uci set firewall.ovpn&#x3D;”rule”<br>uci set firewall.ovpn.name&#x3D;”Allow-OpenVPN”<br>uci set firewall.ovpn.src&#x3D;”wan”<br>uci set firewall.ovpn.dest_port&#x3D;”1194”<br>uci set firewall.ovpn.proto&#x3D;”udp”<br>uci set firewall.ovpn.target&#x3D;”ACCEPT”<br>uci commit firewall<br>&#x2F;etc&#x2F;init.d&#x2F;firewall restart<br>OpenWRT Firewall</p>
+<p>生成服务器和客户端证书</p>
+<h1 id="Configuration-parameters"><a href="#Configuration-parameters" class="headerlink" title="Configuration parameters"></a>Configuration parameters</h1><p>export EASYRSA_PKI&#x3D;”&#x2F;etc&#x2F;easy-rsa&#x2F;pki”<br>export EASYRSA_REQ_CN&#x3D;”ovpnca”</p>
+<h1 id="Remove-and-re-initialize-the-PKI-directory"><a href="#Remove-and-re-initialize-the-PKI-directory" class="headerlink" title="Remove and re-initialize the PKI directory"></a>Remove and re-initialize the PKI directory</h1><p>easyrsa –batch init-pki</p>
+<h1 id="Generate-DH-parameters"><a href="#Generate-DH-parameters" class="headerlink" title="Generate DH parameters"></a>Generate DH parameters</h1><h1 id="此步会较久"><a href="#此步会较久" class="headerlink" title="此步会较久"></a>此步会较久</h1><p>easyrsa –batch gen-dh</p>
+<h1 id="Create-a-new-CA"><a href="#Create-a-new-CA" class="headerlink" title="Create a new CA"></a>Create a new CA</h1><p>easyrsa –batch build-ca nopass</p>
+<h1 id="Generate-a-keypair-and-sign-locally-for-a-server"><a href="#Generate-a-keypair-and-sign-locally-for-a-server" class="headerlink" title="Generate a keypair and sign locally for a server"></a>Generate a keypair and sign locally for a server</h1><p>easyrsa –batch build-server-full server nopass</p>
+<h1 id="Generate-a-keypair-and-sign-locally-for-a-client"><a href="#Generate-a-keypair-and-sign-locally-for-a-client" class="headerlink" title="Generate a keypair and sign locally for a client"></a>Generate a keypair and sign locally for a client</h1><p>easyrsa –batch build-client-full client nopass<br>生成服务器配置文件</p>
+<h1 id="Generate-TLS-PSK"><a href="#Generate-TLS-PSK" class="headerlink" title="Generate TLS PSK"></a>Generate TLS PSK</h1><p>OVPN_PKI&#x3D;”&#x2F;etc&#x2F;easy-rsa&#x2F;pki”<br>openvpn –genkey –secret ${OVPN_PKI}&#x2F;tc.pem</p>
+<h1 id="Configuration-parameters-1"><a href="#Configuration-parameters-1" class="headerlink" title="Configuration parameters"></a>Configuration parameters</h1><p>OVPN_DIR&#x3D;”&#x2F;etc&#x2F;openvpn”<br>OVPN_PKI&#x3D;”&#x2F;etc&#x2F;easy-rsa&#x2F;pki”<br>OVPN_DEV&#x3D;”$(uci get firewall.lan.device | sed -e “s&#x2F;^.<em>\s&#x2F;&#x2F;“)”<br>OVPN_PORT&#x3D;”$(uci get firewall.ovpn.dest_port)”<br>OVPN_PROTO&#x3D;”$(uci get firewall.ovpn.proto)”<br>OVPN_POOL&#x3D;”192.168.8.0 255.255.255.0”<br>OVPN_DNS&#x3D;”${OVPN_POOL%.</em> *}.1”<br>OVPN_DOMAIN&#x3D;”$(uci get dhcp.@dnsmasq[0].domain)”<br>OVPN_DH&#x3D;”$(cat ${OVPN_PKI}&#x2F;dh.pem)”<br>OVPN_TC&#x3D;”$(sed -e “&#x2F;^#&#x2F;d;&#x2F;^\w&#x2F;N;s&#x2F;\n&#x2F;&#x2F;“ ${OVPN_PKI}&#x2F;tc.pem)”<br>OVPN_CA&#x3D;”$(openssl x509 -in ${OVPN_PKI}&#x2F;ca.crt)”<br>NL&#x3D;$’\n’</p>
+<h1 id="Configure-VPN-server"><a href="#Configure-VPN-server" class="headerlink" title="Configure VPN server"></a>Configure VPN server</h1><p>umask u&#x3D;rw,g&#x3D;,o&#x3D;<br>grep -l -r -e “TLS Web Server Auth” “${OVPN_PKI}&#x2F;issued” <br>| sed -e “s&#x2F;^.<em>/&#x2F;&#x2F;;s&#x2F;.\w</em>$&#x2F;&#x2F;“ <br>| while read -r OVPN_ID<br>do<br>OVPN_CERT&#x3D;”$(openssl x509 -in ${OVPN_PKI}&#x2F;issued&#x2F;${OVPN_ID}.crt)”<br>OVPN_KEY&#x3D;”$(cat ${OVPN_PKI}&#x2F;private&#x2F;${OVPN_ID}.key)”<br>cat &lt;&lt; EOF &gt; ${OVPN_DIR}&#x2F;${OVPN_ID}.conf<br>verb 3<br>user nobody<br>group nogroup<br>dev ${OVPN_DEV}<br>port ${OVPN_PORT}<br>proto ${OVPN_PROTO}<br>server ${OVPN_POOL}<br>topology subnet<br>client-to-client<br>keepalive 10 120<br>persist-tun<br>persist-key<br>push “dhcp-option DNS ${OVPN_DNS}”<br>push “dhcp-option DOMAIN ${OVPN_DOMAIN}”<br>push “redirect-gateway def1”<br>push “persist-tun”<br>push “persist-key”<br><dh>${NL}${OVPN_DH}${NL}</dh><br><tls-crypt>${NL}${OVPN_TC}${NL}</tls-crypt><br><ca>${NL}${OVPN_CA}${NL}</ca><br><cert>${NL}${OVPN_CERT}${NL}</cert><br><key>${NL}${OVPN_KEY}${NL}</key><br>EOF<br>done<br>&#x2F;etc&#x2F;init.d&#x2F;openvpn restart<br>OVPN_POOL&#x3D;”192.168.8.0 255.255.255.0” 定义的地址池不要和内网已有的地址冲突 push “redirect-gateway def1” 是将OpenVPN的网关作为默认网关，会创建默认路由指向OpenVPN的网关，如果只是需要访问家里的网络，可将这条按需要修改，如push “route 192.168.1.0 255.255.255.0 192.168.8.1”</p>
+<p>用ip addr show tun0和cat &#x2F;var&#x2F;run&#x2F;openvpn.server.status确认一下OpenVPN运行状态</p>
+<p>OpenVPN Status</p>
+<p>生成客户端ovpn文件</p>
+<h1 id="先确定使用DDNS还是公网IP作为OpenVPN连接使用，并配置好OVPN-SERV参数，本次以DDNS地址为例子"><a href="#先确定使用DDNS还是公网IP作为OpenVPN连接使用，并配置好OVPN-SERV参数，本次以DDNS地址为例子" class="headerlink" title="先确定使用DDNS还是公网IP作为OpenVPN连接使用，并配置好OVPN_SERV参数，本次以DDNS地址为例子"></a>先确定使用DDNS还是公网IP作为OpenVPN连接使用，并配置好OVPN_SERV参数，本次以DDNS地址为例子</h1><p>OVPN_SERV&#x3D;”ddns.example.com”</p>
+<h1 id="Configuration-parameters-2"><a href="#Configuration-parameters-2" class="headerlink" title="Configuration parameters"></a>Configuration parameters</h1><p>OVPN_DIR&#x3D;”&#x2F;etc&#x2F;openvpn”<br>OVPN_PKI&#x3D;”&#x2F;etc&#x2F;easy-rsa&#x2F;pki”<br>OVPN_DEV&#x3D;”$(uci get firewall.lan.device | sed -e “s&#x2F;^.*\s&#x2F;&#x2F;“)”<br>OVPN_PORT&#x3D;”$(uci get firewall.ovpn.dest_port)”<br>OVPN_PROTO&#x3D;”$(uci get firewall.ovpn.proto)”<br>OVPN_TC&#x3D;”$(sed -e “&#x2F;^#&#x2F;d;&#x2F;^\w&#x2F;N;s&#x2F;\n&#x2F;&#x2F;“ ${OVPN_PKI}&#x2F;tc.pem)”<br>OVPN_CA&#x3D;”$(openssl x509 -in ${OVPN_PKI}&#x2F;ca.crt)”<br>NL&#x3D;$’\n’</p>
+<h1 id="Generate-VPN-client-profiles"><a href="#Generate-VPN-client-profiles" class="headerlink" title="Generate VPN client profiles"></a>Generate VPN client profiles</h1><p>umask u&#x3D;rw,g&#x3D;,o&#x3D;<br>grep -l -r -e “TLS Web Client Auth” “${OVPN_PKI}&#x2F;issued” <br>| sed -e “s&#x2F;^.<em>/&#x2F;&#x2F;;s&#x2F;.\w</em>$&#x2F;&#x2F;“ <br>| while read -r OVPN_ID<br>do<br>OVPN_CERT&#x3D;”$(openssl x509 -in ${OVPN_PKI}&#x2F;issued&#x2F;${OVPN_ID}.crt)”<br>OVPN_KEY&#x3D;”$(cat ${OVPN_PKI}&#x2F;private&#x2F;${OVPN_ID}.key)”<br>cat &lt;&lt; EOF &gt; ${OVPN_DIR}&#x2F;${OVPN_ID}.ovpn<br>verb 3<br>dev ${OVPN_DEV%%[0-9]<em>}<br>nobind<br>client<br>remote ${OVPN_SERV} ${OVPN_PORT} ${OVPN_PROTO}<br>auth-nocache<br>remote-cert-tls server<br><tls-crypt>${NL}${OVPN_TC}${NL}</tls-crypt><br><ca>${NL}${OVPN_CA}${NL}</ca><br><cert>${NL}${OVPN_CERT}${NL}</cert><br><key>${NL}${OVPN_KEY}${NL}</key><br>EOF<br>done<br>ls ${OVPN_DIR}&#x2F;</em>.ovpn<br>将该ovpn导入到OpenVPN的客户端就可以链接上OpenVPN服务器</p>
+<p>Connection Status</p>
+<p>至此一般的OpenVPN Server配置已经完成，目前存在的问题就是一个证书只能连接上一个客户端，下一步就是将会配置多用户的方案。</p>
+<p>2.多用户模式</p>
+<p>多用户方案有两种，一种是生成多个证书文件，每个用户单独使用一个证书；另外一种就是使用单证书配合用户密码的形式。</p>
+<p>这两种都会贴一下配置，因为连回家主要是为了方便，所以会以用户名密码的方式为主。</p>
+<p>多证书方式：</p>
+<p>需要生成另外一组用户公钥和私钥</p>
+<h1 id="Configuration-parameters-3"><a href="#Configuration-parameters-3" class="headerlink" title="Configuration parameters"></a>Configuration parameters</h1><p>export EASYRSA_PKI&#x3D;”&#x2F;etc&#x2F;easy-rsa&#x2F;pki”</p>
+<h1 id="Add-one-more-client"><a href="#Add-one-more-client" class="headerlink" title="Add one more client"></a>Add one more client</h1><p>easyrsa –batch build-client-full client1 nopass<br>然后在&#x2F;etc&#x2F;easy-rsa&#x2F;pki&#x2F;issued找到client1.crt,在&#x2F;etc&#x2F;easy-rsa&#x2F;pki&#x2F;private找到client1.key</p>
+<p>将client1.crt的cert和client1.key的key替换ovpn文件中的段即可生成给第二位用户的ovpn文件</p>
+<p>单证书多用户模式：</p>
+<p>创建用户认证脚本(checkpsw.sh)</p>
+<p>&#x2F;etc&#x2F;openvpn&#x2F;checkpsw.sh</p>
+<p>#!&#x2F;bin&#x2F;sh<br>###########################################################</p>
+<h1 id="checkpsw-sh-C-2004-Mathias-Sundman-x6d-x61-116-x68-x69-x61-x73-64-x6f-x70-x65-x6e-118-112-110-x2e-115-x65"><a href="#checkpsw-sh-C-2004-Mathias-Sundman-x6d-x61-116-x68-x69-x61-x73-64-x6f-x70-x65-x6e-118-112-110-x2e-115-x65" class="headerlink" title="checkpsw.sh (C) 2004 Mathias Sundman &#x6d;&#x61;&#116;&#x68;&#x69;&#x61;&#x73;&#64;&#x6f;&#x70;&#x65;&#x6e;&#118;&#112;&#110;&#x2e;&#115;&#x65;"></a>checkpsw.sh (C) 2004 Mathias Sundman <a href="mailto:&#x6d;&#x61;&#116;&#x68;&#x69;&#x61;&#x73;&#64;&#x6f;&#x70;&#x65;&#x6e;&#118;&#112;&#110;&#x2e;&#115;&#x65;">&#x6d;&#x61;&#116;&#x68;&#x69;&#x61;&#x73;&#64;&#x6f;&#x70;&#x65;&#x6e;&#118;&#112;&#110;&#x2e;&#115;&#x65;</a></h1><h1 id=""><a href="#" class="headerlink" title=""></a></h1><h1 id="This-script-will-authenticate-OpenVPN-users-against"><a href="#This-script-will-authenticate-OpenVPN-users-against" class="headerlink" title="This script will authenticate OpenVPN users against"></a>This script will authenticate OpenVPN users against</h1><h1 id="a-plain-text-file-The-passfile-should-simply-contain"><a href="#a-plain-text-file-The-passfile-should-simply-contain" class="headerlink" title="a plain text file. The passfile should simply contain"></a>a plain text file. The passfile should simply contain</h1><h1 id="one-row-per-user-with-the-username-first-followed-by"><a href="#one-row-per-user-with-the-username-first-followed-by" class="headerlink" title="one row per user with the username first followed by"></a>one row per user with the username first followed by</h1><h1 id="one-or-more-space-s-or-tab-s-and-then-the-password"><a href="#one-or-more-space-s-or-tab-s-and-then-the-password" class="headerlink" title="one or more space(s) or tab(s) and then the password."></a>one or more space(s) or tab(s) and then the password.</h1><p>PASSFILE&#x3D;”&#x2F;etc&#x2F;openvpn&#x2F;psw-file”<br>LOG_FILE&#x3D;”&#x2F;etc&#x2F;openvpn&#x2F;openvpn-password.log”<br>TIME_STAMP&#x3D;<code>date &quot;+%Y-%m-%d %T&quot;</code></p>
+<p>###########################################################</p>
+<p>if [ ! -r “${PASSFILE}” ]; then<br>  echo “${TIME_STAMP}: Could not open password file &quot;${PASSFILE}&quot; for reading.” &gt;&gt; ${LOG_FILE}<br>  exit 1<br>fi</p>
+<p>CORRECT_PASSWORD&#x3D;<code>awk &#39;!/^;/&amp;&amp;!/^#/&amp;&amp;$1==&quot;&#39;$&#123;username&#125;&#39;&quot;&#123;print $2;exit&#125;&#39; $&#123;PASSFILE&#125;</code></p>
+<p>if [ “${CORRECT_PASSWORD}” &#x3D; “” ]; then<br>  echo “${TIME_STAMP}: User does not exist: username&#x3D;&quot;${username}&quot;, password&#x3D;&quot;${password}&quot;.” &gt;&gt; ${LOG_FILE}<br>  exit 1<br>fi</p>
+<p>if [ “${password}” &#x3D; “${CORRECT_PASSWORD}” ]; then<br>  echo “${TIME_STAMP}: Successful authentication: username&#x3D;&quot;${username}&quot;.” &gt;&gt; ${LOG_FILE}<br>  exit 0<br>fi</p>
+<p>echo “${TIME_STAMP}: Incorrect password: username&#x3D;&quot;${username}&quot;, password&#x3D;&quot;${password}&quot;.” &gt;&gt; ${LOG_FILE}<br>exit 1<br>配置执行权限</p>
+<p>chmod +x &#x2F;etc&#x2F;openvpn&#x2F;checkpsw.sh</p>
+<p>配置用户密码文件</p>
+<p>&#x2F;etc&#x2F;openvpn&#x2F;psw-file</p>
+<p>user1 passwd1<br>user2 passwd2<br>修改服务端配置文件</p>
+<p>在&#x2F;etc&#x2F;openvpn&#x2F;server.conf后面添加</p>
+<p>script-security 3<br>auth-user-pass-verify &#x2F;etc&#x2F;openvpn&#x2F;checkpsw.sh via-env<br>username-as-common-name<br>verify-client-cert none<br>修改客户端配置文件</p>
+<p>删除掉<cert>和<key></p>
+<p>添加如下内容:</p>
+<p>auth-user-pass</p>
+<p>那样就可以使用用户密码登录了。</p>
+<p>3.OpenWRT Luci集成</p>
+<p>这一步主要是方便在OpenWRT的Web界面方便看到OpenVPN的状态信息</p>
+<p>确保已经安装好</p>
+<p>opkg install luci-app-openvpn</p>
+<p>通过命令修改luci配置</p>
+<h1 id="Provide-VPN-instance-management"><a href="#Provide-VPN-instance-management" class="headerlink" title="Provide VPN instance management"></a>Provide VPN instance management</h1><p>ls &#x2F;etc&#x2F;openvpn&#x2F;<em>.conf <br>| while read -r OVPN_CONF<br>do<br>OVPN_ID&#x3D;”$(basename ${OVPN_CONF%.</em>} | sed -e “s&#x2F;\W&#x2F;_&#x2F;g”)”<br>uci -q delete openvpn.${OVPN_ID}<br>uci set openvpn.${OVPN_ID}&#x3D;”openvpn”<br>uci set openvpn.${OVPN_ID}.enabled&#x3D;”1”<br>uci set openvpn.${OVPN_ID}.config&#x3D;”${OVPN_CONF}”<br>done<br>uci commit openvpn<br>&#x2F;etc&#x2F;init.d&#x2F;openvpn restart<br>Luci Status</p>
+<p>refer:</p>
+<p>1.OpenVPN basic</p>
+<p>2.Openvpn 2.4 设置用户密码认证</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/10/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E7%AE%A1%E7%90%86-GitHub-%E4%B8%8A-star-%E7%9A%84%E9%A1%B9%E7%9B%AE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -869,7 +995,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
