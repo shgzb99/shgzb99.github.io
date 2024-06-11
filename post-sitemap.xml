@@ -9,6 +9,38 @@
 
 
     <url>
+        <loc>http://example.com/2024/06/11/My-Github-Stars-1-4/</loc>
+        <lastmod>2024-06-11T00:29:23.283Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://example.com/2024/06/11/My-Github-Stars-2-4/</loc>
+        <lastmod>2024-06-11T00:29:06.933Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://example.com/2024/06/11/My-Github-Stars-3-4/</loc>
+        <lastmod>2024-06-11T00:28:40.566Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://example.com/2024/06/11/My-Github-Stars-4-4/</loc>
+        <lastmod>2024-06-11T00:28:14.793Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>http://example.com/2024/06/10/Shell-Script-to-Update-Cloudflare-Ddns/</loc>
         <lastmod>2024-06-10T12:11:35.596Z</lastmod>
         <changefreq>weekly</changefreq>
