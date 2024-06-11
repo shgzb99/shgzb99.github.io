@@ -178,6 +178,166 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/11/%E4%B8%80%E6%96%87%E8%AF%BB%E6%87%82%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%88%E9%99%84Python%E5%AE%9E%E7%8E%B0%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="英雄本色">
+      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="英雄本色的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/06/11/%E4%B8%80%E6%96%87%E8%AF%BB%E6%87%82%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%88%E9%99%84Python%E5%AE%9E%E7%8E%B0%EF%BC%89/" class="post-title-link" itemprop="url">一文读懂遗传算法工作原理（附Python实现）</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-06-11 22:01:29 / 修改时间：22:35:27" itemprop="dateCreated datePublished" datetime="2024-06-11T22:01:29+08:00">2024-06-11</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>转载 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/28328304">https://zhuanlan.zhihu.com/p/28328304</a></p>
+<p>近日，Analyticsvidhya 上发表了一篇题为《Introduction to Genetic Algorithm &amp; their application in data science》的文章，作者 Shubham Jain 现身说法，用通俗易懂的语言对遗传算法作了一个全面而扼要的概述，并列举了其在多个领域的实际应用，其中重点介绍了遗传算法的数据科学应用。机器之心对该文进行了编译，原文链接请见文末。</p>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>几天前，我着手解决一个实际问题——大型超市销售问题。在使用了几个简单模型做了一些特征工程之后，我在排行榜上名列第 219 名。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-f522f83c180bfdf34403cb7a0b6af339_720w.webp"></p>
+<p>虽然结果不错，但是我还是想做得更好。于是，我开始研究可以提高分数的优化方法。结果我果然找到了一个，它叫遗传算法。在把它应用到超市销售问题之后，最终我的分数在排行榜上一下跃居前列。</p>
+<p>没错，仅靠遗传算法我就从 219 名直接跳到 15 名，厉害吧！相信阅读完本篇文章后，你也可以很自如地应用遗传算法，而且会发现，当把它用到你自己正在处理的问题时，效果也会有很大提升。</p>
+<h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><p>1、遗传算法理论的由来</p>
+<p>2、生物学的启发</p>
+<p>3、遗传算法定义</p>
+<p>4、遗传算法具体步骤</p>
+<p>初始化</p>
+<p>适应度函数</p>
+<p>选择</p>
+<p>交叉</p>
+<p>变异</p>
+<p>5、遗传算法的应用</p>
+<p>特征选取</p>
+<p>使用 TPOT 库实现</p>
+<p>6、实际应用</p>
+<p>7、结语</p>
+<h3 id="1、遗传算法理论的由来"><a href="#1、遗传算法理论的由来" class="headerlink" title="1、遗传算法理论的由来"></a>1、遗传算法理论的由来</h3><p>我们先从查尔斯·达尔文的一句名言开始：</p>
+<p>能够生存下来的往往不是最强大的物种，也不是最聪明的物种，而是最能适应环境的物种。</p>
+<p>你也许在想：这句话和遗传算法有什么关系？其实遗传算法的整个概念就基于这句话。</p>
+<p>让我们用一个基本例子来解释 ：</p>
+<p>我们先假设一个情景，现在你是一国之王，为了让你的国家免于灾祸，你实施了一套法案：</p>
+<p>你选出所有的好人，要求其通过生育来扩大国民数量。<br>这个过程持续进行了几代。<br>你将发现，你已经有了一整群的好人。</p>
+<p>这个例子虽然不太可能，但是我用它是想帮助你理解概念。也就是说，我们改变了输入值（比如：人口），就可以获得更好的输出值（比如：更好的国家）。现在，我假定你已经对这个概念有了大致理解，认为遗传算法的含义应该和生物学有关系。那么我们就快速地看一些小概念，这样便可以将其联系起来理解。</p>
+<h3 id="2、生物学的启发"><a href="#2、生物学的启发" class="headerlink" title="2、生物学的启发"></a>2、生物学的启发</h3><p>相信你还记得这句话：「细胞是所有生物的基石。」由此可知，在一个生物的任何一个细胞中，都有着相同的一套染色体。所谓染色体，就是指由 DNA 组成的聚合体。</p>
+<p>传统上看，这些染色体可以被由数字 0 和 1 组成的字符串表达出来。</p>
+<p>一条染色体由基因组成，这些基因其实就是组成 DNA 的基本结构，DNA 上的每个基因都编码了一个独特的性状，比如，头发或者眼睛的颜色。希望你在继续阅读之前先回忆一下这里提到的生物学概念。结束了这部分，现在我们来看看所谓遗传算法实际上指的是什么？</p>
+<h3 id="3、遗传算法定义"><a href="#3、遗传算法定义" class="headerlink" title="3、遗传算法定义"></a>3、遗传算法定义</h3><p>首先我们回到前面讨论的那个例子，并总结一下我们做过的事情。</p>
+<p>首先，我们设定好了国民的初始人群大小。<br>然后，我们定义了一个函数，用它来区分好人和坏人。<br>再次，我们选择出好人，并让他们繁殖自己的后代。<br>最后，这些后代们从原来的国民中替代了部分坏人，并不断重复这一过程。</p>
+<p>遗传算法实际上就是这样工作的，也就是说，它基本上尽力地在某种程度上模拟进化的过程。</p>
+<p>因此，为了形式化定义一个遗传算法，我们可以将它看作一个优化方法，它可以尝试找出某些输入，凭借这些输入我们便可以得到最佳的输出值或者是结果。遗传算法的工作方式也源自于生物学，具体流程见下图：</p>
+<p>那么现在我们来逐步理解一下整个流程。</p>
+<h3 id="4、遗传算法具体步骤"><a href="#4、遗传算法具体步骤" class="headerlink" title="4、遗传算法具体步骤"></a>4、遗传算法具体步骤</h3><p>为了让讲解更为简便，我们先来理解一下著名的组合优化问题「背包问题」。如果你还不太懂，这里有一个我的解释版本。</p>
+<p>比如，你准备要去野游 1 个月，但是你只能背一个限重 30 公斤的背包。现在你有不同的必需物品，它们每一个都有自己的「生存点数」（具体在下表中已给出）。因此，你的目标是在有限的背包重量下，最大化你的「生存点数」。</p>
+<p>4.1 初始化</p>
+<p>这里我们用遗传算法来解决这个背包问题。第一步是定义我们的总体。总体中包含了个体，每个个体都有一套自己的染色体。</p>
+<p>我们知道，染色体可表达为 2 进制数串，在这个问题中，1 代表接下来位置的基因存在，0 意味着丢失。（译者注：作者这里借用染色体、基因来解决前面的背包问题，所以特定位置上的基因代表了上方背包问题表格中的物品，比如第一个位置上是 Sleeping Bag，那么此时反映在染色体的『基因』位置就是该染色体的第一个『基因』。）</p>
+<p>现在，我们将图中的 4 条染色体看作我们的总体初始值。</p>
+<p>4.2 适应度函数</p>
+<p>接下来，让我们来计算一下前两条染色体的适应度分数。对于 A1 染色体 [100110] 而言，有：</p>
+<p>类似地，对于 A2 染色体 [001110] 来说，有：</p>
+<p>对于这个问题，我们认为，当染色体包含更多生存分数时，也就意味着它的适应性更强。</p>
+<p>因此，由图可知，染色体 1 适应性强于染色体 2。</p>
+<p>4.3 选择</p>
+<p>现在，我们可以开始从总体中选择适合的染色体，来让它们互相『交配』，产生自己的下一代了。这个是进行选择操作的大致想法，但是这样将会导致染色体在几代之后相互差异减小，失去了多样性。因此，我们一般会进行「轮盘赌选择法」（Roulette Wheel Selection method）。</p>
+<p>想象有一个轮盘，现在我们将它分割成 m 个部分，这里的 m 代表我们总体中染色体的个数。每条染色体在轮盘上占有的区域面积将根据适应度分数成比例表达出来。</p>
+<p>基于上图中的值，我们建立如下「轮盘」。</p>
+<p>现在，这个轮盘开始旋转，我们将被图中固定的指针（fixed point）指到的那片区域选为第一个亲本。然后，对于第二个亲本，我们进行同样的操作。有时候我们也会在途中标注两个固定指针，如下图：</p>
+<p>通过这种方法，我们可以在一轮中就获得两个亲本。我们将这种方法成为「随机普遍选择法」（Stochastic Universal Selection method）。</p>
+<p>4.4 交叉</p>
+<p>在上一个步骤中，我们已经选择出了可以产生后代的亲本染色体。那么用生物学的话说，所谓「交叉」，其实就是指的繁殖。现在我们来对染色体 1 和 4（在上一个步骤中选出来的）进行「交叉」，见下图：</p>
+<p>这是交叉最基本的形式，我们称其为「单点交叉」。这里我们随机选择一个交叉点，然后，将交叉点前后的染色体部分进行染色体间的交叉对调，于是就产生了新的后代。</p>
+<p>如果你设置两个交叉点，那么这种方法被成为「多点交叉」，见下图：</p>
+<p>4.5 变异</p>
+<p>如果现在我们从生物学的角度来看这个问题，那么请问：由上述过程产生的后代是否有和其父母一样的性状呢？答案是否。在后代的生长过程中，它们体内的基因会发生一些变化，使得它们与父母不同。这个过程我们称为「变异」，它可以被定义为染色体上发生的随机变化，正是因为变异，种群中才会存在多样性。</p>
+<p>下图为变异的一个简单示例：</p>
+<p>变异完成之后，我们就得到了新为个体，进化也就完成了，整个过程如下图：</p>
+<p>在进行完一轮「遗传变异」之后，我们用适应度函数对这些新的后代进行验证，如果函数判定它们适应度足够，那么就会用它们从总体中替代掉那些适应度不够的染色体。这里有个问题，我们最终应该以什么标准来判断后代达到了最佳适应度水平呢？</p>
+<p>一般来说，有如下几个终止条件：</p>
+<p>在进行 X 次迭代之后，总体没有什么太大改变。<br>我们事先为算法定义好了进化的次数。<br>当我们的适应度函数已经达到了预先定义的值。</p>
+<p>好了，现在我假设你已基本理解了遗传算法的要领，那么现在让我们用它在数据科学的场景中应用一番。</p>
+<h3 id="5、遗传算法的应用"><a href="#5、遗传算法的应用" class="headerlink" title="5、遗传算法的应用"></a>5、遗传算法的应用</h3><p>5.1 特征选取</p>
+<p>试想一下每当你参加一个数据科学比赛，你会用什么方法来挑选那些对你目标变量的预测来说很重要的特征呢？你经常会对模型中特征的重要性进行一番判断，然后手动设定一个阈值，选择出其重要性高于这个阈值的特征。</p>
+<p>那么，有没有什么方法可以更好地处理这个问题呢？其实处理特征选取任务最先进的算法之一就是遗传算法。</p>
+<p>我们前面处理背包问题的方法可以完全应用到这里。现在，我们还是先从建立「染色体」总体开始，这里的染色体依旧是二进制数串，「1」表示模型包含了该特征，「0 表示模型排除了该特征」。</p>
+<p>不过，有一个不同之处，即我们的适应度函数需要改变一下。这里的适应度函数应该是这次比赛的的精度的标准。也就是说，如果染色体的预测值越精准，那么就可以说它的适应度更高。</p>
+<p>现在我假设你已经对这个方法有点一概念了。下面我不会马上讲解这个问题的解决过程，而是让我们先来用 TPOT 库去实现它。</p>
+<p>5.2 用 TPOT 库来实现</p>
+<p>这个部分相信是你在一开始读本文时心里最终想实现的那个目标。即：实现。那么首先我们来快速浏览一下 TPOT 库（Tree-based Pipeline Optimisation Technique，树形传递优化技术），该库基于 scikit-learn 库建立。下图为一个基本的传递结构。</p>
+<p>图中的灰色区域用 TPOT 库实现了自动处理。实现该部分的自动处理需要用到遗传算法。</p>
+<p>我们这里不深入讲解，而是直接应用它。为了能够使用 TPOT 库，你需要先安装一些 TPOT 建立于其上的 python 库。下面我们快速安装它们：</p>
+<h1 id="installing-DEAP-update-checker-and-tqdm"><a href="#installing-DEAP-update-checker-and-tqdm" class="headerlink" title="installing DEAP, update_checker and tqdm"></a>installing DEAP, update_checker and tqdm</h1><p>pip install deap update_checker tqdm</p>
+<h1 id="installling-TPOT"><a href="#installling-TPOT" class="headerlink" title="installling TPOT"></a>installling TPOT</h1><p>pip install tpot</p>
+<p>这里，我用了 Big Mart Sales（数据集地址：<a target="_blank" rel="noopener" href="https://datahack.analyticsvidhya.com/contest/practice-problem-big-mart-sales-iii/%EF%BC%89%E6%95%B0%E6%8D%AE%E9%9B%86%EF%BC%8C%E4%B8%BA%E5%AE%9E%E7%8E%B0%E5%81%9A%E5%87%86%E5%A4%87%EF%BC%8C%E6%88%91%E4%BB%AC%E5%85%88%E5%BF%AB%E9%80%9F%E4%B8%8B%E8%BD%BD%E8%AE%AD%E7%BB%83%E5%92%8C%E6%B5%8B%E8%AF%95%E6%96%87%E4%BB%B6%EF%BC%8C%E4%BB%A5%E4%B8%8B%E6%98%AF">https://datahack.analyticsvidhya.com/contest/practice-problem-big-mart-sales-iii/）数据集，为实现做准备，我们先快速下载训练和测试文件，以下是</a> python 代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"># import basic libraries</span><br><span class="line">import numpy as np </span><br><span class="line">import pandas as pd </span><br><span class="line">import matplotlib.pyplot as plt </span><br><span class="line">%matplotlib inline </span><br><span class="line">from sklearn import preprocessing </span><br><span class="line">from sklearn.metrics import mean_squared_error </span><br><span class="line">## preprocessing </span><br><span class="line">### mean imputations </span><br><span class="line">train[&#x27;Item_Weight&#x27;].fillna((train[&#x27;Item_Weight&#x27;].mean()), inplace=True)</span><br><span class="line">test[&#x27;Item_Weight&#x27;].fillna((test[&#x27;Item_Weight&#x27;].mean()), inplace=True)</span><br><span class="line"> ### reducing fat content to only two categories </span><br><span class="line">train[&#x27;Item_Fat_Content&#x27;] = train[&#x27;Item_Fat_Content&#x27;].replace([&#x27;low fat&#x27;,&#x27;LF&#x27;], [&#x27;Low Fat&#x27;,&#x27;Low Fat&#x27;]) </span><br><span class="line">train[&#x27;Item_Fat_Content&#x27;] = train[&#x27;Item_Fat_Content&#x27;].replace([&#x27;reg&#x27;], [&#x27;Regular&#x27;]) </span><br><span class="line">test[&#x27;Item_Fat_Content&#x27;] = test[&#x27;Item_Fat_Content&#x27;].replace([&#x27;low fat&#x27;,&#x27;LF&#x27;], [&#x27;Low Fat&#x27;,&#x27;Low Fat&#x27;]) </span><br><span class="line">test[&#x27;Item_Fat_Content&#x27;] = test[&#x27;Item_Fat_Content&#x27;].replace([&#x27;reg&#x27;], [&#x27;Regular&#x27;]) </span><br><span class="line">train[&#x27;Outlet_Establishment_Year&#x27;] = 2013 - train[&#x27;Outlet_Establishment_Year&#x27;] </span><br><span class="line">test[&#x27;Outlet_Establishment_Year&#x27;] = 2013 - test[&#x27;Outlet_Establishment_Year&#x27;] </span><br><span class="line"></span><br><span class="line">train[&#x27;Outlet_Size&#x27;].fillna(&#x27;Small&#x27;,inplace=True)</span><br><span class="line">test[&#x27;Outlet_Size&#x27;].fillna(&#x27;Small&#x27;,inplace=True)</span><br><span class="line"></span><br><span class="line">train[&#x27;Item_Visibility&#x27;] = np.sqrt(train[&#x27;Item_Visibility&#x27;])</span><br><span class="line">test[&#x27;Item_Visibility&#x27;] = np.sqrt(test[&#x27;Item_Visibility&#x27;])</span><br><span class="line"></span><br><span class="line">col = [&#x27;Outlet_Size&#x27;,&#x27;Outlet_Location_Type&#x27;,&#x27;Outlet_Type&#x27;,&#x27;Item_Fat_Content&#x27;]</span><br><span class="line">test[&#x27;Item_Outlet_Sales&#x27;] = 0</span><br><span class="line">combi = train.append(test)</span><br><span class="line">for i in col:</span><br><span class="line"> combi[i] = number.fit_transform(combi[i].astype(&#x27;str&#x27;))</span><br><span class="line"> combi[i] = combi[i].astype(&#x27;object&#x27;)</span><br><span class="line">train = combi[:train.shape[0]]</span><br><span class="line">test = combi[train.shape[0]:]</span><br><span class="line">test.drop(&#x27;Item_Outlet_Sales&#x27;,axis=1,inplace=True)</span><br><span class="line"></span><br><span class="line">## removing id variables </span><br><span class="line">tpot_train = train.drop([&#x27;Outlet_Identifier&#x27;,&#x27;Item_Type&#x27;,&#x27;Item_Identifier&#x27;],axis=1)</span><br><span class="line">tpot_test = test.drop([&#x27;Outlet_Identifier&#x27;,&#x27;Item_Type&#x27;,&#x27;Item_Identifier&#x27;],axis=1)</span><br><span class="line">target = tpot_train[&#x27;Item_Outlet_Sales&#x27;]</span><br><span class="line">tpot_train.drop(&#x27;Item_Outlet_Sales&#x27;,axis=1,inplace=True)</span><br><span class="line"></span><br><span class="line"># finally building model using tpot library</span><br><span class="line">from tpot import TPOTRegressor</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(tpot_train, target,</span><br><span class="line"> train_size=0.75, test_size=0.25)</span><br><span class="line"></span><br><span class="line">tpot = TPOTRegressor(generations=5, population_size=50, verbosity=2)</span><br><span class="line">tpot.fit(X_train, y_train)</span><br><span class="line">print(tpot.score(X_test, y_test))</span><br><span class="line">tpot.export(&#x27;tpot_boston_pipeline.py&#x27;)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<p>一旦这些代码运行完成，tpot_exported_pipeline.py 里就将会放入用于路径优化的 python 代码。我们可以发现，ExtraTreeRegressor 可以最好地解决这个问题。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">## predicting using tpot optimised pipeline</span><br><span class="line">tpot_pred = tpot.predict(tpot_test)</span><br><span class="line">sub1 = pd.DataFrame(data=tpot_pred)</span><br><span class="line">#sub1.index = np.arange(0, len(test)+1)</span><br><span class="line">sub1 = sub1.rename(columns = &#123;&#x27;0&#x27;:&#x27;Item_Outlet_Sales&#x27;&#125;)</span><br><span class="line">sub1[&#x27;Item_Identifier&#x27;] = test[&#x27;Item_Identifier&#x27;]</span><br><span class="line">sub1[&#x27;Outlet_Identifier&#x27;] = test[&#x27;Outlet_Identifier&#x27;]</span><br><span class="line">sub1.columns = [&#x27;Item_Outlet_Sales&#x27;,&#x27;Item_Identifier&#x27;,&#x27;Outlet_Identifier&#x27;]</span><br><span class="line">sub1 = sub1[[&#x27;Item_Identifier&#x27;,&#x27;Outlet_Identifier&#x27;,&#x27;Item_Outlet_Sales&#x27;]]</span><br><span class="line">sub1.to_csv(&#x27;tpot.csv&#x27;,index=False)</span><br></pre></td></tr></table></figure>
+
+<p>如果你提交了这个 csv，那么你会发现我一开始保证的那些还没有完全实现。那是不是我在骗你们呢？当然不是。实际上，TPOT 库有一个简单的规则。如果你不运行 TPOT 太久，那么它就不会为你的问题找出最可能传递方式。</p>
+<p>所以，你得增加进化的代数，拿杯咖啡出去走一遭，其它的交给 TPOT 就行。此外，你也可以用这个库来处理分类问题。进一步内容可以参考这个文档：<a target="_blank" rel="noopener" href="http://rhiever.github.io/tpot/%E3%80%82%E9%99%A4%E4%BA%86%E6%AF%94%E8%B5%9B%EF%BC%8C%E5%9C%A8%E7%94%9F%E6%B4%BB%E4%B8%AD%E6%88%91%E4%BB%AC%E4%B9%9F%E6%9C%89%E5%BE%88%E5%A4%9A%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E5%8F%AF%E4%BB%A5%E7%94%A8%E5%88%B0%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95%E3%80%82">http://rhiever.github.io/tpot/。除了比赛，在生活中我们也有很多应用场景可以用到遗传算法。</a></p>
+<h3 id="6、-实际应用"><a href="#6、-实际应用" class="headerlink" title="6、 实际应用"></a>6、 实际应用</h3><p>遗传算法在真实世界中有很多应用。这里我列了部分有趣的场景，但是由于篇幅限制，我不会逐一详细介绍。</p>
+<p>6.1 工程设计</p>
+<p>工程设计非常依赖计算机建模以及模拟，这样才能让设计周期过程即快又经济。遗传算法在这里可以进行优化并给出一个很好的结果。</p>
+<p>相关资源：</p>
+<p>论文：Engineering design using genetic algorithms<br>地址：<a target="_blank" rel="noopener" href="http://lib.dr.iastate.edu/cgi/viewcontent.cgi?article=16942&amp;context=rtd">http://lib.dr.iastate.edu/cgi/viewcontent.cgi?article=16942&amp;context=rtd</a></p>
+<p>6.2 交通与船运路线（Travelling Salesman Problem，巡回售货员问题）</p>
+<p>这是一个非常著名的问题，它已被很多贸易公司用来让运输更省时、经济。解决这个问题也要用到遗传算法。</p>
+<p>6.3 机器人</p>
+<p>遗传算法在机器人领域中的应用非常广泛。实际上，目前人们正在用遗传算法来创造可以像人类一样行动的自主学习机器人，其执行的任务可以是做饭、洗衣服等等。</p>
+<p>相关资源：</p>
+<p>论文：Genetic Algorithms for Auto-tuning Mobile Robot Motion Control</p>
+<p>地址：<a target="_blank" rel="noopener" href="https://pdfs.semanticscholar.org/7c8c/faa78795bcba8e72cd56f8b8e3b95c0df20c.pdf">https://pdfs.semanticscholar.org/7c8c/faa78795bcba8e72cd56f8b8e3b95c0df20c.pdf</a></p>
+<h3 id="7、结语"><a href="#7、结语" class="headerlink" title="7、结语"></a>7、结语</h3><p>希望通过本文介绍，你现在已经对遗传算法有了足够的理解，而且也会用 TPOT 库来实现它了。但是如果你不亲身实践，本文的知识也是非常有限的。</p>
+<p>所以，请各位读者朋友一定要在无论是数据科学比赛或是生活中尝试自己去实现它。</p>
+<p>选自Analyticsvidhya 机器之心编译</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/11/My-Github-Stars-1-4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1921,328 +2081,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/09/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%EF%BC%9A%E4%BB%8E%E9%9B%B6%E5%88%B0%E4%B8%8A%E7%BA%BF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="英雄本色">
-      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="英雄本色的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/06/09/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%EF%BC%9A%E4%BB%8E%E9%9B%B6%E5%88%B0%E4%B8%8A%E7%BA%BF/" class="post-title-link" itemprop="url">搭建个人博客：从零到上线</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-06-09 23:53:36" itemprop="dateCreated datePublished" datetime="2024-06-09T23:53:36+08:00">2024-06-09</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-06-10 00:08:58" itemprop="dateModified" datetime="2024-06-10T00:08:58+08:00">2024-06-10</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>使用 Docker 搭建个人博客：从零到上线<br>小奇 青檬小栈 2024-06-08 08:05 安徽<br>图片<br><a target="_blank" rel="noopener" href="https://mmbiz.qpic.cn/sz_mmbiz_gif/Ric3gNzlqMktFY107ObFDRpgSatYsoyjHXrcxj4bBw7FcG1d2BrbzcD6mTaMzEMDTsMdvXVibaIdOelTBURThtibw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">图片</a><br>图片<img src="https://mmbiz.qpic.cn/sz_mmbiz_gif/Ric3gNzlqMkvPnXywsoHaF81F6JictPpR89bRVz2LQ63JTlYhEPXpicIr5icOAxCMlgB57HTL0UVwjW2gPElV87Y9Q/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"><br>在当今数字时代，拥有一个个人博客不仅能展示你的技术和思想，还能为你提供一个记录和分享的平台。</p>
-<p>Docker 作为一种流行的容器化技术，可以让你快速、轻松地部署和管理你的博客。</p>
-<p>在本文中，我们将详细介绍如何使用 Docker 从零开始搭建个人博客。</p>
-<p>图片</p>
-<p>目录</p>
-<ol>
-<li><p>前提条件</p>
-</li>
-<li><p>选择博客平台</p>
-</li>
-<li><p>环境准备</p>
-</li>
-<li><p>克隆博客仓库</p>
-</li>
-<li><p>编写 Docker Compose 文件</p>
-</li>
-<li><p>配置环境变量</p>
-</li>
-<li><p>启动容器</p>
-</li>
-<li><p>访问博客</p>
-</li>
-<li><p>自定义博客</p>
-</li>
-<li><p>总结</p>
-</li>
-</ol>
-<p>前提条件<br>在开始之前，请确保你的系统已经安装了以下工具：</p>
-<ol>
-<li><p>Docker[1]</p>
-</li>
-<li><p>Docker Compose[2]</p>
-</li>
-</ol>
-<p>这些工具的安装可以参考各自的官方文档。如果您是初次接触 Docker，可以先了解一下 Docker 的基本概念和命令。</p>
-<p>选择博客平台<br>我们选择了 Hexo[3] 作为我们的博客平台。Hexo 是一个快速、简洁且高效的博客框架，支持 Markdown 语法，并且有丰富的主题和插件可供选择。</p>
-<p>环境准备<br>首先，我们需要为 Hexo 创建一个工作目录，并初始化一个 Hexo 项目。打开终端并运行以下命令：</p>
-<p>mkdir my-blog<br>cd my-blog<br>npm install hexo-cli -g<br>hexo init<br>npm install<br>这些命令将创建一个新的 Hexo 项目，并安装所有必要的依赖项。接下来，我们将准备 Docker 环境。</p>
-<p>克隆博客仓库<br>为了方便管理和部署，我们将博客项目托管在 GitHub 上。首先，创建一个新的 GitHub 仓库，然后将本地 Hexo 项目推送到该仓库。</p>
-<p>git init<br>git remote add origin <a target="_blank" rel="noopener" href="https://github.com/yourusername/yourblog.git">https://github.com/yourusername/yourblog.git</a><br>git add .<br>git commit -m “Initial commit”<br>git push -u origin master<br>编写 Docker Compose 文件<br>我们将使用 Docker Compose 来管理多个 Docker 容器。创建一个名为 docker-compose.yml 的文件，并添加以下内容：</p>
-<p>version: ‘3.8’</p>
-<p>services:<br>  hexo:<br>    image: node:14<br>    container_name: hexo_blog<br>    working_dir: &#x2F;usr&#x2F;src&#x2F;app<br>    volumes:<br>      - .:&#x2F;usr&#x2F;src&#x2F;app<br>    command: sh -c “npm install &amp;&amp; hexo server -p 4000”<br>    ports:<br>      - “4000:4000”<br>这个 Docker Compose 文件定义了一个名为 hexo 的服务，使用官方的 Node.js 镜像，并将当前目录挂载到容器内。启动容器时，将安装依赖并启动 Hexo 服务器。</p>
-<p>配置环境变量<br>为了方便管理配置，我们可以将一些环境变量放入 .env 文件中。创建一个 .env 文件，并添加以下内容：</p>
-<p>BLOG_PORT&#x3D;4000<br>然后，在 docker-compose.yml 文件中引用这些环境变量：</p>
-<p>version: ‘3.8’</p>
-<p>services:<br>  hexo:<br>    image: node:14<br>    container_name: hexo_blog<br>    working_dir: &#x2F;usr&#x2F;src&#x2F;app<br>    volumes:<br>      - .:&#x2F;usr&#x2F;src&#x2F;app<br>    command: sh -c “npm install &amp;&amp; hexo server -p ${BLOG_PORT}”<br>    ports:<br>      - “${BLOG_PORT}:${BLOG_PORT}”<br>启动容器<br>现在我们可以使用 Docker Compose 启动容器了。运行以下命令：</p>
-<p>docker-compose up -d<br>该命令会在后台启动 Hexo 容器。你可以使用以下命令查看容器的状态：</p>
-<p>docker-compose ps<br>如果一切顺利，你应该会看到 Hexo 容器正在运行。</p>
-<p>访问博客<br>打开浏览器，并访问 <a href="http://localhost:4000，你应该会看到">http://localhost:4000，你应该会看到</a> Hexo 的默认欢迎页面。 当然，我们继续深入探讨如何自定义和管理你的 Hexo 博客，包括更改主题、添加插件和部署到生产环境。</p>
-<p>图片</p>
-<p>图片</p>
-<p>自定义博客<br>更改主题<br>Hexo 有许多精美的主题，你可以在 Hexo 主题库[4] 中找到。以下是更改主题的步骤。</p>
-<ol>
-<li><p>选择主题：在 Hexo 主题库中选择一个你喜欢的主题，并记下其安装命令或 GitHub 仓库地址。</p>
-</li>
-<li><p>安装主题：在你的博客根目录下运行安装命令。例如，安装 NexT 主题：</p>
-</li>
-</ol>
-<p>git clone <a target="_blank" rel="noopener" href="https://github.com/theme-next/hexo-theme-next">https://github.com/theme-next/hexo-theme-next</a> themes&#x2F;next<br>3. 配置主题：打开 Hexo 配置文件 _config.yml，更改主题配置：</p>
-<p>theme: next<br>4. 自定义主题：进入 themes&#x2F;next 目录，根据主题文档自定义配置，例如更改配色、布局等。</p>
-<p>添加插件<br>Hexo 提供了丰富的插件系统，可以扩展博客的功能。以下是添加插件的步骤：</p>
-<ol>
-<li><p>选择插件：在 Hexo 插件库[5] 中选择需要的插件。</p>
-</li>
-<li><p>安装插件：在博客根目录下运行安装命令。例如，安装 Hexo SEO 插件：</p>
-</li>
-</ol>
-<p>npm install hexo-generator-seo-friendly-sitemap –save<br>3. 配置插件：根据插件文档，打开 _config.yml 文件，添加相应的配置。例如，配置 SEO 插件：</p>
-<p>sitemap:<br>  path: sitemap.xml<br>部署到生产环境<br>将你的博客部署到云服务器或静态网站托管服务（如 GitHub Pages、Netlify）上，可以让全世界的人访问。以下是一些常见的部署方法。</p>
-<p>部署到 GitHub Pages</p>
-<ol>
-<li>安装部署插件：在博客根目录下运行以下命令：</li>
-</ol>
-<p>npm install hexo-deployer-git –save<br>2. 配置部署插件：在 _config.yml 文件中添加部署配置：</p>
-<p>deploy:<br>  type: git<br>  repo: <a target="_blank" rel="noopener" href="https://github.com/yourusername/yourblog.git">https://github.com/yourusername/yourblog.git</a><br>  branch: gh-pages<br>3. 生成静态文件并部署：运行以下命令：</p>
-<p>hexo clean<br>hexo generate<br>hexo deploy<br>部署到 Netlify</p>
-<ol>
-<li><p>创建 Netlify 帐号：访问 Netlify[6] 创建一个免费帐号。</p>
-</li>
-<li><p>连接 GitHub 仓库：在 Netlify 仪表盘中创建一个新站点，并选择你的 GitHub 仓库。</p>
-</li>
-<li><p>配置构建设置：设置构建命令为 hexo generate，发布目录为 public。</p>
-</li>
-<li><p>部署站点：保存并部署，Netlify 会自动从你的仓库中拉取代码并部署。</p>
-</li>
-</ol>
-<p>持续集成和自动部署<br>为了简化部署过程，你可以使用持续集成工具（如 GitHub Actions）来实现自动化部署。</p>
-<p>使用 GitHub Actions 自动部署</p>
-<ol>
-<li>创建 GitHub Actions 工作流文件：在你的仓库中创建 .github&#x2F;workflows&#x2F;deploy.yml 文件，并添加以下内容：</li>
-</ol>
-<p>name: Deploy Hexo Blog</p>
-<p>on:<br>  push:<br>    branches:<br>      - master</p>
-<p>jobs:<br>  build:<br>    runs-on: ubuntu-latest</p>
-<pre><code>steps:
-- name: Checkout code
-  uses: actions/checkout@v2
-
-- name: Setup Node.js
-  uses: actions/setup-node@v1
-  with:
-    node-version: &#39;14&#39;
-
-- name: Install dependencies
-  run: npm install
-
-- name: Generate static files
-  run: npm run build
-
-- name: Deploy to GitHub Pages
-  uses: peaceiris/actions-gh-pages@v3
-  with:
-    github_token: $&#123;&#123; secrets.GITHUB_TOKEN &#125;&#125;
-    publish_dir: ./public
-</code></pre>
-<ol start="2">
-<li><p>配置 GitHub Secrets：在你的 GitHub 仓库设置中，添加 GITHUB_TOKEN 到 Secrets 中。</p>
-</li>
-<li><p>推送代码：每次将代码推送到 master 分支时，GitHub Actions 会自动运行工作流并部署你的博客。</p>
-</li>
-</ol>
-<p>访问博客<br>在部署完成后，你可以通过配置的域名或托管服务提供的默认域名访问你的博客。</p>
-<p>自定义博客<br>自定义域名<br>如果你希望使用自定义域名而不是默认的 GitHub Pages 或 Netlify 域名，你可以按照以下步骤进行设置。</p>
-<p>在 GitHub Pages 上使用自定义域名</p>
-<ol>
-<li><p>购买域名：你可以通过域名注册商（如 Namecheap、GoDaddy）购买一个域名。</p>
-</li>
-<li><p>配置 DNS：在你的域名注册商的管理控制台中，添加一个 CNAME 记录，指向 yourusername.github.io。例如：</p>
-</li>
-</ol>
-<p>CNAME record:<br>Name: www<br>Value: yourusername.github.io<br>3. 添加 CNAME 文件：在你的 Hexo 项目根目录下创建一个名为 CNAME 的文件，内容为你的自定义域名，例如：</p>
-<p><a target="_blank" rel="noopener" href="http://www.yourdomain.com/">www.yourdomain.com</a><br>4. 部署：再次运行 hexo deploy 命令，将 CNAME 文件部署到 GitHub Pages。</p>
-<p>在 Netlify 上使用自定义域名</p>
-<ol>
-<li><p>购买域名：同样，你需要通过域名注册商购买一个域名。</p>
-</li>
-<li><p>添加域名到 Netlify：在 Netlify 仪表盘中，进入你的站点设置，找到 “Domain management” 并添加你的自定义域名。</p>
-</li>
-<li><p>配置 DNS：Netlify 会提供 DNS 记录配置指导，你需要在域名注册商的管理控制台中添加相应的 DNS 记录，例如 A 记录或 CNAME 记录。</p>
-</li>
-</ol>
-<p>添加评论系统<br>一个互动的博客通常会包含评论系统。Hexo 支持多种评论系统，例如 Disqus 和 Gitalk。以下以 Disqus 为例：</p>
-<ol>
-<li><p>注册 Disqus：访问 Disqus[7] 并创建一个新的站点。</p>
-</li>
-<li><p>获取 Disqus Shortname：在 Disqus 的设置中找到 Shortname，它是你站点的唯一标识符。</p>
-</li>
-<li><p>配置 Hexo：在 Hexo 的 _config.yml 文件中添加 Disqus 配置：</p>
-</li>
-</ol>
-<p>disqus_shortname: your-disqus-shortname<br>4. 安装 Disqus 插件：如果你的主题不支持 Disqus 评论系统，你可能需要安装 Hexo Disqus 插件：</p>
-<p>npm install hexo-disqus –save<br>添加搜索功能<br>为了让读者更容易找到他们感兴趣的文章，你可以为博客添加搜索功能。例如，使用 hexo-generator-searchdb 插件：</p>
-<ol>
-<li>安装插件：</li>
-</ol>
-<p>npm install hexo-generator-searchdb –save<br>2. 配置插件：在 Hexo 的 _config.yml 文件中添加以下配置：</p>
-<p>search:<br>  path: search.xml<br>  field: post<br>  format: html<br>3. 修改主题：根据你使用的主题文档，添加搜索框和相应的 JS 代码来启用搜索功能。</p>
-<p>优化性能<br>为了提升博客的加载速度和性能，可以进行以下优化：</p>
-<p>启用 CDN<br>使用内容分发网络（CDN）可以加速你博客的静态资源加载。例如，使用 Cloudflare：</p>
-<ol>
-<li><p>注册 Cloudflare：访问 Cloudflare[8] 并注册一个新账户。</p>
-</li>
-<li><p>添加站点：按照提示添加你的自定义域名，并更新域名注册商的 DNS 服务器设置为 Cloudflare 提供的 DNS 服务器。</p>
-</li>
-<li><p>启用 CDN：确保 Cloudflare 的 CDN 功能已启用，并配置缓存规则。</p>
-</li>
-</ol>
-<p>压缩资源<br>压缩 CSS、JS 和图片等静态资源可以显著减少页面加载时间。你可以使用 Hexo 插件来实现资源压缩：</p>
-<ol>
-<li>安装压缩插件：</li>
-</ol>
-<p>npm install hexo-neat –save<br>2. 配置插件：在 Hexo 的 _config.yml 文件中添加以下配置：</p>
-<p>neat_enable: true<br>neat_html:<br>  enable: true<br>  exclude:<br>neat_css:<br>  enable: true<br>  exclude:<br>neat_js:<br>  enable: true<br>  exclude:<br>备份和恢复<br>定期备份你的博客项目是个好习惯，可以防止数据丢失。你可以使用 Git 来管理备份。</p>
-<p>使用 GitHub 备份</p>
-<ol>
-<li>确保项目在 GitHub 上：之前我们已经将 Hexo 项目推送到 GitHub 仓库，这里简单回顾一下：</li>
-</ol>
-<p>git init<br>git remote add origin <a target="_blank" rel="noopener" href="https://github.com/yourusername/yourblog.git">https://github.com/yourusername/yourblog.git</a><br>git add .<br>git commit -m “Initial commit”<br>git push -u origin master</p>
-<ol>
-<li>定期提交和推送：每次对博客进行修改后，记得提交并推送到 GitHub：</li>
-</ol>
-<p>git add .<br>git commit -m “Update blog content”<br>git push<br>恢复博客<br>如果需要恢复你的博客，只需从 GitHub 克隆仓库并安装依赖：</p>
-<p>git clone <a target="_blank" rel="noopener" href="https://github.com/yourusername/yourblog.git">https://github.com/yourusername/yourblog.git</a><br>cd yourblog<br>npm install<br>常见问题解决<br>Docker 容器无法启动<br>如果遇到 Docker 容器无法启动的情况，可以查看容器日志来诊断问题：</p>
-<p>docker-compose logs hexo<br>常见问题可能包括依赖安装失败、端口冲突等。根据日志信息进行相应的调整和修复。</p>
-<p>Hexo 部署失败<br>如果在部署到 GitHub Pages 或其他平台时失败，可以尝试以下步骤：</p>
-<ol>
-<li><p>检查配置文件：确保 _config.yml 中的配置正确，特别是 deploy 部分。</p>
-</li>
-<li><p>清理缓存和生成文件：</p>
-</li>
-</ol>
-<p>hexo clean<br>hexo generate</p>
-<ol>
-<li>重新部署：</li>
-</ol>
-<p>hexo deploy<br>主题样式不生效<br>如果更改主题或自定义样式后没有生效，可以尝试以下步骤：</p>
-<ol>
-<li>清理缓存和生成文件：</li>
-</ol>
-<p>hexo clean<br>hexo generate</p>
-<ol>
-<li><p>检查主题配置：确保主题的 _config.yml 文件中的配置正确，并已保存。</p>
-</li>
-<li><p>重启本地服务器：</p>
-</li>
-</ol>
-<p>hexo server<br>进一步优化和扩展<br>SEO 优化<br>为了提高搜索引擎排名，可以进行以下 SEO 优化：</p>
-<ol>
-<li><p>设置 Meta 标签：在 _config.yml 中配置 meta 标签，如 title, description, keywords 等。</p>
-</li>
-<li><p>使用 SEO 插件：例如，安装 hexo-generator-seo-friendly-sitemap 和 hexo-generator-robots 插件：</p>
-</li>
-</ol>
-<p>npm install hexo-generator-seo-friendly-sitemap hexo-generator-robots –save<br>并在 _config.yml 中进行相应配置：</p>
-<p>sitemap:<br>  path: sitemap.xml</p>
-<p>robots:<br>  useragent: *<br>  disallow:<br>分析和监控<br>为了了解博客的访问情况，可以集成分析工具，如 Google Analytics 或 Baidu Analytics。</p>
-<p>集成 Google Analytics</p>
-<ol>
-<li><p>注册 Google Analytics：访问 Google Analytics[9]，并获取跟踪 ID。</p>
-</li>
-<li><p>配置 Hexo：在 _config.yml 中添加 Google Analytics 配置：</p>
-</li>
-</ol>
-<p>google_analytics: UA-XXXXX-Y<br>集成 Baidu Analytics</p>
-<ol>
-<li><p>注册 Baidu Analytics：访问 Baidu Analytics[10]，并获取代码片段。</p>
-</li>
-<li><p>配置 Hexo：将代码片段添加到主题的 _config.yml 文件中，或直接修改主题的 layout&#x2F;_partial&#x2F; 文件。</p>
-</li>
-</ol>
-<p>社交分享<br>增加社交分享按钮可以提升博客的互动性和传播度。</p>
-<ol>
-<li><p>选择插件：例如，使用 hexo-plugin-social-share 插件。</p>
-</li>
-<li><p>安装插件：</p>
-</li>
-</ol>
-<p>npm install hexo-plugin-social-share –save</p>
-<ol>
-<li>配置插件：在 _config.yml 中添加社交分享配置：</li>
-</ol>
-<p>social_share:<br>  enable: true<br>  sites:<br>    - twitter<br>    - facebook<br>    - linkedin<br>总结<br>通过本文的详细指南，我们从零开始搭建了一个基于 Hexo 的个人博客，并通过 Docker 容器化技术进行了管理和部署。同时，我们还介绍了如何自定义博客主题、添加插件、优化性能以及解决常见问题。希望这些步骤能帮助你顺利搭建并管理一个专业的个人博客。</p>
-<p>使用 Docker 和 Hexo，你可以快速、轻松地创建和维护一个个人博客，不仅展示你的技术和思想，还可以为你提供一个记录和分享的平台。赶快动手试试吧！</p>
-<p>如果你有任何疑问或需要进一步的帮助，请随时在评论区留言，我们将尽力为你解答。Happy Blogging!</p>
-<p>END</p>
-<p>欢迎关注我的公众号</p>
-<p>原创技术文章第一时间推送，点赞和在看就是最大的支持❤️</p>
-<p>图片</p>
-<p>点分享</p>
-<p>图片</p>
-<p>点收藏</p>
-<p>图片</p>
-<p>点点赞</p>
-<p>图片</p>
-<p>点在看</p>
-<p>​</p>
-<p>微信扫一扫<br>关注该公众号</p>
-<p>人划线</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2312,7 +2150,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
