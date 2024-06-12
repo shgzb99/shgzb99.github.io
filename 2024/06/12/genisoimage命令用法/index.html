@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="转载 https:&#x2F;&#x2F;www.cnblogs.com&#x2F;klb561&#x2F;p&#x2F;9108712.html 功能说明：建立ISO 9660映像文件。  常用命令：genisoimage -o imagename.iso file 语 法：mkisofs [-adDfhJlLNrRTvz][-print-size][-quiet][-A ][-abstract ][-b ][-biblio ][-c ][-C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="genisoimage命令用法">
+<meta property="og:url" content="http://example.com/2024/06/12/genisoimage%E5%91%BD%E4%BB%A4%E7%94%A8%E6%B3%95/index.html">
+<meta property="og:site_name" content="英雄本色的博客">
+<meta property="og:description" content="转载 https:&#x2F;&#x2F;www.cnblogs.com&#x2F;klb561&#x2F;p&#x2F;9108712.html 功能说明：建立ISO 9660映像文件。  常用命令：genisoimage -o imagename.iso file 语 法：mkisofs [-adDfhJlLNrRTvz][-print-size][-quiet][-A ][-abstract ][-b ][-biblio ][-c ][-C">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-06-12T05:57:03.000Z">
+<meta property="article:modified_time" content="2024-06-12T06:00:19.439Z">
+<meta property="article:author" content="英雄本色">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2024/06/12/genisoimage%E5%91%BD%E4%BB%A4%E7%94%A8%E6%B3%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>genisoimage命令用法 | 英雄本色的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">英雄本色的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录生活，分享感悟</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/12/genisoimage%E5%91%BD%E4%BB%A4%E7%94%A8%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="英雄本色">
+      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="英雄本色的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          genisoimage命令用法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-06-12 13:57:03 / 修改时间：14:00:19" itemprop="dateCreated datePublished" datetime="2024-06-12T13:57:03+08:00">2024-06-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>转载 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/klb561/p/9108712.html">https://www.cnblogs.com/klb561/p/9108712.html</a></p>
+<p>功能说明：建立ISO 9660映像文件。  常用命令：genisoimage -o imagename.iso file 语 法：mkisofs [-adDfhJlLNrRTvz][-print-size][-quiet][-A ][-abstract ][-b ][-biblio ][-c ][-C ][-copyright ][-hide ][-hide-joliet ][-log-file ][-m ][-M ][-o ][-p ][-P ][-sysid ][-V ][-volset ][-volset-size ][-volset-seqno ][-x ][目录或文件]  补充说明：mkisofs可将指定的目录与文件做成ISO 9660格式的映像文件</p>
+<p>基本用法：</p>
+<p>mkisofs (or genisoimage) -o image.iso &#x2F;path&#x2F;of&#x2F;folder</p>
+<p>如有中文不能显示尝试(建议使用)：</p>
+<p>mkisofs (or genisoimage) -J -o image.iso &#x2F;path&#x2F;of&#x2F;folder</p>
+<p>完整命令查看：</p>
+<p>mkisofs (or genisoimage) –help 或 man genisoimage</p>
+<p>命令: mkisofs(make iso file system)</p>
+<p>功能说明：建立ISO 9660映像文件。<br>  语 法：mkisofs [-adDfhJlLNrRTvz][-print-size][-quiet][-A &lt;应用程序ID&gt;][-abstract &lt;摘要文件&gt;][-b &lt;开机映像文件&gt;][-biblio ][-c &lt;开机文件名称&gt;][-C &lt;盘区编号，磁区编号&gt;][-copyright &lt;版权信息文件&gt;][-hide &lt;目录或文件名&gt;][-hide-joliet &lt;文件或目录名&gt;][-log-file &lt;记录文件&gt;][-m &lt;目录或文件名&gt;][-M &lt;开机映像文件&gt;][-o &lt;映像文件&gt;][-p &lt;数据处理人&gt;][-P &lt;光盘发行人&gt;][-sysid &lt;系统ID &gt;][-V &lt;光盘ID &gt;][-volset &lt;卷册集ID&gt;][-volset-size &lt;光盘总数&gt;][-volset-seqno &lt;卷册序号&gt;][-x &lt;目录&gt;][目录或文件]<br>补充说明：mkisofs可将指定的目录与文件做成ISO 9660格式的映像文件，以供刻录光盘。<br>参 数：<br>-a或–all mkisofs通常不处理备份文件。使用此参数可以把备份文件加到映像文件中。<br>-A&lt;应用程序ID&gt;或-appid&lt;应用程序ID&gt; 指定光盘的应用程序ID。<br>-abstract&lt;摘要文件&gt; 指定摘要文件的文件名。<br>-b&lt;开机映像文件&gt;或-eltorito-boot&lt;开机映像文件&gt; 指定在制作可开机光盘时所需的开机映像文件。<br>-biblio 指定ISBN文件的文件名，ISBN文件位于光盘根目录下，记录光盘的ISBN。<br>-c&lt;开机文件名称&gt; 制作可开机光盘时，mkisofs会将开机映像文件中的全-eltorito-catalog&lt;开机文件名称&gt;全部内容作成一个文件。<br>-C&lt;盘区编号，盘区编号&gt; 将许多节区合成一个映像文件时，必须使用此参数。<br>-copyright&lt;版权信息文件&gt; 指定版权信息文件的文件名。<br>-d或-omit-period 省略文件后的句号。<br>-D或-disable-deep-relocation ISO 9660最多只能处理8层的目录，超过8层的部分，RRIP会自动将它们设置成ISO 9660兼容的格式。使用-D参数可关闭此功能。<br>-f或-follow-links 忽略符号连接。<br>-h 显示帮助。<br>-hide&lt;目录或文件名&gt; 使指定的目录或文件在ISO 9660或Rock RidgeExtensions的系统中隐藏。<br>-hide-joliet&lt;目录或文件名&gt; 使指定的目录或文件在Joliet系统中隐藏。<br>-J或-joliet 使用Joliet格式的目录与文件名称。<br>-l或-full-iso9660-filenames 使用ISO 9660 32字符长度的文件名。<br>-L或-allow-leading-dots 允许文件名的第一个字符为句号。<br>-log-file&lt;记录文件&gt; 在执行过程中若有错误信息，预设会显示在屏幕上。<br>-m&lt;目录或文件名&gt;或-exclude&lt;目录或文件名&gt; 指定的目录或文件名将不会房入映像文件中。<br>-M&lt;映像文件&gt;或-prev-session&lt;映像文件&gt; 与指定的映像文件合并。<br>-N或-omit-version-number 省略ISO 9660文件中的版本信息。<br>-o&lt;映像文件&gt;或-output&lt;映像文件&gt; 指定映像文件的名称。<br>-p&lt;数据处理人&gt;或-preparer&lt;数据处理人&gt; 记录光盘的数据处理人。<br>-print-size 显示预估的文件系统大小。<br>-quiet 执行时不显示任何信息。<br>-r或-rational-rock 使用Rock Ridge Extensions，并开放全部文件的读取权限。<br>-R或-rock 使用Rock Ridge Extensions。<br>-sysid&lt;系统ID&gt; 指定光盘的系统ID。<br>-T或-translation-table 建立文件名的转换表，适用于不支持Rock Ridge Extensions的系统上。<br>-v或-verbose 执行时显示详细的信息。<br>-V&lt;光盘ID</p>
+<p>###############################################<br>#################################################</p>
+<p> mkisofs(8) 程序作为 sysutils&#x2F;cdrtools port 的一部分， 将生成 ISO 9660 文件系统，其中包含 UNIX? 命名空间中的文件名。最简单的用法是：</p>
+<h1 id="mkisofs-o-imagefile-iso-path-to-tree"><a href="#mkisofs-o-imagefile-iso-path-to-tree" class="headerlink" title="mkisofs -o imagefile.iso &#x2F;path&#x2F;to&#x2F;tree"></a>mkisofs -o imagefile.iso &#x2F;path&#x2F;to&#x2F;tree</h1><p>这个命令将创建一个包含 ISO9660 文件系统的 imagefile.iso 文件，它是目录树 &#x2F;path&#x2F;to&#x2F;tree 的一个副本。 在处理过程中，它将文件名称映射为标准的 ISO9660 文件系统的文件名，将排除那些不典型的 ISO 文件系统的文件。<br>有很多选项能够用来克服那些限制。特别的，-R 选项能够启用 Rock Ridge 扩展一般的 UNIX 系统，-J 选项能启用用于 Microsoft 系统的 Joliet 扩展，-hfs 选项能用来创建用于 Mac OS? 系统的 HFS 文件系统。<br>    RockRidge格式是ISO9660格式的延伸，支持文件名字母的大小写、符号字符、长文件名以及超过8层的目录结构。RockRidge使CD-ROM能兼容Unix的文件系统，因此它在Unix系统上已经被广泛地使用。<br>    对于那些即将要在 FreeBSD 系统中使用 CD 的人来说，-U 选项能用来消除所有文件名的限制。当使用-R 选项时，它会产生一个 文件系统映像，它与您从那儿启动 FreeBSD 树是一样的，虽然它在许多方面也违反了 ISO 9660 的标准。<br>最后一个常用的选项是 -b。 它用来指定启动映像的位置，用以生成 “El Torito” 启动 CD。 这个选项使用一个参数， 用以指定将写入 CD 的目录的根。默认情况下， mkisofs(8) 会以常说的 “软盘模拟” 方式来创建 ISO， 因此它希望引导映像文件的尺寸恰好是 1200， 1440 或 2880 KB。 某些引导加载器， 例如 FreeBSD 发行版磁盘， 并不使用模拟模式；这种情况下， 需要使用 -no-emul-boot 选项。 因此， 如果 &#x2F;tmp&#x2F;myboot 是一个包含了启动映像文件 &#x2F;tmp&#x2F;myboot&#x2F;boot&#x2F;cdboot 的可引导的 FreeBSD 系统，您就可以使用下面的命令生成 ISO 9660 文件系统映像 &#x2F;tmp&#x2F;bootable.iso：</p>
+<h1 id="mkisofs-R-no-emul-boot-b-boot-cdboot-o-tmp-bootable-iso-tmp-myboot"><a href="#mkisofs-R-no-emul-boot-b-boot-cdboot-o-tmp-bootable-iso-tmp-myboot" class="headerlink" title="mkisofs -R -no-emul-boot -b boot&#x2F;cdboot -o &#x2F;tmp&#x2F;bootable.iso &#x2F;tmp&#x2F;myboot"></a>mkisofs -R -no-emul-boot -b boot&#x2F;cdboot -o &#x2F;tmp&#x2F;bootable.iso &#x2F;tmp&#x2F;myboot</h1><p>完成这些工作之后， 如果您的内核中配置了 md，就可以用下列命令来挂接文件系统了：</p>
+<h1 id="mdconfig-a-t-vnode-f-tmp-bootable-iso-u-0"><a href="#mdconfig-a-t-vnode-f-tmp-bootable-iso-u-0" class="headerlink" title="mdconfig -a -t vnode -f &#x2F;tmp&#x2F;bootable.iso -u 0"></a>mdconfig -a -t vnode -f &#x2F;tmp&#x2F;bootable.iso -u 0</h1><h1 id="mount-t-cd9660-dev-md0-mnt"><a href="#mount-t-cd9660-dev-md0-mnt" class="headerlink" title="mount -t cd9660 &#x2F;dev&#x2F;md0 &#x2F;mnt"></a>mount -t cd9660 &#x2F;dev&#x2F;md0 &#x2F;mnt</h1><p>可以发现 &#x2F;mnt 和 &#x2F;tmp&#x2F;myboot 是一样的。</p>
+<h4 id="1-安装所需的软件包："><a href="#1-安装所需的软件包：" class="headerlink" title="1.安装所需的软件包："></a>1.安装所需的软件包：</h4><p>[root@localhost ~]# yum -y install createrepo mkisofs isomd5sum</p>
+<h4 id="2-根据当前系统已安装的软件包生成安装系统所需要的rpm列表"><a href="#2-根据当前系统已安装的软件包生成安装系统所需要的rpm列表" class="headerlink" title="2.根据当前系统已安装的软件包生成安装系统所需要的rpm列表"></a>2.根据当前系统已安装的软件包生成安装系统所需要的rpm列表</h4><p>[root@localhost ~]# awk ‘&#x2F;Installing&#x2F;{print $2}’ install.log |sed ‘s&#x2F;^[0-9]*:&#x2F;&#x2F;g’ &gt;&#x2F;root&#x2F;packages.list</p>
+<h4 id="3-建立定制所需要的目录并把除Packages目录以外的文件复制到新的系统目录"><a href="#3-建立定制所需要的目录并把除Packages目录以外的文件复制到新的系统目录" class="headerlink" title="3.建立定制所需要的目录并把除Packages目录以外的文件复制到新的系统目录"></a>3.建立定制所需要的目录并把除Packages目录以外的文件复制到新的系统目录</h4><p>[root@localhost ~]# mkdir  &#x2F;mnt&#x2F;cdrom<br>[root@localhost ~]# mkdir -p &#x2F;data&#x2F;OS<br>[root@localhost ~]# mount &#x2F;dev&#x2F;cdrom &#x2F;mnt&#x2F;cdrom&#x2F;<br>[root@localhost ~]# rsync -a –exclude&#x3D;Packages &#x2F;mnt&#x2F;cdrom&#x2F; &#x2F;data&#x2F;OS&#x2F;<br>[root@localhost ~]# mkdir &#x2F;data&#x2F;OS&#x2F;Packages</p>
+<h4 id="4-使用脚本自动复制所需要的RPM包到新建立的光盘目录中Packages"><a href="#4-使用脚本自动复制所需要的RPM包到新建立的光盘目录中Packages" class="headerlink" title="4.使用脚本自动复制所需要的RPM包到新建立的光盘目录中Packages"></a>4.使用脚本自动复制所需要的RPM包到新建立的光盘目录中Packages</h4><p>[root@localhost ~]# vim cprpms.sh</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash  </span><br><span class="line">SRC_RPMS=/mnt/cdrom/Packages     </span><br><span class="line">DST_RPMS=/data/OS/Packages     </span><br><span class="line">packages_list=/root/packages.list </span><br><span class="line">number_of_packages=`cat $packages_list | wc -l` </span><br><span class="line">i=1 </span><br><span class="line">while [ $i -le $number_of_packages ] ; </span><br><span class="line"> do </span><br><span class="line">    name=`head -n $i $packages_list | tail -n -1` </span><br><span class="line">         echo &quot;cp $SRC_RPMS/$name* $DST_RPMS/&quot;  </span><br><span class="line">         cp $SRC_RPMS/$name* $DST_RPMS/         </span><br><span class="line">    i=`expr $i + 1` </span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p> [root@localhost ~]# sh cprpms.sh</p>
+<h4 id="5-配置kickstart脚本"><a href="#5-配置kickstart脚本" class="headerlink" title="5.配置kickstart脚本"></a>5.配置kickstart脚本</h4><p>[root@localhost ~]# vim &#x2F;data&#x2F;OS&#x2F;isolinux&#x2F;ks.cfg</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line">#platform=x86, AMD64, or Intel EM64T </span><br><span class="line"># Firewall configuration </span><br><span class="line">firewall --disabled </span><br><span class="line"># Install OS instead of upgrade </span><br><span class="line">install </span><br><span class="line"># Use CDROM installation media </span><br><span class="line">cdrom </span><br><span class="line"># Root password default is &quot;redhat&quot; </span><br><span class="line">rootpw --iscrypted $1$JJuQiyTA$fbBF2fBqHB1P5PpFNy5f.1</span><br><span class="line"># System authorization information </span><br><span class="line">auth  --useshadow  --passalgo=md5</span><br><span class="line"># Use text mode install </span><br><span class="line">text </span><br><span class="line">firstboot --disable </span><br><span class="line"># System keyboard </span><br><span class="line">keyboard us </span><br><span class="line"># System language </span><br><span class="line">lang en_US </span><br><span class="line"># SELinux configuration </span><br><span class="line">selinux --disabled </span><br><span class="line"># Do not configure the X Window System </span><br><span class="line">skipx </span><br><span class="line"># Installation logging level </span><br><span class="line">logging --level=info</span><br><span class="line"># Reboot after installation </span><br><span class="line">reboot </span><br><span class="line"># System timezone </span><br><span class="line">timezone  Asia/Shanghai </span><br><span class="line"># Network information </span><br><span class="line">network  --bootproto=dhcp --device=eth0 --onboot=on –noipv6 </span><br><span class="line"># System bootloader configuration </span><br><span class="line">bootloader --location=mbr</span><br><span class="line"># Clear the Master Boot Record </span><br><span class="line">zerombr </span><br><span class="line"># Partition clearing information </span><br><span class="line">clearpart --all --initlabel </span><br><span class="line"># Disk partitioning information </span><br><span class="line">ignoredisk --only-use=sda</span><br><span class="line">part /boot --fstype=&quot;ext4&quot; --size=1024</span><br><span class="line">part swap --recommended</span><br><span class="line">part / --fstype=&quot;ext4&quot; --grow --size=1</span><br><span class="line">%packages</span><br><span class="line">@additional-devel</span><br><span class="line">@base</span><br><span class="line">@core</span><br><span class="line">@debugging</span><br><span class="line">@basic-desktop</span><br><span class="line">@desktop-debugging</span><br><span class="line">@desktop-platform</span><br><span class="line">@desktop-platform-devel</span><br><span class="line">@development</span><br><span class="line">@directory-client</span><br><span class="line">@eclipse</span><br><span class="line">@emacs</span><br><span class="line">@fonts</span><br><span class="line">@general-desktop</span><br><span class="line">@graphical-admin-tools</span><br><span class="line">@graphics</span><br><span class="line">@input-methods</span><br><span class="line">@internet-browser</span><br><span class="line">@java-platform</span><br><span class="line">@legacy-x</span><br><span class="line">@network-file-system-client</span><br><span class="line">@performance</span><br><span class="line">@perl-runtime</span><br><span class="line">@print-client</span><br><span class="line">@remote-desktop-clients</span><br><span class="line">@server-platform</span><br><span class="line">@server-platform-devel</span><br><span class="line">@server-policy</span><br><span class="line">@tex</span><br><span class="line">@technical-writing</span><br><span class="line">@virtualization</span><br><span class="line">@virtualization-client</span><br><span class="line">@virtualization-platform</span><br><span class="line">@workstation-policy</span><br><span class="line">@x11</span><br><span class="line">libgcrypt-devel</span><br><span class="line">libXinerama-devel</span><br><span class="line">openmotif-devel</span><br><span class="line">libXmu-devel</span><br><span class="line">xorg-x11-proto-devel</span><br><span class="line">startup-notification-devel</span><br><span class="line">libgnomeui-devel</span><br><span class="line">libbonobo-devel</span><br><span class="line">junit</span><br><span class="line">libXau-devel</span><br><span class="line">libXrandr-devel</span><br><span class="line">popt-devel</span><br><span class="line">gnome-python2-desktop</span><br><span class="line">libdrm-devel</span><br><span class="line">libxslt-devel</span><br><span class="line">libglade2-devel</span><br><span class="line">gnutls-devel</span><br><span class="line">mtools</span><br><span class="line">pax</span><br><span class="line">python-dmidecode</span><br><span class="line">oddjob</span><br><span class="line">wodim</span><br><span class="line">sgpio</span><br><span class="line">genisoimage</span><br><span class="line">device-mapper-persistent-data</span><br><span class="line">systemtap-client</span><br><span class="line">abrt-gui</span><br><span class="line">desktop-file-utils</span><br><span class="line">ant</span><br><span class="line">rpmdevtools</span><br><span class="line">jpackage-utils</span><br><span class="line">rpmlint</span><br><span class="line">samba-winbind</span><br><span class="line">certmonger</span><br><span class="line">pam_krb5</span><br><span class="line">krb5-workstation</span><br><span class="line">netpbm-progs</span><br><span class="line">openmotif</span><br><span class="line">libXmu</span><br><span class="line">libXp</span><br><span class="line">perl-DBD-SQLite</span><br><span class="line">libvirt-java</span><br><span class="line">%end</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-让系统从kickstart配置启动安装"><a href="#6-让系统从kickstart配置启动安装" class="headerlink" title="6.让系统从kickstart配置启动安装"></a>6.让系统从kickstart配置启动安装</h4><p>[root@localhost OS]# vim &#x2F;data&#x2F;OS&#x2F;isolinux&#x2F;isolinux.cfg   #备注这里需要给执行权限，才可以编辑，默认只读；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">default ks</span><br><span class="line">prompt 1</span><br><span class="line">timeout 60</span><br><span class="line">display boot.msg</span><br><span class="line">F1 boot.msg</span><br><span class="line">F2 options.msg</span><br><span class="line">F3 general.msg</span><br><span class="line">F4 param.msg</span><br><span class="line">F5 rescue.msg</span><br><span class="line">label linux</span><br><span class="line">kernel vmlinuz</span><br><span class="line">append initrd=initrd.img</span><br><span class="line">label text</span><br><span class="line">kernel vmlinuz</span><br><span class="line">append initrd=initrd.img text</span><br><span class="line">label ks</span><br><span class="line">kernel vmlinuz</span><br><span class="line">append ks=cdrom:/isolinux/ks.cfg initrd=initrd.img</span><br><span class="line">label local</span><br><span class="line">localboot 1</span><br><span class="line">label memtest86</span><br><span class="line">kernel memtest</span><br><span class="line">append -</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-生成rpm包的依赖关系"><a href="#7-生成rpm包的依赖关系" class="headerlink" title="7.生成rpm包的依赖关系"></a>7.生成rpm包的依赖关系</h4><p>[root@localhost ~]# cd &#x2F;data&#x2F;OS&#x2F;<br>[root@localhost OS]# createrepo -g repodata&#x2F;<em>-comps.xml &#x2F;data&#x2F;OS&#x2F;<br>[root@localhost OS]# declare -x discinfo&#x3D;<code>head -1 .discinfo</code><br>[root@localhost OS]# createrepo -u “media:&#x2F;&#x2F;$discinfo” -g repodata&#x2F;</em>-comps.xml &#x2F;data&#x2F;OS&#x2F;</p>
+<h4 id="8-生成ISO镜像文件"><a href="#8-生成ISO镜像文件" class="headerlink" title="8.生成ISO镜像文件"></a>8.生成ISO镜像文件</h4><p>[root@localhost ~]# cd &#x2F;data&#x2F;OS&#x2F;<br>[root@localhost OS]# mkisofs -R -J -T -r -l -d -joliet-long -allow-multidot <br> -allow-leading-dots -no-bak -o &#x2F;data&#x2F;CentOS-6.7-x86_64.iso <br> -b isolinux&#x2F;isolinux.bin -c isolinux&#x2F;boot.cat -no-emul-boot <br> -boot-load-size 4 -boot-info-table &#x2F;data&#x2F;OS</p>
+<h4 id="9-生成MD5校验码"><a href="#9-生成MD5校验码" class="headerlink" title="9.生成MD5校验码"></a>9.生成MD5校验码</h4><p>[root@localhost ~]# implantisomd5 &#x2F;data&#x2F;CentOS-6.3-x86_64.iso</p>
+<h4 id="10-测试"><a href="#10-测试" class="headerlink" title="10.测试"></a>10.测试</h4>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/06/12/Archlinux%E5%AE%89%E8%A3%85-%E8%B6%85%E8%AF%A6%E7%BB%86/" rel="prev" title="Archlinux安装(超详细)">
+      <i class="fa fa-chevron-left"></i> Archlinux安装(超详细)
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#mkisofs-o-imagefile-iso-path-to-tree"><span class="nav-number">1.</span> <span class="nav-text">mkisofs -o imagefile.iso &#x2F;path&#x2F;to&#x2F;tree</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mkisofs-R-no-emul-boot-b-boot-cdboot-o-tmp-bootable-iso-tmp-myboot"><span class="nav-number">2.</span> <span class="nav-text">mkisofs -R -no-emul-boot -b boot&#x2F;cdboot -o &#x2F;tmp&#x2F;bootable.iso &#x2F;tmp&#x2F;myboot</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mdconfig-a-t-vnode-f-tmp-bootable-iso-u-0"><span class="nav-number">3.</span> <span class="nav-text">mdconfig -a -t vnode -f &#x2F;tmp&#x2F;bootable.iso -u 0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mount-t-cd9660-dev-md0-mnt"><span class="nav-number">4.</span> <span class="nav-text">mount -t cd9660 &#x2F;dev&#x2F;md0 &#x2F;mnt</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%AE%89%E8%A3%85%E6%89%80%E9%9C%80%E7%9A%84%E8%BD%AF%E4%BB%B6%E5%8C%85%EF%BC%9A"><span class="nav-number">4.0.0.1.</span> <span class="nav-text">1.安装所需的软件包：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E6%A0%B9%E6%8D%AE%E5%BD%93%E5%89%8D%E7%B3%BB%E7%BB%9F%E5%B7%B2%E5%AE%89%E8%A3%85%E7%9A%84%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%94%9F%E6%88%90%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84rpm%E5%88%97%E8%A1%A8"><span class="nav-number">4.0.0.2.</span> <span class="nav-text">2.根据当前系统已安装的软件包生成安装系统所需要的rpm列表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E5%BB%BA%E7%AB%8B%E5%AE%9A%E5%88%B6%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84%E7%9B%AE%E5%BD%95%E5%B9%B6%E6%8A%8A%E9%99%A4Packages%E7%9B%AE%E5%BD%95%E4%BB%A5%E5%A4%96%E7%9A%84%E6%96%87%E4%BB%B6%E5%A4%8D%E5%88%B6%E5%88%B0%E6%96%B0%E7%9A%84%E7%B3%BB%E7%BB%9F%E7%9B%AE%E5%BD%95"><span class="nav-number">4.0.0.3.</span> <span class="nav-text">3.建立定制所需要的目录并把除Packages目录以外的文件复制到新的系统目录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E4%BD%BF%E7%94%A8%E8%84%9A%E6%9C%AC%E8%87%AA%E5%8A%A8%E5%A4%8D%E5%88%B6%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84RPM%E5%8C%85%E5%88%B0%E6%96%B0%E5%BB%BA%E7%AB%8B%E7%9A%84%E5%85%89%E7%9B%98%E7%9B%AE%E5%BD%95%E4%B8%ADPackages"><span class="nav-number">4.0.0.4.</span> <span class="nav-text">4.使用脚本自动复制所需要的RPM包到新建立的光盘目录中Packages</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E9%85%8D%E7%BD%AEkickstart%E8%84%9A%E6%9C%AC"><span class="nav-number">4.0.0.5.</span> <span class="nav-text">5.配置kickstart脚本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-%E8%AE%A9%E7%B3%BB%E7%BB%9F%E4%BB%8Ekickstart%E9%85%8D%E7%BD%AE%E5%90%AF%E5%8A%A8%E5%AE%89%E8%A3%85"><span class="nav-number">4.0.0.6.</span> <span class="nav-text">6.让系统从kickstart配置启动安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-%E7%94%9F%E6%88%90rpm%E5%8C%85%E7%9A%84%E4%BE%9D%E8%B5%96%E5%85%B3%E7%B3%BB"><span class="nav-number">4.0.0.7.</span> <span class="nav-text">7.生成rpm包的依赖关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-%E7%94%9F%E6%88%90ISO%E9%95%9C%E5%83%8F%E6%96%87%E4%BB%B6"><span class="nav-number">4.0.0.8.</span> <span class="nav-text">8.生成ISO镜像文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-%E7%94%9F%E6%88%90MD5%E6%A0%A1%E9%AA%8C%E7%A0%81"><span class="nav-number">4.0.0.9.</span> <span class="nav-text">9.生成MD5校验码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-%E6%B5%8B%E8%AF%95"><span class="nav-number">4.0.0.10.</span> <span class="nav-text">10.测试</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">英雄本色</p>
+  <div class="site-description" itemprop="description">英雄本色的博客，记录生活，分享感悟。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">英雄本色</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
