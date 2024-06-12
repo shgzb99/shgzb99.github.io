@@ -9,6 +9,14 @@
 
 
     <url>
+        <loc>http://example.com/2024/06/12/publish-obsidian-post-to-wordpress/</loc>
+        <lastmod>2024-06-12T13:26:00.246Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>http://example.com/2024/06/12/%E5%8F%8D%E6%9F%A5%E4%B8%80%E4%B8%AA%E5%9F%9F%E5%90%8D%E7%9A%84%E6%89%80%E6%9C%89%E5%AD%90%E5%9F%9F%E5%90%8D/</loc>
         <lastmod>2024-06-12T13:18:38.819Z</lastmod>
         <changefreq>weekly</changefreq>

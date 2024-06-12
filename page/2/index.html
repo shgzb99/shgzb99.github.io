@@ -178,6 +178,78 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/10/%E5%A6%82%E4%BD%95%E5%9C%A8Debian-12%E4%B8%8A%E5%AE%89%E8%A3%85Proxmox-VE-8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="英雄本色">
+      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="英雄本色的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/06/10/%E5%A6%82%E4%BD%95%E5%9C%A8Debian-12%E4%B8%8A%E5%AE%89%E8%A3%85Proxmox-VE-8/" class="post-title-link" itemprop="url">如何在Debian 12上安装Proxmox VE 8</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-06-10 19:54:04 / 修改时间：20:06:14" itemprop="dateCreated datePublished" datetime="2024-06-10T19:54:04+08:00">2024-06-10</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>转载 <a target="_blank" rel="noopener" href="https://echowings.github.io/zh-cn/p/%E5%A6%82%E4%BD%95%E5%9C%A8debian-12%E4%B8%8A%E5%AE%89%E8%A3%85proxmox-ve-8/">https://echowings.github.io/zh-cn/p/%E5%A6%82%E4%BD%95%E5%9C%A8debian-12%E4%B8%8A%E5%AE%89%E8%A3%85proxmox-ve-8/</a><br>更改Debian 12的apt安装源</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"> #备份 /et/apt/source.list</span><br><span class="line">cp /etc/apt/sources.list /etc/apt/sources.list-bak</span><br><span class="line"></span><br><span class="line">#选项 1: 使用官方debian 12 源</span><br><span class="line">tee /etc/apt/sources.list &lt;&lt; &quot;EOF&quot;</span><br><span class="line">deb http://deb.debian.org/debian bookworm main non-free-firmware</span><br><span class="line">deb-src http://deb.debian.org/debian bookworm main non-free-firmware</span><br><span class="line"></span><br><span class="line">deb http://deb.debian.org/debian-security/ bookworm-security main non-free-firmware</span><br><span class="line">deb-src http://deb.debian.org/debian-security/ bookworm-security main non-free-firmware</span><br><span class="line"></span><br><span class="line">deb http://deb.debian.org/debian bookworm-updates main non-free-firmware</span><br><span class="line">deb-src http://deb.debian.org/debian bookworm-updates main non-free-firmware</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">#选项 2:使用中科大mirrors.utsc.edu.cn源</span><br><span class="line"># Downlaod and Install debian 12 sourcelist</span><br><span class="line">curl -fsSL https://mirrors.ustc.edu.cn/repogen/conf/debian-https-4-bookworm -o  /etc/apt/sources.list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">apt update &amp;&amp; apt -y dist-upgrade</span><br><span class="line"></span><br><span class="line">apt install -y neovim net-tools</span><br></pre></td></tr></table></figure>
+
+<p>网卡更名，把网卡名字还原为ethx(可选操作)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">export PATH=$PATH:/usr/sbin:/home/$(whoami)/.local/bin</span><br><span class="line">echo &quot;export PATH=$PATH:/usr/sbin:/home/$(whoami)/.local/bin&quot; &gt;&gt; ~/.bashrc</span><br><span class="line"></span><br><span class="line">cp /etc/default/grub /etc/default/grub-bak</span><br><span class="line">sed -i &#x27;/GRUB_CMDLINE_LINUX=/s/&quot;$/net.ifnames=0 biosdevname=0&quot;/&#x27; /etc/default/grub</span><br><span class="line"></span><br><span class="line">#更改网卡名字 enp2s0 更改为eth0，根据你实际网卡名字更改</span><br><span class="line">sed -i &#x27;s/enp2s0/eth0/&#x27; /etc/network/interfaces</span><br><span class="line">update-grub</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 重启系统生效</span><br><span class="line">systemctl reboot</span><br></pre></td></tr></table></figure>
+<p>更改hosts文件的hostname</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ipv4_addr=$(ip -4 route get 8.8.8.8 | awk &#123;&#x27;print $7&#x27;&#125; | tr -d &#x27;\n&#x27;)</span><br><span class="line">echo $ipv4_addr</span><br><span class="line">sed -i &quot;s/127.0.1.1/$&#123;ipv4_addr&#125;/g&quot; /etc/hosts</span><br><span class="line">cat /etc/hosts </span><br><span class="line"></span><br><span class="line">hostname --ip-address</span><br></pre></td></tr></table></figure>
+<p>更换PVE Sourcelist</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">#可选操作，2选1</span><br><span class="line">#选项 1: PVE官方sourcelist</span><br><span class="line">tee /etc/apt/sources.list.d/pve-install-repo.list &lt;&lt; &quot;EOF&quot;</span><br><span class="line">deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"># 选项2: 中科大国内镜像</span><br><span class="line">tee /etc/apt/sources.list.d/pve-install-repo.list &lt;&lt; &quot;EOF&quot;</span><br><span class="line">deb [arch=amd64] https://mirrors.ustc.edu.cn/proxmox/debian/pve bullseye pve-no-subscription</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">#安装gpg密钥</span><br><span class="line">#如下操作2选1</span><br><span class="line">#选项 1: 官方站点</span><br><span class="line">wget http://download.proxmox.com/debian/proxmox-release-bookworm.gpg  -O /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg</span><br><span class="line"></span><br><span class="line">#选项2: 中科大镜像</span><br><span class="line">wget https://mirrors.ustc.edu.cn/proxmox/debian/proxmox-release-bookworm.gpg -O /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#Ceph源更改</span><br><span class="line">#二选一</span><br><span class="line"></span><br><span class="line">#选项 1: pve官方源</span><br><span class="line">echo &quot;deb http://download.proxmox.com/debian/ceph-quincy bookworm no-subscription&quot; &gt; /etc/apt/sources.list.d/ceph.list</span><br><span class="line"></span><br><span class="line">#选项 2: 中科大国内镜像</span><br><span class="line">echo &quot;deb https://mirrors.ustc.edu.cn/proxmox/debian/ceph-quincy bookworm no-subscription&quot; &gt; /etc/apt/sources.list.d/ceph.list</span><br><span class="line"></span><br><span class="line"># 更新并安装</span><br><span class="line">apt update &amp;&amp; apt  -y full-upgrade</span><br><span class="line"></span><br><span class="line"># Install proxmxo ve kernel</span><br><span class="line">apt install pve-kernel-6.2</span><br><span class="line"></span><br><span class="line"># 重启系统</span><br><span class="line">systemctl reboot</span><br></pre></td></tr></table></figure>
+<p>安装proxmox ve软件包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># 安装proxmox ve 软件包</span><br><span class="line">apt install -y  proxmox-ve postfix open-iscsi</span><br><span class="line"></span><br><span class="line">#移除debian 12的内核</span><br><span class="line">apt remove linux-image-amd64 &#x27;linux-image-6.1*&#x27;</span><br><span class="line">update-grub</span><br><span class="line"></span><br><span class="line"># 移除 OS-PROBER</span><br><span class="line">apt remove  -y os-prober</span><br><span class="line"></span><br><span class="line"># 关闭登录pve 未订阅提醒对话框</span><br><span class="line">sed -Ezi.bak &quot;s/(Ext.Msg.show\(\&#123;\s+title: gettext\(&#x27;No valid sub)/void\(\&#123; \/\/\1/g&quot; /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js &amp;&amp; systemctl restart pveproxy.service</span><br><span class="line"></span><br><span class="line"># 删除pve 企业源</span><br><span class="line">rm -f /etc/apt/sources.list.d/pve-enterprise.list</span><br><span class="line"></span><br><span class="line"># 安装 openvswitch-switch</span><br><span class="line">apt install -y  openvswitch-switch</span><br></pre></td></tr></table></figure>
+<p>更改中科大 lxc模板源</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp /usr/share/perl5/PVE/APLInfo.pm /usr/share/perl5/PVE/APLInfo.pm_back</span><br><span class="line">sed -i &#x27;s|http://download.proxmox.com|https://mirrors.ustc.edu.cn/proxmox|g&#x27; /usr/share/perl5/PVE/APLInfo.pm</span><br></pre></td></tr></table></figure>
+<p>参考文档<br><a target="_blank" rel="noopener" href="https://pve.proxmox.com/wiki/Install_Proxmox_VE_on_Debian_12_Bookworm">Install Proxmox VE on Debian 12 Bookworm</a><br><a target="_blank" rel="noopener" href="https://wiki.debian.org/SourcesList">Debian SourcesList</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/10/OpenWRT%E6%90%AD%E5%BB%BAOpenVPN%E6%9C%8D%E5%8A%A1%E5%99%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -990,7 +1062,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

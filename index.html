@@ -178,6 +178,79 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/12/publish-obsidian-post-to-wordpress/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="英雄本色">
+      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="英雄本色的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/06/12/publish-obsidian-post-to-wordpress/" class="post-title-link" itemprop="url">publish-obsidian-post-to-wordpress</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-06-12 21:24:54 / 修改时间：21:26:00" itemprop="dateCreated datePublished" datetime="2024-06-12T21:24:54+08:00">2024-06-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>转载 <a target="_blank" rel="noopener" href="https://einverne.github.io/post/2023/08/publish-obsidian-post-to-wordpress.html">https://einverne.github.io/post/2023/08/publish-obsidian-post-to-wordpress.html</a></p>
+<p>如何快速分享 Obsidian 中的笔记是从我开始使用 Obsidian 之后一直在思考的问题，在之前，因为我所有的笔记都是通过 Markdown 来存放在本地的，如果我想要分享一个笔记，一般就是将笔记移动到 <code>Blog/_post</code> 目录下，因为我使用一个 Git 仓库来管理我所有的笔记（Vault）然后使用 git submodule 的方式来将我的 <a target="_blank" rel="noopener" href="https://blog.einverne.info/">Jekyll 博客</a>，<a target="_blank" rel="noopener" href="https://invest.einverne.info/">Hexo 博客</a> 放到我的统一的笔记库里面。所以当我想要发布一篇笔记的时候，就是将笔记移动到对应的博客的目录，然后在使用 git commit 提交，push 来发布，之后的过程都是通过 CI 自动完成的。</p>
+<p>虽然这样的方式我已经使用了很多年了，也没有什么大的问题，唯一的问题就是因为发布博客对 Markdown 的标题有一些限制，所以发布之前都得进行重命名。并且我没有办法做到一键发布，大部分的情况下我都必需打开终端，然后进行提交。直到我发现了一款叫做 [[obsidian-wordpress]] 的插件。</p>
+<p>这个<a target="_blank" rel="noopener" href="https://github.com/devbean/obsidian-wordpress">插件</a>完美的解决了我想要快速分享一篇笔记，然后还不需要我做任何调整，当完成初次的配置之后，基本上只需要点击一下就可以完成发布。</p>
+<p><img src="https://photo.einverne.info/images/2023/08/28/U9pC.png" alt="U9pC"></p>
+<p>这个插件使用 WordPress 的接口（XML-RPC 或 REST）来发布文章。</p>
+<h2 id="obsidian-wordpress"><a href="#obsidian-wordpress" class="headerlink" title="obsidian wordpress"></a>obsidian wordpress</h2><p><a target="_blank" rel="noopener" href="https://github.com/devbean/obsidian-wordpress">obsidian-wordpress</a> 是一款 Obsidian 下的插件，可以一键将笔记发布到 WordPress 站点中。该插件使用 XML-RPC 或 REST 接口进行发布。</p>
+<p>XML-RPC 是默认启用的，但有些站点可能由于安全问题而禁用它。 虽然有些共享主机可能默认禁用 XML-RPC，但是您无法启用它。 因此，如果禁用 XML-RPC，这个插件将不起作用。</p>
+<p>在 WodrPress 4.7 之后，REST API 会在默认情况下启用。 一些 REST API 需要额外的操作来保护可写 API。 历史上 REST 接口是通过安装插件实现的。 在 WordPress 5.6 版本之后，引入了应用程序密码来完成类似的工作。 因此在 WordPress 5.6 之后 ，应用程序密码是首选的。</p>
+<h2 id="初次设置"><a href="#初次设置" class="headerlink" title="初次设置"></a>初次设置</h2><p>在插件的设置中，找到 Profile，这里可以配置站点的信息，包括地址，API 类型，用户名，密码等。</p>
+<p><img src="https://photo.einverne.info/images/2023/08/28/UA2H.png" alt="UA2H"></p>
+<p>需要注意的是这里的密码，在最新版的 WordPress 中请使用应用程序密码，在用户管理下面生成。</p>
+<p>当完成以上的设置之后，在任意的笔记中，都可以在侧边栏中找到 WordPress 的按钮，然后点击，选择分类，一键完成发布。最近我有在写我的 <a target="_blank" rel="noopener" href="https://japan.einverne.info/">日本生活</a> ，其中所有的内容都是我在 Obsidian 中完成编写，然后发布的。我创建了一个单独的文件夹用来存放所有发布到该网站的内容，并且这些内容也可以很好的和我的其他笔记进行融合，并且在我修改了文章的内容之后，也可以快速进行一键发布。</p>
+<p>在以前我使用 WordPress 的时候，非常不方面的一点就是对其中文章内容的修改非常不方便，我不喜欢在线的编辑器，而如今 Obsidian 就成为了我的 WordPress 的本地编辑器。</p>
+<h2 id="图片怎么办"><a href="#图片怎么办" class="headerlink" title="图片怎么办"></a>图片怎么办</h2><p>文章中的图片我是我之前搭建的 [[Chevereto]] 图床，配合 macOS 下的 uPic，我设置了快捷键 Ctrl + Shift + U，就可以一键上传粘贴板中的内容。然后直接在 Obsidian 中使用即可。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/12/%E5%8F%8D%E6%9F%A5%E4%B8%80%E4%B8%AA%E5%9F%9F%E5%90%8D%E7%9A%84%E6%89%80%E6%9C%89%E5%AD%90%E5%9F%9F%E5%90%8D/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2291,78 +2364,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/10/%E5%A6%82%E4%BD%95%E5%9C%A8Debian-12%E4%B8%8A%E5%AE%89%E8%A3%85Proxmox-VE-8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="英雄本色">
-      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="英雄本色的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/06/10/%E5%A6%82%E4%BD%95%E5%9C%A8Debian-12%E4%B8%8A%E5%AE%89%E8%A3%85Proxmox-VE-8/" class="post-title-link" itemprop="url">如何在Debian 12上安装Proxmox VE 8</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2024-06-10 19:54:04 / 修改时间：20:06:14" itemprop="dateCreated datePublished" datetime="2024-06-10T19:54:04+08:00">2024-06-10</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>转载 <a target="_blank" rel="noopener" href="https://echowings.github.io/zh-cn/p/%E5%A6%82%E4%BD%95%E5%9C%A8debian-12%E4%B8%8A%E5%AE%89%E8%A3%85proxmox-ve-8/">https://echowings.github.io/zh-cn/p/%E5%A6%82%E4%BD%95%E5%9C%A8debian-12%E4%B8%8A%E5%AE%89%E8%A3%85proxmox-ve-8/</a><br>更改Debian 12的apt安装源</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"> #备份 /et/apt/source.list</span><br><span class="line">cp /etc/apt/sources.list /etc/apt/sources.list-bak</span><br><span class="line"></span><br><span class="line">#选项 1: 使用官方debian 12 源</span><br><span class="line">tee /etc/apt/sources.list &lt;&lt; &quot;EOF&quot;</span><br><span class="line">deb http://deb.debian.org/debian bookworm main non-free-firmware</span><br><span class="line">deb-src http://deb.debian.org/debian bookworm main non-free-firmware</span><br><span class="line"></span><br><span class="line">deb http://deb.debian.org/debian-security/ bookworm-security main non-free-firmware</span><br><span class="line">deb-src http://deb.debian.org/debian-security/ bookworm-security main non-free-firmware</span><br><span class="line"></span><br><span class="line">deb http://deb.debian.org/debian bookworm-updates main non-free-firmware</span><br><span class="line">deb-src http://deb.debian.org/debian bookworm-updates main non-free-firmware</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">#选项 2:使用中科大mirrors.utsc.edu.cn源</span><br><span class="line"># Downlaod and Install debian 12 sourcelist</span><br><span class="line">curl -fsSL https://mirrors.ustc.edu.cn/repogen/conf/debian-https-4-bookworm -o  /etc/apt/sources.list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">apt update &amp;&amp; apt -y dist-upgrade</span><br><span class="line"></span><br><span class="line">apt install -y neovim net-tools</span><br></pre></td></tr></table></figure>
-
-<p>网卡更名，把网卡名字还原为ethx(可选操作)</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">export PATH=$PATH:/usr/sbin:/home/$(whoami)/.local/bin</span><br><span class="line">echo &quot;export PATH=$PATH:/usr/sbin:/home/$(whoami)/.local/bin&quot; &gt;&gt; ~/.bashrc</span><br><span class="line"></span><br><span class="line">cp /etc/default/grub /etc/default/grub-bak</span><br><span class="line">sed -i &#x27;/GRUB_CMDLINE_LINUX=/s/&quot;$/net.ifnames=0 biosdevname=0&quot;/&#x27; /etc/default/grub</span><br><span class="line"></span><br><span class="line">#更改网卡名字 enp2s0 更改为eth0，根据你实际网卡名字更改</span><br><span class="line">sed -i &#x27;s/enp2s0/eth0/&#x27; /etc/network/interfaces</span><br><span class="line">update-grub</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 重启系统生效</span><br><span class="line">systemctl reboot</span><br></pre></td></tr></table></figure>
-<p>更改hosts文件的hostname</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ipv4_addr=$(ip -4 route get 8.8.8.8 | awk &#123;&#x27;print $7&#x27;&#125; | tr -d &#x27;\n&#x27;)</span><br><span class="line">echo $ipv4_addr</span><br><span class="line">sed -i &quot;s/127.0.1.1/$&#123;ipv4_addr&#125;/g&quot; /etc/hosts</span><br><span class="line">cat /etc/hosts </span><br><span class="line"></span><br><span class="line">hostname --ip-address</span><br></pre></td></tr></table></figure>
-<p>更换PVE Sourcelist</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">#可选操作，2选1</span><br><span class="line">#选项 1: PVE官方sourcelist</span><br><span class="line">tee /etc/apt/sources.list.d/pve-install-repo.list &lt;&lt; &quot;EOF&quot;</span><br><span class="line">deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"># 选项2: 中科大国内镜像</span><br><span class="line">tee /etc/apt/sources.list.d/pve-install-repo.list &lt;&lt; &quot;EOF&quot;</span><br><span class="line">deb [arch=amd64] https://mirrors.ustc.edu.cn/proxmox/debian/pve bullseye pve-no-subscription</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">#安装gpg密钥</span><br><span class="line">#如下操作2选1</span><br><span class="line">#选项 1: 官方站点</span><br><span class="line">wget http://download.proxmox.com/debian/proxmox-release-bookworm.gpg  -O /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg</span><br><span class="line"></span><br><span class="line">#选项2: 中科大镜像</span><br><span class="line">wget https://mirrors.ustc.edu.cn/proxmox/debian/proxmox-release-bookworm.gpg -O /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#Ceph源更改</span><br><span class="line">#二选一</span><br><span class="line"></span><br><span class="line">#选项 1: pve官方源</span><br><span class="line">echo &quot;deb http://download.proxmox.com/debian/ceph-quincy bookworm no-subscription&quot; &gt; /etc/apt/sources.list.d/ceph.list</span><br><span class="line"></span><br><span class="line">#选项 2: 中科大国内镜像</span><br><span class="line">echo &quot;deb https://mirrors.ustc.edu.cn/proxmox/debian/ceph-quincy bookworm no-subscription&quot; &gt; /etc/apt/sources.list.d/ceph.list</span><br><span class="line"></span><br><span class="line"># 更新并安装</span><br><span class="line">apt update &amp;&amp; apt  -y full-upgrade</span><br><span class="line"></span><br><span class="line"># Install proxmxo ve kernel</span><br><span class="line">apt install pve-kernel-6.2</span><br><span class="line"></span><br><span class="line"># 重启系统</span><br><span class="line">systemctl reboot</span><br></pre></td></tr></table></figure>
-<p>安装proxmox ve软件包</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># 安装proxmox ve 软件包</span><br><span class="line">apt install -y  proxmox-ve postfix open-iscsi</span><br><span class="line"></span><br><span class="line">#移除debian 12的内核</span><br><span class="line">apt remove linux-image-amd64 &#x27;linux-image-6.1*&#x27;</span><br><span class="line">update-grub</span><br><span class="line"></span><br><span class="line"># 移除 OS-PROBER</span><br><span class="line">apt remove  -y os-prober</span><br><span class="line"></span><br><span class="line"># 关闭登录pve 未订阅提醒对话框</span><br><span class="line">sed -Ezi.bak &quot;s/(Ext.Msg.show\(\&#123;\s+title: gettext\(&#x27;No valid sub)/void\(\&#123; \/\/\1/g&quot; /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js &amp;&amp; systemctl restart pveproxy.service</span><br><span class="line"></span><br><span class="line"># 删除pve 企业源</span><br><span class="line">rm -f /etc/apt/sources.list.d/pve-enterprise.list</span><br><span class="line"></span><br><span class="line"># 安装 openvswitch-switch</span><br><span class="line">apt install -y  openvswitch-switch</span><br></pre></td></tr></table></figure>
-<p>更改中科大 lxc模板源</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp /usr/share/perl5/PVE/APLInfo.pm /usr/share/perl5/PVE/APLInfo.pm_back</span><br><span class="line">sed -i &#x27;s|http://download.proxmox.com|https://mirrors.ustc.edu.cn/proxmox|g&#x27; /usr/share/perl5/PVE/APLInfo.pm</span><br></pre></td></tr></table></figure>
-<p>参考文档<br><a target="_blank" rel="noopener" href="https://pve.proxmox.com/wiki/Install_Proxmox_VE_on_Debian_12_Bookworm">Install Proxmox VE on Debian 12 Bookworm</a><br><a target="_blank" rel="noopener" href="https://wiki.debian.org/SourcesList">Debian SourcesList</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2432,7 +2433,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
