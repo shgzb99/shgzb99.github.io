@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="转载 https:&#x2F;&#x2F;einverne.github.io&#x2F;post&#x2F;2023&#x2F;09&#x2F;subdomain-scanner.html  layout: posttitle: “反查一个域名的所有子域名”aliases:- “反查一个域名的所有子域名”tagline: “”description: “”category: 学习笔记tags: [ domain, subdomain, dns, subd">
+  <meta name="description" content="转载 https:&#x2F;&#x2F;einverne.github.io&#x2F;post&#x2F;2023&#x2F;09&#x2F;subdomain-scanner.html 前段时间看到一篇文章说因为 Nginx 的一个「特性」，在直接访问 IP ，并且没有配置默认证书的情况下 Nginx 就会返回一个 SSL 证书从而倒置域名的泄露，进而泄露了网站的源 IP，使得一些扫描网站，比如 [[censys]] 可以直接查询到域名背后的网站 I">
 <meta property="og:type" content="article">
 <meta property="og:title" content="反查一个域名的所有子域名">
 <meta property="og:url" content="http://example.com/2024/06/12/%E5%8F%8D%E6%9F%A5%E4%B8%80%E4%B8%AA%E5%9F%9F%E5%90%8D%E7%9A%84%E6%89%80%E6%9C%89%E5%AD%90%E5%9F%9F%E5%90%8D/index.html">
 <meta property="og:site_name" content="英雄本色的博客">
-<meta property="og:description" content="转载 https:&#x2F;&#x2F;einverne.github.io&#x2F;post&#x2F;2023&#x2F;09&#x2F;subdomain-scanner.html  layout: posttitle: “反查一个域名的所有子域名”aliases:- “反查一个域名的所有子域名”tagline: “”description: “”category: 学习笔记tags: [ domain, subdomain, dns, subd">
+<meta property="og:description" content="转载 https:&#x2F;&#x2F;einverne.github.io&#x2F;post&#x2F;2023&#x2F;09&#x2F;subdomain-scanner.html 前段时间看到一篇文章说因为 Nginx 的一个「特性」，在直接访问 IP ，并且没有配置默认证书的情况下 Nginx 就会返回一个 SSL 证书从而倒置域名的泄露，进而泄露了网站的源 IP，使得一些扫描网站，比如 [[censys]] 可以直接查询到域名背后的网站 I">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-06-12T13:03:34.000Z">
-<meta property="article:modified_time" content="2024-06-12T13:16:31.476Z">
+<meta property="article:modified_time" content="2024-06-12T13:18:38.819Z">
 <meta property="article:author" content="英雄本色">
 <meta name="twitter:card" content="summary">
 
@@ -205,7 +205,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2024-06-12 21:03:34 / 修改时间：21:16:31" itemprop="dateCreated datePublished" datetime="2024-06-12T21:03:34+08:00">2024-06-12</time>
+              <time title="创建时间：2024-06-12 21:03:34 / 修改时间：21:18:38" itemprop="dateCreated datePublished" datetime="2024-06-12T21:03:34+08:00">2024-06-12</time>
             </span>
 
           
@@ -220,8 +220,7 @@
 
       
         <p>转载 <a target="_blank" rel="noopener" href="https://einverne.github.io/post/2023/09/subdomain-scanner.html">https://einverne.github.io/post/2023/09/subdomain-scanner.html</a></p>
-<hr>
-<h2 id="layout-posttitle-“反查一个域名的所有子域名”aliases-“反查一个域名的所有子域名”tagline-“”description-“”category-学习笔记tags-domain-subdomain-dns-subdomain-scanner-information-gathering-create-time-2023-09-06-08-18-40last-updated-2023-09-16-09-19-48"><a href="#layout-posttitle-“反查一个域名的所有子域名”aliases-“反查一个域名的所有子域名”tagline-“”description-“”category-学习笔记tags-domain-subdomain-dns-subdomain-scanner-information-gathering-create-time-2023-09-06-08-18-40last-updated-2023-09-16-09-19-48" class="headerlink" title="layout: posttitle: “反查一个域名的所有子域名”aliases:- “反查一个域名的所有子域名”tagline: “”description: “”category: 学习笔记tags: [ domain, subdomain, dns, subdomain-scanner, information-gathering, ]create_time: 2023-09-06 08:18:40last_updated: 2023-09-16 09:19:48"></a>layout: post<br>title: “反查一个域名的所有子域名”<br>aliases:<br>- “反查一个域名的所有子域名”<br>tagline: “”<br>description: “”<br>category: 学习笔记<br>tags: [ domain, subdomain, dns, subdomain-scanner, information-gathering, ]<br>create_time: 2023-09-06 08:18:40<br>last_updated: 2023-09-16 09:19:48</h2><p>前段时间看到一篇文章说因为 Nginx 的一个「特性」，在直接访问 IP ，并且没有配置默认证书的情况下 Nginx 就会返回一个 SSL 证书从而倒置域名的泄露，进而泄露了网站的源 IP，使得一些扫描网站，比如 [[censys]] 可以直接查询到域名背后的网站 IP，从而导致网站即使用了 CDN 也会遭受到攻击。在这个契机下，我又开始了衍生，因为在 censys，[[fofa]]，[[Shodan]] 等等网站上你只需要输入一个域名就可以获得所有这个站点相关的信息，那么有没有办法可以在只知道一个网站域名的情况下知道所有的二级域名呢。</p>
+<p>前段时间看到一篇文章说因为 Nginx 的一个「特性」，在直接访问 IP ，并且没有配置默认证书的情况下 Nginx 就会返回一个 SSL 证书从而倒置域名的泄露，进而泄露了网站的源 IP，使得一些扫描网站，比如 [[censys]] 可以直接查询到域名背后的网站 IP，从而导致网站即使用了 CDN 也会遭受到攻击。在这个契机下，我又开始了衍生，因为在 censys，[[fofa]]，[[Shodan]] 等等网站上你只需要输入一个域名就可以获得所有这个站点相关的信息，那么有没有办法可以在只知道一个网站域名的情况下知道所有的二级域名呢。</p>
 <p>于是抱着这个新想法，进行了一番调查，果然还是有办法可以知道的。我最最朴素的想法就是写一个遍历，直接通过随机的字符串，<code>[a-z0-9\-]</code> 等等字符的组合，然后进行这些域名检查，ping，dig 的结果，如果有返回，可以认为这个子域名被启用了。但是很显然这个想法的效率太低了，并且遍历这么多无效的域名前缀很显然没有办法最快的找到所有的。</p>
 <p>然后我就找到了 [[MassDNS]]，一款使用 C 语言编写的高性能子域名扫描工具。它通过使用自定义的 DNS 解析器和并发查询来加快子域名的发现速度。MassDNS 支持使用字典文件进行子域名爆破，并提供了丰富的配置选项来优化扫描过程。 MassDNS 还支持自定义的 DNS 服务器，并可以通过设置最大查询时间和最大重试次数等参数来控制扫描过程中的超时和重试行为。此外，它还提供了多种输出格式，包括文本、JSON 和 CSV，以便用户根据需要对扫描结果进行分析和处理。 使用 MassDNS 进行子域名扫描非常简单，只需指定目标域名和字典文件即可开始扫描。它还提供了多线程支持，可以根据系统资源情况调整并发线程数量，以实现更快的扫描速度。</p>
 <p>然后我又循着脉络找到了 <a target="_blank" rel="noopener" href="https://github.com/shmilylty/OneForAll">OneForAll</a> 这样一个开源的工具，它是一个功能强大的子域名收集工具，集成了非常多的工具，从它的官方介绍上也可以看出来它收集子域名的思路和方法。</p>
@@ -336,7 +335,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#layout-posttitle-%E2%80%9C%E5%8F%8D%E6%9F%A5%E4%B8%80%E4%B8%AA%E5%9F%9F%E5%90%8D%E7%9A%84%E6%89%80%E6%9C%89%E5%AD%90%E5%9F%9F%E5%90%8D%E2%80%9Daliases-%E2%80%9C%E5%8F%8D%E6%9F%A5%E4%B8%80%E4%B8%AA%E5%9F%9F%E5%90%8D%E7%9A%84%E6%89%80%E6%9C%89%E5%AD%90%E5%9F%9F%E5%90%8D%E2%80%9Dtagline-%E2%80%9C%E2%80%9Ddescription-%E2%80%9C%E2%80%9Dcategory-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0tags-domain-subdomain-dns-subdomain-scanner-information-gathering-create-time-2023-09-06-08-18-40last-updated-2023-09-16-09-19-48"><span class="nav-number">1.</span> <span class="nav-text">layout: posttitle: “反查一个域名的所有子域名”aliases:- “反查一个域名的所有子域名”tagline: “”description: “”category: 学习笔记tags: [ domain, subdomain, dns, subdomain-scanner, information-gathering, ]create_time: 2023-09-06 08:18:40last_updated: 2023-09-16 09:19:48</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OneForAll-%E4%BD%BF%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">OneForAll 使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Other"><span class="nav-number">3.</span> <span class="nav-text">Other</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#OneForAll-%E4%BD%BF%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">OneForAll 使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Other"><span class="nav-number">2.</span> <span class="nav-text">Other</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
