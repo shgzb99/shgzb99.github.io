@@ -178,6 +178,131 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/13/dd%E5%91%BD%E4%BB%A4%E6%98%BE%E7%A4%BA%E8%BF%9B%E5%BA%A6%E5%8F%8A%E6%89%8B%E5%8A%A8%E8%BF%81%E7%A7%BB%E7%B3%BB%E7%BB%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="英雄本色">
+      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="英雄本色的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/06/13/dd%E5%91%BD%E4%BB%A4%E6%98%BE%E7%A4%BA%E8%BF%9B%E5%BA%A6%E5%8F%8A%E6%89%8B%E5%8A%A8%E8%BF%81%E7%A7%BB%E7%B3%BB%E7%BB%9F/" class="post-title-link" itemprop="url">dd命令显示进度及手动迁移系统</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-06-13 14:31:54 / 修改时间：14:32:42" itemprop="dateCreated datePublished" datetime="2024-06-13T14:31:54+08:00">2024-06-13</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>转载 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/grumpyhippo/p/11260161.html#:~:text=dd%E5%91%BD%E4%BB%A4%E6%98%BE%E7%A4%BA%E8%BF%9B%E5%BA%A6%201.%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%AA%97%E5%8F%A3%E6%89%A7%E8%A1%8Cdd%E5%91%BD%E4%BB%A4%202.%E5%8F%A6%E5%BC%80%E4%B8%80%E4%B8%AA%E7%AA%97%E5%8F%A3%EF%BC%8C%E6%89%A7%E8%A1%8Cwatch%20-n%205,pkill%20-USR1%20-x%20dd%203.%E5%9C%A8%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%89%A7%E8%A1%8Cdd%E5%91%BD%E4%BB%A4%E7%9A%84%E7%AA%97%E5%8F%A3%E5%8D%B3%E5%8F%AF%E6%98%BE%E7%A4%BAdd%E6%89%A7%E8%A1%8C%E8%BF%9B%E5%BA%A6%EF%BC%8C%E7%9B%B4%E5%88%B0%E4%BB%BB%E5%8A%A1%E5%AE%8C%E6%88%90">https://www.cnblogs.com/grumpyhippo/p/11260161.html#:~:text=dd%E5%91%BD%E4%BB%A4%E6%98%BE%E7%A4%BA%E8%BF%9B%E5%BA%A6%201.%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%AA%97%E5%8F%A3%E6%89%A7%E8%A1%8Cdd%E5%91%BD%E4%BB%A4%202.%E5%8F%A6%E5%BC%80%E4%B8%80%E4%B8%AA%E7%AA%97%E5%8F%A3%EF%BC%8C%E6%89%A7%E8%A1%8Cwatch%20-n%205,pkill%20-USR1%20-x%20dd%203.%E5%9C%A8%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%89%A7%E8%A1%8Cdd%E5%91%BD%E4%BB%A4%E7%9A%84%E7%AA%97%E5%8F%A3%E5%8D%B3%E5%8F%AF%E6%98%BE%E7%A4%BAdd%E6%89%A7%E8%A1%8C%E8%BF%9B%E5%BA%A6%EF%BC%8C%E7%9B%B4%E5%88%B0%E4%BB%BB%E5%8A%A1%E5%AE%8C%E6%88%90</a></p>
+<p>dd命令显示进度<br>1.第一个窗口执行dd命令<br>2.另开一个窗口，执行watch -n 5 pkill -USR1 -x dd<br>3.在第一个执行dd命令的窗口即可显示dd执行进度，直到任务完成</p>
+<p>dd 网络磁盘克隆<br>dd if&#x3D;&#x2F;dev&#x2F;sda |ssh xxx.xxx.xxx.xxx “dd of&#x3D;&#x2F;dev&#x2F;sda bs&#x3D;4M”</p>
+<p>linux手动迁移方法<br>1.在目标机器挂起live CD，并配置可通IP地址，开启ssh服务器，设置root密码。2.在原机执行dd if&#x3D;&#x2F;dev&#x2F;sda |ssh xxx.xxx.xxx.xxx “dd of&#x3D;&#x2F;dev&#x2F;sda bs&#x3D;4M”<br>3.第二步完成后再目标机live CD系统中将boot所在分区挂载起来，执行grub-install –root-directory&#x3D;&#x2F;mnt&#x2F;boot &#x2F;dev&#x2F;sda<br>4.目标机reboot<br>5.启动时进入grub&gt;<br>6.ls查看boot所在分区，例如查询可知在（hd0,msdos1）。执行：set root&#x3D;(hd0,msdos1);set prefix&#x3D;(hd0,msdos1)&#x2F;grub2;insmod normal;normal<br>7.执行完以上即可进入系统<br>8.进入系统后执行grub2-install &#x2F;dev&#x2F;sda<br>9.reboot目标机完成迁移。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/13/linux%E4%B8%8B%E6%98%BE%E7%A4%BAdd%E5%91%BD%E4%BB%A4%E7%9A%84%E8%BF%9B%E5%BA%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="英雄本色">
+      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="英雄本色的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/06/13/linux%E4%B8%8B%E6%98%BE%E7%A4%BAdd%E5%91%BD%E4%BB%A4%E7%9A%84%E8%BF%9B%E5%BA%A6/" class="post-title-link" itemprop="url">linux下显示dd命令的进度</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-06-13 14:30:01 / 修改时间：14:31:14" itemprop="dateCreated datePublished" datetime="2024-06-13T14:30:01+08:00">2024-06-13</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>转载 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/potato-chip/p/12759103.html">https://www.cnblogs.com/potato-chip/p/12759103.html</a></p>
+<p>sudo dd if&#x3D;&#x2F;dev&#x2F;zero of&#x3D;&#x2F;tmp&#x2F;zero.img status&#x3D;progress<br>linux下显示dd命令的进度：<br>dd if&#x3D;&#x2F;dev&#x2F;zero of&#x3D;&#x2F;tmp&#x2F;zero.img bs&#x3D;10M count&#x3D;100000<br>想要查看上面的dd命令的执行进度，可以使用下面几种方法：<br>比如：每5秒输出dd的进度<br>方法一：<br>watch -n 5 pkill -USR1 ^dd$</p>
+<p>方法二：<br>watch -n 5 killall -USR1 dd</p>
+<p>方法三：<br>while killall -USR1 dd; do sleep 5; done</p>
+<p>方法四：<br>while (ps auxww |grep “ dd “ |grep -v grep |awk ‘{print $2}’ |while read pid; do kill -USR1 $pid; done) ; do sleep 5; done<br>上述四种方法中使用三个命令：pkill、killall、kill向dd命令发送SIGUSR1信息，dd命令进程接收到信号之后就打印出自己当前的进度。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/12/publish-obsidian-post-to-wordpress/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2123,247 +2248,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/11/My-Github-Stars-4-4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="英雄本色">
-      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="英雄本色的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/06/11/My-Github-Stars-4-4/" class="post-title-link" itemprop="url">My Github Stars 4/4</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2024-06-11 08:26:36 / 修改时间：08:28:14" itemprop="dateCreated datePublished" datetime="2024-06-11T08:26:36+08:00">2024-06-11</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/tensorflower/ArcFace-python">tensorflower&#x2F;ArcFace-python</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/AobingJava/JavaFamily">AobingJava&#x2F;JavaFamily</a>【Java面试+Java学习指南】 一份涵盖大部分Java程序员所需要掌握的核心知识。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jeecgboot/jeecg-boot">jeecgboot&#x2F;jeecg-boot</a>🔥「企业级低代码平台」前后端分离架构SpringBoot 2.x&#x2F;3.x，SpringCloud，Ant Design&amp;Vue，Mybatis，Shiro，JWT。强大的代码生成器让前后端代码一键生成，无需写任何代码! 引领新的开发模式OnlineCoding-&gt;代码生成-&gt;手工MERGE，帮助Java项目解决70%重复工作，让开发更关注业务，既能快速提高效率，帮助公司节省成本，同时又不失灵活性。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/rafsalrahim/flask_image_base64">rafsalrahim&#x2F;flask_image_base64</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/864381832/xJavaFxTool-spring">864381832&#x2F;xJavaFxTool-spring</a>基于JavaFx和SpringBoot搭建的实用小工具集合，方便开发过程中的代码编写与调试，想学习javaFx的同学可以参考参考。其中包括文件复制、Cron表达式生成器、编码转换、加密解密、Time转换、路径转换、二维码生成工具、身份证生成器、正则表达式生成工具、网址缩短、转义字符、字符串转换、Mq调试工具、Http调试工具、json格式化编辑工具、图标生成工具、Redis连接工具、网页源码下载工具、切换Hosts工具、Ftp服务器、Cmd调试工具、Ftp&#x2F;Ftps&#x2F;Sftp客户端调试工具、Pdf转换工具、文件列表生成器、图片压缩工具、图片转码工具、Kafka调试工具、Email群发工具、颜色代码转换工具、短信群发工具、脚本引擎调试、文件重命名、Json转换、语音转换、Socket调试、图片解析、微信小程序反编译、Zookeeper操作、Excel拆分合并、文件夹监控、文件编码检测、传输、端口扫描、久坐提醒、随机数生成、剪贴板历史等工具</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Halle-Astra/Crowd-Counting">Halle-Astra&#x2F;Crowd-Counting</a>人头检测</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/planet0104/webcam_demo">planet0104&#x2F;webcam_demo</a>webcam摄像头串流到网页端</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/sincerefly/camera-detect-face">sincerefly&#x2F;camera-detect-face</a>Python使用OpenCV从摄像头中识别人脸标注后展示到网页</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/weijiawu/information-extraction-of-express">weijiawu&#x2F;information-extraction-of-express</a>基于OpenCV、目标检测对快递单进行识别并提取有用的信息进行处理</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/itboyst/ArcSoftFaceDemo">itboyst&#x2F;ArcSoftFaceDemo</a>ArcSoft基于虹软人脸识别v3.0&#x2F;v4.1 Java服务端Demo代码，最完整的服务端Demo。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zlyBear/BearOCR">zlyBear&#x2F;BearOCR</a>使用OpenCV识别图片文字区域</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/JimmyHHua/opencv_tutorials">JimmyHHua&#x2F;opencv_tutorials</a>Opencv4.0 with python (English&amp;中文)， and will keep the update ! 👊</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/liuqun/njit8021xclient">liuqun&#x2F;njit8021xclient</a>南京工程学院802.1X客户端（Linux版兼容H3C&#x2F;iNode V2.40-F0335）</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ruijanlee/h3cc">ruijanlee&#x2F;h3cc</a>H3c connect - 强力插入你的校园网 - @RuiJanLee</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/disassembly/H3c_Portal-login-logout">disassembly&#x2F;H3c_Portal-login-logout</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/adamwen829/h3c-portal-client">adamwen829&#x2F;h3c-portal-client</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/legendjack/Handwritten-Numeral-Recognition_CNN">legendjack&#x2F;Handwritten-Numeral-Recognition_CNN</a>基于Tensorflow，OpenCV.  使用MNIST数据集训练卷积神经网络模型，用于手写数字识别</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/fengyuanchen/viewerjs">fengyuanchen&#x2F;viewerjs</a>JavaScript image viewer.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/caoym/odr">caoym&#x2F;odr</a>Optical Document Recognition. 一种基于视觉词汇的文本分类方法（ <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/f774e273a883">https://www.jianshu.com/p/f774e273a883</a> ）</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/YLDarren/opencvHandleImg">YLDarren&#x2F;opencvHandleImg</a>opencv处理图片，灰度化、二值化、降噪、切割、归一、矫正</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/airxiechao/simple-car-plate-recognition">airxiechao&#x2F;simple-car-plate-recognition</a>简单车牌识别-Mask_RCNN定位车牌+手写方法分割字符+CNN单个字符识别</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/1zlab/1ZLAB_OpenCV_Handwriting">1zlab&#x2F;1ZLAB_OpenCV_Handwriting</a>OpenCV手写字体识别专题教程主要侧重的是对手写数字样本的采集与预处理部分， 主要包括图像透视变换，二值化，联通阈检索，字符分割。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/chenguanyou/CharacterRecognition">chenguanyou&#x2F;CharacterRecognition</a>百度文字识别api，Python3，包含了(通用文字识别，通用文字识别（含位置信息版），通用文字识别（高精度版），通用文字识别（高精度含位置版），网络图片文字识别，身份证识别，银行卡识别，驾驶证识别，行驶证识别，营业执照识别，车牌识别，表格文字识别-提交请求，通用票据识别，手写文字识别，增值税发票识别，数字识别，欢迎使用！请使用新版文字识别<a target="_blank" rel="noopener" href="https://github.com/chenguanyou/BaiduTextApi">https://github.com/chenguanyou/BaiduTextApi</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/limodou/Win32-Process-Watcher">limodou&#x2F;Win32-Process-Watcher</a>Monitor the execution status of the processes in windows platform.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zhangyinghahaha/data_analysis">zhangyinghahaha&#x2F;data_analysis</a>基于Python的南京二手房数据采集及可视化分析</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/PyImageSearch/imutils">PyImageSearch&#x2F;imutils</a>“A series of convenience functions to make basic image processing operations such as translation, rotation, resizing, skeletonization, and displaying Matplotlib images easier with OpenCV and Python.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Bonfire/OptiGrader">Bonfire&#x2F;OptiGrader</a>OptiGrader is an optical mark recognition (OMR) application that serves as both a scantron grader and an online gradebook.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/HanpuLiang/Simple-Handwritten-Numerel-Recogntion">HanpuLiang&#x2F;Simple-Handwritten-Numerel-Recogntion</a>A simple way to identify handwritten numbers.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/LiuXiaolong19920720/opencv-soduko">LiuXiaolong19920720&#x2F;opencv-soduko</a>Solve soduko in a image based on OpenCV and Python</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/LiuXiaolong19920720/Add-Christmas-Hat">LiuXiaolong19920720&#x2F;Add-Christmas-Hat</a>Add Christmas hat on one’s head based on OpneCV and Dlib</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ArtrixTech/BoomMine">ArtrixTech&#x2F;BoomMine</a>BoomMine - A CV-Based Minesweeper Cheat</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/MachineLP/OpenCV-">MachineLP&#x2F;OpenCV-</a>OpenCV学习笔记</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/qindongliang/answer-sheet-scan">qindongliang&#x2F;answer-sheet-scan</a>answersheet scan or recognition by computer camera 电脑摄像头识别答题卡，可能是最灵活准确率最高的摄像头答题卡扫描开源实现</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/NullYing/answer_paper_recognition">NullYing&#x2F;answer_paper_recognition</a>最简单的答题卡识别核心(顺序读取)</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/charlesmade/opencv_reg">charlesmade&#x2F;opencv_reg</a>识别答题卡</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/liangzelang/Answer-Card-Recognition">liangzelang&#x2F;Answer-Card-Recognition</a>“本项目是用图像处理的方法对常见的答题卡进行检测、识别，得到答题卡的结果。(This project is about Answer Card, using image process methods to detect and recognize the Answer card ,based on OpenCV 3.x)”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/qindongliang/answer_sheet_scan">qindongliang&#x2F;answer_sheet_scan</a>使用python3+opencv3实现的一些识别答题卡的例子</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/MZCretin/DragDemo">MZCretin&#x2F;DragDemo</a>需求解决系列一之移动卡片实现答题功能，移动卡片插入到题干之中完成答题</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/mozilla/geckodriver">mozilla&#x2F;geckodriver</a>WebDriver for Firefox</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ctripcorp/C-OCR">ctripcorp&#x2F;C-OCR</a>  C-OCR是携程自研的OCR项目，主要包括身份证、护照、火车票、签证等旅游相关证件、材料的识别。  项目包含4个部分，拒识、检测、识别、后处理。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/RMerl/asuswrt-merlin">RMerl&#x2F;asuswrt-merlin</a>Enhanced version of Asus’s router firmware (Asuswrt) (legacy code base)</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ZKeeer/WeChatAssistant">ZKeeer&#x2F;WeChatAssistant</a>(放弃维护)PC端微信小工具：撤回消息备份，关键词监听，公众号签到，截图，自定义内容的自动回复，今天吃什么(fun)</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/l123456789jy/WxDatabaseDecryptKey">l123456789jy&#x2F;WxDatabaseDecryptKey</a>读取微信数据库聊天记录备份</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/yincangqiong/arcSoft_ArcFace">yincangqiong&#x2F;arcSoft_ArcFace</a>虹软开源SDK应用于人脸检测</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/SkyStonePan/IDCardVeriDemo_CPP">SkyStonePan&#x2F;IDCardVeriDemo_CPP</a>虹软人证SDK示例Demo，使用QT5.8.2</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/AngelLiang/arcsoft_fdfr_python_demo">AngelLiang&#x2F;arcsoft_fdfr_python_demo</a>虹软人脸认知引擎——Python调用</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/niehen6174/face-recognition-and-put-in-chinese">niehen6174&#x2F;face-recognition-and-put-in-chinese</a>python  opencv</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/niehen6174/face_detection_and_recognition">niehen6174&#x2F;face_detection_and_recognition</a>“face++,百度ai,虹软,face_recognition 实现人脸检测 人脸识别”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/simonw/dbf-to-sqlite">simonw&#x2F;dbf-to-sqlite</a>“CLI tool for converting DBF files (dBase, FoxPro etc) to SQLite”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/leeyiw/dnspod_ddns">leeyiw&#x2F;dnspod_ddns</a>a Python tool to dynamic update DNS record at DNSPod</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/topdogs/lixin-dnspod-ddns">topdogs&#x2F;lixin-dnspod-ddns</a>dnspod动态域名</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/strahe/dnspod-ddns">strahe&#x2F;dnspod-ddns</a>定时检查ip变化并更新dnspod的解析记录.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/CDOTAD/FudanPT">CDOTAD&#x2F;FudanPT</a>复旦大学研究生入学考试初试成绩爬取，都怪复旦大学不提供排名</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zhenchao125/kaoshi">zhenchao125&#x2F;kaoshi</a>考试系统开发</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/yadtang/Check">yadtang&#x2F;Check</a>基于SSM（SpringMVC、Spring和Mybatis）的在线考试系统，主要包括基础信息维护、用户管理、在线考试、在线组卷、成绩查询以及题库维护几部分。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/lsgwr/spring-boot-online-exam">lsgwr&#x2F;spring-boot-online-exam</a>基于Spring Boot的在线考试系统(预览地址 <a target="_blank" rel="noopener" href="http://129.211.88.191/">http://129.211.88.191</a> ，账户分别是admin、teacher、student，密码是admin123)，也有Python实现</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/imalexyang/ExamStack">imalexyang&#x2F;ExamStack</a>国内首款基于JAVA与MYSQL开发的网络考试系统ExamStack(Exam++)</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/LiuBoyu/blockchain">LiuBoyu&#x2F;blockchain</a>区块链 - 中文资源</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/vipstone/faceai">vipstone&#x2F;faceai</a>一款入门级的人脸、视频、文字检测以及识别的项目.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ypwhs/captcha_break">ypwhs&#x2F;captcha_break</a>验证码识别</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/iperov/DeepFaceLab">iperov&#x2F;DeepFaceLab</a>DeepFaceLab is the leading software for creating deepfakes.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/bthicks/OMR-Grader">bthicks&#x2F;OMR-Grader</a>“Grader for bubble sheet multiple choice tests using Optical Mark Recognition, Python, and OpenCV”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Dishcreate/paper_marking_automation">Dishcreate&#x2F;paper_marking_automation</a>MCQ and OEQ paper marking automated by using deep learning model that refer for optical mark detection </li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ctnatsai/optical-mark-reader">ctnatsai&#x2F;optical-mark-reader</a>Makes use of image processing techniques to scan and mark a given students MCQ sheet.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/s9k96/Optical-Mark-Recognition">s9k96&#x2F;Optical-Mark-Recognition</a>Python script to read an omr sheet and perform perspective transform and then calculating the right and wrong bubbled answers. </li>
-<li><a target="_blank" rel="noopener" href="https://github.com/gloomyfish1998/opencv_tutorial">gloomyfish1998&#x2F;opencv_tutorial</a>基于OpenCV4.0 C++&#x2F;Python SDK的案例代码演示程序与效果图像</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Udayraj123/OMRChecker">Udayraj123&#x2F;OMRChecker</a>Evaluate OMR sheets fast and accurately using a scanner 🖨 or your phone 🤳. </li>
-<li><a target="_blank" rel="noopener" href="https://github.com/tsauvine/omr">tsauvine&#x2F;omr</a>Optical mark recognition</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/GregoryCMiller/omr">GregoryCMiller&#x2F;omr</a>Bubble Vision: Optical Mark Reader</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/rbaron/omr">rbaron&#x2F;omr</a>Optical Mark Recognition in Python</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/x-hw/amazing-qr">x-hw&#x2F;amazing-qr</a>💮 amazing QRCode generator in Python (supporting animated gif) - Python amazing 二维码生成器（支持 gif 动态图片二维码）</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/chestnut-egg/Face">chestnut-egg&#x2F;Face</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/iccfish/12306_ticket_helper">iccfish&#x2F;12306_ticket_helper</a>基于Webkit&#x2F;Firefox浏览器，辅助用于12306订票的助手软件。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/pjialin/py12306">pjialin&#x2F;py12306</a>🚂 12306 购票助手，支持集群，多账号，多任务购票以及 Web 页面管理 </li>
-<li><a target="_blank" rel="noopener" href="https://github.com/testerSunshine/12306">testerSunshine&#x2F;12306</a>12306智能刷票，订票</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/0x7c13/Notepads">0x7c13&#x2F;Notepads</a>“A modern, lightweight text editor with a minimalist design.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/deplicate/deplicate">deplicate&#x2F;deplicate</a>Advanced Duplicate File Finder for Python</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/arsenetar/dupeguru">arsenetar&#x2F;dupeguru</a>Find duplicate files</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/QLMX/data_mining_models">QLMX&#x2F;data_mining_models</a>“Basic data mining model, including feature importance display”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/gorakhargosh/watchdog">gorakhargosh&#x2F;watchdog</a>Python library and shell utilities to monitor filesystem events.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/windstormeye/watchDog">windstormeye&#x2F;watchDog</a>🐶 使用微信＋树莓派＋Arduino＋服务器构建你的看门狗</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/nancygaooo/Visualization-Practice">nancygaooo&#x2F;Visualization-Practice</a>Some visualization with different python packages</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/lilydjwg/winterpy">lilydjwg&#x2F;winterpy</a>My python scripts started in winter.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/littlecodersh/ItChat">littlecodersh&#x2F;ItChat</a>A complete and graceful API for Wechat. 微信个人号接口、微信机器人及命令行微信，三十行即可自定义个人号机器人。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/suzhenyu22/sql4pandas">suzhenyu22&#x2F;sql4pandas</a>Something useful tools for data analysis using pandas and sql</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/kootenpv/yagmail">kootenpv&#x2F;yagmail</a>Send email in Python conveniently for gmail using yagmail</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/fire717/Machine-Learning">fire717&#x2F;Machine-Learning</a>机器学习&amp;深度学习资料笔记&amp;基本算法实现&amp;资源整理（ML &#x2F; CV &#x2F; NLP &#x2F; DM…）</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/inspurer/WorkAttendanceSystem">inspurer&#x2F;WorkAttendanceSystem</a>一个基于opencv、dilb的员工人脸识别考勤系统</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/BridgitD/school-dropout-predictions">BridgitD&#x2F;school-dropout-predictions</a>Predicting high school students most at-risk for dropping out of high school</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/rasbt/python-machine-learning-book-2nd-edition">rasbt&#x2F;python-machine-learning-book-2nd-edition</a>“The “”Python Machine Learning (2nd edition)”” book code repository and info resource”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/gto76/python-cheatsheet">gto76&#x2F;python-cheatsheet</a>Comprehensive Python Cheatsheet</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/microsoft/ai-edu">microsoft&#x2F;ai-edu</a>“AI education materials for Chinese students, teachers and IT professionals.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/guyueyingmu/avbook">guyueyingmu&#x2F;avbook</a>“AV 电影管理系统， avmoo , javbus , javlibrary 爬虫，线上 AV 影片图书馆，AV 磁力链接数据库，Japanese Adult Video Library,Adult Video Magnet Links - Japanese Adult Video Database”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/b3log/baidu-netdisk-downloaderx">b3log&#x2F;baidu-netdisk-downloaderx</a>⚡️ 一款图形界面的百度网盘不限速下载器，支持 Windows、Linux 和 Mac。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/taosdata/TDengine">taosdata&#x2F;TDengine</a>“TDengine is an open source, high-performance, cloud native time-series database optimized for Internet of Things (IoT), Connected Cars, Industrial IoT and DevOps.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/cdlwhm1217096231/Machine_Learning">cdlwhm1217096231&#x2F;Machine_Learning</a>机器学习练习代码及相关资料</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/caijie12138/CS224n-2019">caijie12138&#x2F;CS224n-2019</a>Stanford cs224n 2019 homework</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/yanxiali/User_Churn_Predictions">yanxiali&#x2F;User_Churn_Predictions</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/phdshliang/Tianchi_jinnan2_season2_vis">phdshliang&#x2F;Tianchi_jinnan2_season2_vis</a>visualization tools for Tianchi_jinnan2_season2 data</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Thomstrong/Arsenal-DataAnalysis">Thomstrong&#x2F;Arsenal-DataAnalysis</a>Tianchi Data Analysis</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/AmbitionC/Education-Visualization-competition">AmbitionC&#x2F;Education-Visualization-competition</a>Tianchi visualizaiton competition</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/luohao-brian/funny_linux_cmds">luohao-brian&#x2F;funny_linux_cmds</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/rookiezq/Wind">rookiezq&#x2F;Wind</a>用Pyecharts的地理坐标系表示风力分布图</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/TryEnlight/Machine-Learning-Projects">TryEnlight&#x2F;Machine-Learning-Projects</a>Machine Learning Experiments and Work</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/d6t/d6tpipe">d6t&#x2F;d6tpipe</a>Push and pull data files like code</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/apache/superset">apache&#x2F;superset</a>Apache Superset is a Data Visualization and Data Exploration Platform</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Tobby-star/subway_analysis">Tobby-star&#x2F;subway_analysis</a>地铁名-数据分析</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/olemb/dbfread">olemb&#x2F;dbfread</a>Read DBF Files with Python</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/waveform80/pistreaming">waveform80&#x2F;pistreaming</a>A little demo of streaming the Pi’s camera to web browsers</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/TommyZihao/ZihaoTutorialOfRaspberryPi">TommyZihao&#x2F;ZihaoTutorialOfRaspberryPi</a>子豪兄的零基础树莓派教程，代码存放地及更新勘误</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/microsoft/terminal">microsoft&#x2F;terminal</a>“The new Windows Terminal and the original Windows console host, all in the same place!”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jackfrued/Python-100-Days">jackfrued&#x2F;Python-100-Days</a>Python - 100天从新手到大师</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/hanshiqiang365/ocr_demo">hanshiqiang365&#x2F;ocr_demo</a>OCR Demo</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/yanzhou/CnkiSpider">yanzhou&#x2F;CnkiSpider</a>中国知网爬虫</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Alfred1984/interesting-python">Alfred1984&#x2F;interesting-python</a>有趣的Python爬虫和Python数据分析小项目(Some interesting Python crawlers and data analysis projects)</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/starichat/rent_house">starichat&#x2F;rent_house</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/tobyqin/photodup">tobyqin&#x2F;photodup</a>Find duplicate photos (or other file types) on your computer.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Jannchie/Historical-ranking-data-visualization-based-on-d3.js">Jannchie&#x2F;Historical-ranking-data-visualization-based-on-d3.js</a>[Deprecated!] This is a data visualization project that converts historical data rankings into dynamic bar charts.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/shadowsocks/shadowsocks-gui">shadowsocks&#x2F;shadowsocks-gui</a>Shadowsocks GUI client</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/shadowsocks/shadowsocks">shadowsocks&#x2F;shadowsocks</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/10/Shell-Script-to-Update-Cloudflare-Ddns/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="英雄本色">
-      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="英雄本色的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/06/10/Shell-Script-to-Update-Cloudflare-Ddns/" class="post-title-link" itemprop="url">Shell Script to Update Cloudflare Ddns</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2024-06-10 20:09:21 / 修改时间：20:11:35" itemprop="dateCreated datePublished" datetime="2024-06-10T20:09:21+08:00">2024-06-10</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>转载 <a target="_blank" rel="noopener" href="https://echowings.github.io/zh-cn/p/shell-script-to-update-cloudflare-ddns/">https://echowings.github.io/zh-cn/p/shell-script-to-update-cloudflare-ddns/</a><br>Script</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">##############  User Configuration  ###############</span><br><span class="line"># Define programme path</span><br><span class="line"># location_path=&quot;/config/scripts/ddns&quot;</span><br><span class="line">location_path=$(dirname -- &quot;$0&quot;)</span><br><span class="line"></span><br><span class="line"># You Registered CloudFlare  Mail Account</span><br><span class="line">auth_email=&quot;&quot;</span><br><span class="line"></span><br><span class="line"># CloudFlare Global API Key</span><br><span class="line">auth_key=&quot;&quot;</span><br><span class="line"># Root Doman Name</span><br><span class="line">zone_name=&quot;&quot;</span><br><span class="line"></span><br><span class="line"># IP Type，Enter &#x27;ipv4&#x27; or &#x27;ipv6&#x27; ,at here we got paramter from our input</span><br><span class="line">type=$1</span><br><span class="line"></span><br><span class="line"># DDNS Domain Name</span><br><span class="line">record_name=$2</span><br><span class="line"></span><br><span class="line"># WAN INTERFACE</span><br><span class="line">INTERFACE=&quot;&quot;</span><br><span class="line"></span><br><span class="line">#############  Script  ############</span><br><span class="line"># The before WAN IP </span><br><span class="line">ip_file=&quot;$location_path/$1_$2_ip.txt&quot;</span><br><span class="line"></span><br><span class="line"># Domain id information</span><br><span class="line"># Domain id information</span><br><span class="line">id_file=&quot;$location_path/$1_$2_cloudflare.ids&quot;</span><br><span class="line"></span><br><span class="line"># Log location</span><br><span class="line">log_file=&quot;$location_path/cloudflare.log&quot;</span><br><span class="line"></span><br><span class="line">################  Don&#x27;t change here  ###############</span><br><span class="line">##################  Function  ####################</span><br><span class="line">record_type=&quot;&quot;</span><br><span class="line">ip=&quot;&quot;</span><br><span class="line">zone_identifier=&quot;&quot;</span><br><span class="line">record_identifier=&quot;&quot;</span><br><span class="line">update=&quot;&quot;</span><br><span class="line"></span><br><span class="line"># Log function</span><br><span class="line">log() &#123;</span><br><span class="line">    if [ &quot;$1&quot; ]; then</span><br><span class="line">        echo -e &quot;[$(date)] - $1&quot; &gt;&gt; $log_file</span><br><span class="line">    fi</span><br><span class="line">&#125;</span><br><span class="line">#To get local IP address</span><br><span class="line">get_ip() &#123;</span><br><span class="line">    if [ $type == &quot;ipv4&quot; ]; then</span><br><span class="line">	    record_type=&quot;A&quot;</span><br><span class="line">	    ip=$(ip addr | grep $&#123;INTERFACE&#125;  -A2 | grep inet | grep -v inet6  | awk &#x27;&#123;print $2&#125;&#x27;)</span><br><span class="line">    elif [ $type == &quot;ipv6&quot; ]; then</span><br><span class="line">	    record_type=&quot;AAAA&quot;</span><br><span class="line">	    ip=$(ip addr | grep $&#123;INTERFACE&#125;  -A2 | grep inet6  | awk &#x27;&#123;print $2&#125;&#x27; | cut -d &#x27;/&#x27; -f1)</span><br><span class="line">    else</span><br><span class="line">	    echo &quot;Type wrong&quot;</span><br><span class="line">	    log &quot;Type wrong&quot;</span><br><span class="line">        exit 0</span><br><span class="line">    fi</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># Check IP changed or not, if there&#x27;s no change, then terminal programme</span><br><span class="line">check_ip_change() &#123;</span><br><span class="line">    if [ -f $ip_file ]; then</span><br><span class="line">        old_ip=$(cat $ip_file)</span><br><span class="line">        if [ &quot;$ip&quot; == &quot;$old_ip&quot; ]; then</span><br><span class="line">            echo &quot;IP has not changed.&quot;</span><br><span class="line">            log &quot;IP has not changed.&quot;</span><br><span class="line">            exit 0</span><br><span class="line">        fi</span><br><span class="line">    fi</span><br><span class="line">&#125;</span><br><span class="line">#Get zone_id subdomain ID</span><br><span class="line">get_id() &#123;</span><br><span class="line">    if [ -f $id_file ] &amp;&amp; [ $(wc -l $id_file | cut -d &quot; &quot; -f 1) == 2 ]; then</span><br><span class="line">        zone_identifier=$(head -1 $id_file)</span><br><span class="line">        record_identifier=$(tail -1 $id_file)</span><br><span class="line">    else</span><br><span class="line">        zone_identifier=$(curl -s -X GET &quot;https://api.cloudflare.com/client/v4/zones?name=$zone_name&quot; -H &quot;X-Auth-Email: $auth_email&quot; -H &quot;X-Auth-Key: $auth_key&quot; -H &quot;Content-Type: application/json&quot; | grep -Po &#x27;(?&lt;=&quot;id&quot;:&quot;)[^&quot;]*&#x27; | head -1 )</span><br><span class="line">        rec_response_json=`curl -X GET &quot;https://api.cloudflare.com/client/v4/zones/$zone_identifier/dns_records?name=$record_name&quot; -H &quot;X-Auth-Email: $auth_email&quot; -H &quot;X-Auth-Key: $auth_key&quot; -H &quot;Content-Type: application/json&quot;`</span><br><span class="line">        record_identifier=`echo $rec_response_json | grep -Po &#x27;(?&lt;=&quot;id&quot;:&quot;)[^&quot;]*&#x27;`</span><br><span class="line">        echo &quot;$zone_identifier&quot; &gt; $id_file</span><br><span class="line">        echo &quot;$record_identifier&quot; &gt;&gt; $id_file</span><br><span class="line">    fi</span><br><span class="line">&#125;</span><br><span class="line">#Update DNS record</span><br><span class="line">update_dns() &#123;</span><br><span class="line">    update=$(curl -s -X PUT &quot;https://api.cloudflare.com/client/v4/zones/$zone_identifier/dns_records/$record_identifier&quot; -H &quot;X-Auth-Email: $auth_email&quot; -H &quot;X-Auth-Key: $auth_key&quot; -H &quot;Content-Type: application/json&quot; --data &quot;&#123;\&quot;id\&quot;:\&quot;$zone_identifier\&quot;,\&quot;type\&quot;:\&quot;$record_type\&quot;,\&quot;name\&quot;:\&quot;$record_name\&quot;,\&quot;content\&quot;:\&quot;$ip\&quot;&#125;&quot;)</span><br><span class="line">&#125;</span><br><span class="line">###################  Main  ###################</span><br><span class="line">log &quot;Script start.&quot;</span><br><span class="line">#Got IP Address</span><br><span class="line">get_ip</span><br><span class="line"></span><br><span class="line"># Check got the right ip address</span><br><span class="line">if [ &quot;$ip&quot; == &quot;&quot; ]; then</span><br><span class="line">    echo &quot;Can not get IP address.Please check your network connection.&quot;</span><br><span class="line">    log &quot;Can not get IP address.Please check your network connection.&quot;</span><br><span class="line">    exit 0</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"># Check IP changed or not</span><br><span class="line">check_ip_change</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># Get zone_id and sumdomain record ID</span><br><span class="line">get_id</span><br><span class="line"></span><br><span class="line"># Check get ID successfully or not</span><br><span class="line">if [ &quot;$zone_identifier&quot; == &quot;&quot; ]; then</span><br><span class="line">    echo &quot;Can not get zone_id.&quot;</span><br><span class="line">    log &quot;Can not get zone_id.&quot;</span><br><span class="line">    exit 0</span><br><span class="line">elif [ &quot;$record_identifier&quot; == &quot;&quot; ]; then</span><br><span class="line">    echo &quot;Can not get record_id.&quot;</span><br><span class="line">    log &quot;Can not get record_id.&quot;</span><br><span class="line">    exit 0</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"># Update DNS Record</span><br><span class="line">update_dns</span><br><span class="line"></span><br><span class="line"># Check DNS record updated or not</span><br><span class="line">if [[ $update == *&quot;\&quot;success\&quot;:false&quot;* ]]; then</span><br><span class="line">    log &quot;API UPDATE FAILED. DUMPING RESULTS:\n$update&quot;</span><br><span class="line">    echo -e &quot;API UPDATE FAILED. DUMPING RESULTS:\n$update&quot;</span><br><span class="line">    exit 0</span><br><span class="line">else</span><br><span class="line">    echo &quot;$ip&quot; &gt; $ip_file</span><br><span class="line">    log &quot;$record_name IP changed to: $ip&quot;</span><br><span class="line">    echo &quot;$record_name IP changed to: $ip&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
-<p>How to run the script</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#update A record</span><br><span class="line">sudo bash /config/scripts/ddns/cloudflare-ddns.sh ipv4 &lt;MY_DOMAIN_NAME&gt;</span><br><span class="line"></span><br><span class="line">#update AAAA record</span><br><span class="line">sudo bash /config/scripts/ddns/cloudflare-ddns.sh ipv6 &lt;MY_DOMAIN_NAME&gt;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2433,7 +2317,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">18</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
