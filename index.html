@@ -178,6 +178,89 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/14/linux%E4%B8%AD%E6%8C%82%E8%BD%BDIMG%E6%96%87%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="英雄本色">
+      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="英雄本色的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/06/14/linux%E4%B8%AD%E6%8C%82%E8%BD%BDIMG%E6%96%87%E4%BB%B6/" class="post-title-link" itemprop="url">linux中挂载IMG文件</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-06-14 17:17:35 / 修改时间：17:18:25" itemprop="dateCreated datePublished" datetime="2024-06-14T17:17:35+08:00">2024-06-14</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>原文：<a target="_blank" rel="noopener" href="http://www.linuxsir.org/bbs/thread334903.html">http://www.linuxsir.org/bbs/thread334903.html</a></p>
+<ol>
+<li><p>先查看第一个空闲loop设备<br>Shell代码<br>sudo losetup -f<br>&#x2F;dev&#x2F;loop0  </p>
+</li>
+<li><p>使用上一步得到的设备名，第一次创建loop设备<br>Shell代码<br>sudo losetup &#x2F;dev&#x2F;loop0 archlinux-2008.06-core-i686.img  </p>
+</li>
+<li><p>查看信息<br>Shell代码<br>sudo fdisk -lu &#x2F;dev&#x2F;loop0</p>
+</li>
+</ol>
+<p>Disk &#x2F;dev&#x2F;loop0: 322 MB, 322469376 bytes<br>53 heads, 12 sectors&#x2F;track, 990 cylinders, total 629823 sectors<br>Units &#x3D; sectors of 1 * 512 &#x3D; 512 bytes<br>Disk identifier: 0x00000000  </p>
+<pre><code>  Device Boot      Start         End      Blocks   Id  System  
+</code></pre>
+<p>&#x2F;dev&#x2F;loop0p1   *          63      629822      314880   83  Linux<br>Partition 1 has different physical&#x2F;logical beginnings (non-Linux?):<br>     phys&#x3D;(0, 1, 1) logical&#x3D;(0, 5, 4)<br>Partition 1 has different physical&#x2F;logical endings:<br>     phys&#x3D;(39, 52, 12) logical&#x3D;(990, 15, 3)  </p>
+<p>我们可以看到，该镜像只有一个分区(loop0p1)，从第63扇区开始(Start列)，每扇区512字节(Units &#x3D; sectors of 1 * 512 &#x3D; 512 bytes)，我们算出offset，下面mout命令会用到：<br>Shell代码<br>63*512&#x3D;32256  </p>
+<ol start="4">
+<li>mout<br>Shell代码<br>sudo losetup -o 32256 &#x2F;dev&#x2F;loop1 archlinux-2008.06-core-i686.img<br>sudo mount -o loop &#x2F;dev&#x2F;loop1 &#x2F;mnt&#x2F;<br>ls &#x2F;mnt&#x2F;<br>addons  archlive.sqfs  boot  lost+found</li>
+</ol>
+<p>事实上，fdisk可以直接查看img文件(虽然功能不全，下面会说到)，mount可以自动创建loop设备，所以上面步骤可以简化为：<br>I. 查看信息<br>Shell代码<br>sudo fdisk -lu archlinux-2008.06-core-i686.img<br>You must set cylinders.<br>You can do this from the extra functions menu.  </p>
+<p>Disk archlinux-2008.06-core-i686.img: 0 MB, 0 bytes<br>53 heads, 12 sectors&#x2F;track, 0 cylinders, total 0 sectors<br>Units &#x3D; sectors of 1 * 512 &#x3D; 512 bytes<br>Disk identifier: 0x00000000  </p>
+<pre><code>                      Device Boot      Start         End      Blocks   Id  System  
+</code></pre>
+<p>archlinux-2008.06-core-i686.img1   *          63      629822      314880   83  Linux<br>Partition 1 has different physical&#x2F;logical beginnings (non-Linux?):<br>     phys&#x3D;(0, 1, 1) logical&#x3D;(0, 5, 4)<br>Partition 1 has different physical&#x2F;logical endings:<br>     phys&#x3D;(39, 52, 12) logical&#x3D;(990, 15, 3)  </p>
+<p>第一行抱怨不能得到cylinders，原因是普通文件上没有实现ioctl操作，我们可以看到0 cylinders，但这对我们不重要，关键是我们依然可以得到第一个分区（archlinux-2008.06-core-i686.img1）的偏移值</p>
+<p>II. 直接mount<br>Shell代码<br>sudo mount -o loop,offset&#x3D;32256 archlinux-2008.06-core-i686.img &#x2F;mnt&#x2F;<br>ls &#x2F;mnt&#x2F;<br>addons  archlive.sqfs  boot  lost+found  </p>
+<p>参考Loop-mounting partitions from a disk image</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/14/Linux%E4%B8%AD%E6%8C%82%E8%BD%BD%E5%90%84%E7%A7%8D%E6%A0%BC%E5%BC%8F%E9%95%9C%E5%83%8F%E7%9A%84%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1320,370 +1403,10 @@ echo 12345 | tee - -
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/11/My-Github-Stars-1-4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="英雄本色">
-      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="英雄本色的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/06/11/My-Github-Stars-1-4/" class="post-title-link" itemprop="url">My Github Stars 1/4</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2024-06-11 08:26:59 / 修改时间：08:29:23" itemprop="dateCreated datePublished" datetime="2024-06-11T08:26:59+08:00">2024-06-11</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/oarriaga/paz">oarriaga&#x2F;paz</a>“Hierarchical perception library in Python for pose estimation, object detection, instance segmentation, keypoint estimation, face recognition, etc.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/oarriaga/face_classification">oarriaga&#x2F;face_classification</a>Real-time face detection and emotion&#x2F;gender classification using fer2013&#x2F;imdb datasets with a keras CNN model and openCV.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/a514514772/Real-Time-Facial-Expression-Recognition-with-DeepLearning">a514514772&#x2F;Real-Time-Facial-Expression-Recognition-with-DeepLearning</a>A real-time facial expression recognition system with webcam streaming and CNN</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/snuc/poj">snuc&#x2F;poj</a>PKU JudgeOnline Accepted Source Code</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jiahao1001/OJ_Guide">jiahao1001&#x2F;OJ_Guide</a>POJ机试题目分类。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/wistbean/learn_python3_spider">wistbean&#x2F;learn_python3_spider</a>python爬虫教程系列、从0到1学习python爬虫，包括浏览器抓包，手机APP抓包，如 fiddler、mitmproxy，各种爬虫涉及的模块的使用，如：requests、beautifulSoup、selenium、appium、scrapy等，以及IP代理，验证码识别，Mysql，MongoDB数据库的python使用，多线程多进程爬虫的使用，css 爬虫加密逆向破解，JS爬虫逆向，分布式爬虫，爬虫项目实战实例等</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/qk-antares/antares-oj-frontend">qk-antares&#x2F;antares-oj-frontend</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/qdlaoyao/js-regex-mini-book">qdlaoyao&#x2F;js-regex-mini-book</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Relph1119/black-hat-python-2nd">Relph1119&#x2F;black-hat-python-2nd</a>“《Python黑帽子-黑客与渗透测试编程之道》(Black Hat Python, 2nd Edition)阅读笔记”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/giantbranch/python-hacker-code">giantbranch&#x2F;python-hacker-code</a>《python黑帽子：黑客与渗透测试编程之道》代码及实验文件，字典等</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Bowen7/regex-vis">Bowen7&#x2F;regex-vis</a>🎨 Regex visualizer &amp; editor</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/wanghongenpin/network_proxy_flutter">wanghongenpin&#x2F;network_proxy_flutter</a>“Open source free capture HTTP(S) traffic  software ProxyPin, supporting full platform systems”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/usebruno/bruno">usebruno&#x2F;bruno</a>Opensource IDE For Exploring and Testing Api’s (lightweight alternative to postman&#x2F;insomnia)</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/antonmedv/fx">antonmedv&#x2F;fx</a>Terminal JSON viewer &amp; processor</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jaywcjlove/reference">jaywcjlove&#x2F;reference</a>为开发人员分享快速参考备忘清单(速查表)</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/NaiboWang/EasySpider">NaiboWang&#x2F;EasySpider</a>A visual no-code&#x2F;code-free web crawler&#x2F;spider易采集：一个可视化浏览器自动化测试&#x2F;数据采集&#x2F;爬虫软件，可以无代码图形化的设计和执行爬虫任务。别名：ServiceWrapper面向Web应用的智能化服务封装系统。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/heyman/heynote">heyman&#x2F;heynote</a>A dedicated scratchpad for developers</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/gchq/CyberChef">gchq&#x2F;CyberChef</a>“The Cyber Swiss Army Knife - a web app for encryption, encoding, compression and data analysis”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/schlagmichdoch/PairDrop">schlagmichdoch&#x2F;PairDrop</a>PairDrop: Local file sharing in your browser. Inspired by Apple’s AirDrop. Fork of Snapdrop.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/handsontable/handsontable">handsontable&#x2F;handsontable</a>“JavaScript data grid with a spreadsheet look &amp; feel. Works with React, Angular, and Vue. Supported by the Handsontable team ⚡”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/SpiderClub/smart_login">SpiderClub&#x2F;smart_login</a>各大网站登陆方式，有的是通过selenium登录，有的是通过抓包直接模拟登录（精力原因，目前不再继续维护）</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/avwo/whistle">avwo&#x2F;whistle</a>“HTTP, HTTP2, HTTPS, Websocket debugging proxy”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Why8n/EasyTrain">Why8n&#x2F;EasyTrain</a>12306自动抢票软件</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/gorse-io/gorse">gorse-io&#x2F;gorse</a>Gorse open source recommender system engine</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/RVC-Boss/GPT-SoVITS">RVC-Boss&#x2F;GPT-SoVITS</a>1 min voice data can also be used to train a good TTS model! (few shot voice cloning)</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/xianrendzw/EasyReport">xianrendzw&#x2F;EasyReport</a>“A simple and easy to use Web Report System for java.EasyReport是一个简单易用的Web报表工具(支持Hadoop,HBase及各种关系型数据库),它的主要功能是把SQL语句查询出的行列结构转换成HTML表格(Table)，并支持表格的跨行(RowSpan)与跨列(ColSpan)。同时它还支持报表Excel导出、图表显示及固定表头与左边列的功能。”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/saltbo/zpan">saltbo&#x2F;zpan</a>A self-hosted cloud disk base on the cloud storage.&#x2F; 一个基于云存储的网盘系统，用于自建私人网盘或企业网盘。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/nocodb/nocodb">nocodb&#x2F;nocodb</a>🔥 🔥 🔥 Open Source Airtable Alternative</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Liuian/Tools">Liuian&#x2F;Tools</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/openai/whisper">openai&#x2F;whisper</a>Robust Speech Recognition via Large-Scale Weak Supervision</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/IsAmitprajapati/Restaurant-E-Commerce-Website">IsAmitprajapati&#x2F;Restaurant-E-Commerce-Website</a>“Functionality Like checkout, login with firebase, payment, product filter, upload the product details and image in firebase (admin) , admin only upload the product, most important think mobile responsive is also.  A modern UI conforms to your audience’s existing perspective of what they think qualifies as a credible visual experience.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/heyform/heyform">heyform&#x2F;heyform</a>“HeyForm is an open-source form builder that allows anyone to create engaging conversational forms for surveys, questionnaires, quizzes, and polls. No coding skills required.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Rockyzsu/JS-Reverse">Rockyzsu&#x2F;JS-Reverse</a>JS逆向 记录。使用密码登录的网站的加密JS代码</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/dotja/authentication_app_react_django_rest">dotja&#x2F;authentication_app_react_django_rest</a>Authentication app using React and Django REST framework</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/lmliheng/image">lmliheng&#x2F;image</a>flask图库</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/teableio/teable">teableio&#x2F;teable</a>✨ The Next Gen Airtable Alternative: No-Code Postgres</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/TandoorRecipes/recipes">TandoorRecipes&#x2F;recipes</a>“Application for managing recipes, planning meals, building shopping lists and much much more!”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Fridolph/my-resume">Fridolph&#x2F;my-resume</a>个人简历，Vue3+TypeScript +Tailwind CSS + i18n全新版本</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/HalseySpicy/Geeker-Admin">HalseySpicy&#x2F;Geeker-Admin</a>✨✨✨ Geeker Admin，基于 Vue3.4、TypeScript、Vite5、Pinia、Element-Plus 开源的一套后台管理框架。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/PicGo">Molunerfinn&#x2F;PicGo</a>:rocket:A simple &amp; beautiful tool for pictures uploading built by vue-cli-electron-builder</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/codeskyblue/gohttpserver">codeskyblue&#x2F;gohttpserver</a>“The best HTTP Static File Server, write with golang+vue”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Textualize/toolong">Textualize&#x2F;toolong</a>“A terminal application to view, tail, merge, and search log files (plus JSONL).”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Cartoonssss/SpringBoot-Vue">Cartoonssss&#x2F;SpringBoot-Vue</a>大三下学期的小组课程设计项目，后台使用了SpringBoot的框架，前台使用Vue框架搭建的一个在线考试系统</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/HahaLhh/Ts-Vue-ElementUI">HahaLhh&#x2F;Ts-Vue-ElementUI</a>Ts+Vue+ElementUI后台课程管理系统</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/islandowner-web/IT-MOOC">islandowner-web&#x2F;IT-MOOC</a>基于Django2.2开发的IT教育学习平台（视频学习，线上作业，课程推荐，双后台权限分离）</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/facefusion/facefusion">facefusion&#x2F;facefusion</a>Next generation face swapper and enhancer</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/mattermost/mattermost">mattermost&#x2F;mattermost</a>Mattermost is an open source platform for secure collaboration across the entire software development lifecycle..</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/HalilDeniz/BackDoorSim">HalilDeniz&#x2F;BackDoorSim</a>BackdoorSim: An Educational into Remote Administration Tools</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/HalilDeniz/PassBreaker">HalilDeniz&#x2F;PassBreaker</a>PassBreaker</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/newbee-ltd/vue3-admin">newbee-ltd&#x2F;vue3-admin</a>🔥 🎉Vue 3 + Vite 2 + Vue-Router 4 + Element-Plus + Echarts 5 + Axios 开发的后台管理系统</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Linzecong/LPOJ">Linzecong&#x2F;LPOJ</a>An open source online judge system base on Django REST framework and Vue.js !</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/stepui/stepin-template">stepui&#x2F;stepin-template</a>an admin template built with antdv、tailwindcss、vue and vite</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/iczer/vue-antd-admin">iczer&#x2F;vue-antd-admin</a>🐜 Ant Design Pro’s implementation with Vue</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/DengBoCong/easy-shop">DengBoCong&#x2F;easy-shop</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/cjymz886/sentence-similarity">cjymz886&#x2F;sentence-similarity</a>对四种句子&#x2F;文本相似度计算方法进行实验与比较</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/API-Imperfect/django-real-estate">API-Imperfect&#x2F;django-real-estate</a>“A Simple real estate app, built with React, Redux, NGINX, Docker and more…. 🐍  😎”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/cloudreve/Cloudreve">cloudreve&#x2F;Cloudreve</a>“🌩支持多家云存储的云盘系统 (Self-hosted file management and sharing system, supports multiple storage providers)”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/tabler/tabler">tabler&#x2F;tabler</a>Tabler is free and open-source HTML Dashboard UI Kit built on Bootstrap</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/mickael-kerjean/filestash">mickael-kerjean&#x2F;filestash</a>“🦄 A modern web client for SFTP, S3, FTP, WebDAV, Git, Minio, LDAP, CalDAV, CardDAV, Mysql, Backblaze, …”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/cornflourblue/react-18-redux-registration-login-example">cornflourblue&#x2F;react-18-redux-registration-login-example</a>React 18 + Redux - User Registration and Login Example &amp; Tutorial</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/lionsoul2014/ip2region">lionsoul2014&#x2F;ip2region</a>“Ip2region (2.0 - xdb) is a offline IP address manager framework and locator, support billions of data segments, ten microsecond searching performance. xdb engine implementation for many programming languages”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/bnhf/openvpn-admin-plus">bnhf&#x2F;openvpn-admin-plus</a>“Docker-based web interface (with golang backend) for monitoring and admin of an OpenVPN TAP&#x2F;TUN server setup with PiVPN or other OpenVPN server installations. This project has been renamed from pivpn-tap-web-ui, to reflect its new broader scope.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/bnhf/docker-openvpn">bnhf&#x2F;docker-openvpn</a>🔒 OpenVPN server in a Docker container complete with an EasyRSA PKI CA</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/luchx/axios-request">luchx&#x2F;axios-request</a>面向 axios 的配置化请求封装，内置支持 报错提示、请求取消、防抖、文件下载等功能</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/BaiFangZi/vue3-antd-manage">BaiFangZi&#x2F;vue3-antd-manage</a>Vue3 + Antd 开发的项目管理系统，集成常用文件类型的导出以及文件的下载，虚拟列表以及懒加载的性能优化，图表地图、权限管理等管理系统的常用功能，持续集成中。。。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/aLittleDonkey/poetize-ui-vue2">aLittleDonkey&#x2F;poetize-ui-vue2</a>个人博客 聊天室，挑战最美博客，使用 SpringBoot 和 Vue 的个人网站</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/codekitchen-community/fine-weather">codekitchen-community&#x2F;fine-weather</a>An album application. Demo: <a target="_blank" rel="noopener" href="https://fine-weather-gallery.tkzt.cn/">https://fine-weather-gallery.tkzt.cn/</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/react-auth-kit/react-auth-kit">react-auth-kit&#x2F;react-auth-kit</a>Powerful Auth Management library for ReactJs-based applications </li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ipenywis/react-easy-auth">ipenywis&#x2F;react-easy-auth</a>React Login with very easy authentication using react-auth-kit library. Explained on CoderOne Youtube channel</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/root-lucas/react-admin-backend">root-lucas&#x2F;react-admin-backend</a>客户端基于react + antd 实现，服务端基于express + mongodb实现</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/P-J27/Front-end-learning-notes">P-J27&#x2F;Front-end-learning-notes</a>前端学习的笔记库</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/btc022003/hdf-manager-app-public">btc022003&#x2F;hdf-manager-app-public</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/chrisblakely01/mern-booking-app">chrisblakely01&#x2F;mern-booking-app</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/veryacademy/YT-Django-DRF-Simple-Blog-Series-JWT-Part-3">veryacademy&#x2F;YT-Django-DRF-Simple-Blog-Series-JWT-Part-3</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/veryacademy/docker-mastery-with-django">veryacademy&#x2F;docker-mastery-with-django</a>“Docker Mastery with Django is an open-source initiative and tutorial series. Learn from a beginner level how to use Docker, compose and Kubernetes for django projects.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/SteinOveHelset/djackets_django">SteinOveHelset&#x2F;djackets_django</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/rspadinger/SurveyKing">rspadinger&#x2F;SurveyKing</a>Fullstack Node.js - React app that uses webhooks (for SendGrid) and Stripe payment integration - <a target="_blank" rel="noopener" href="http://www.surveyking.fswebdev.info/">http://www.surveyking.fswebdev.info</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/javahuang/SurveyKing">javahuang&#x2F;SurveyKing</a>Make a better survey system.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ArjanCodes/2022-docker">ArjanCodes&#x2F;2022-docker</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/andyahn91/face-recognition.js">andyahn91&#x2F;face-recognition.js</a>Simple Node.js package for robust face detection and face recognition. JavaScript and TypeScript API.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ed-roh/fullstack-admin">ed-roh&#x2F;fullstack-admin</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/gitdagray/react_protected_routes">gitdagray&#x2F;react_protected_routes</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/linkedweb/auth-site">linkedweb&#x2F;auth-site</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/cornflourblue/react-hooks-redux-registration-login-example">cornflourblue&#x2F;react-hooks-redux-registration-login-example</a>React Hooks + Redux - User Registration and Login Tutorial &amp; Example</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/OPN48/pyLogmanage">OPN48&#x2F;pyLogmanage</a>一个python3日志切割分片、压缩、监听发送到钉钉通知的开源项目，解决很多教程忽略reopen操作导致日志分割压缩后需要重启服务后才能写入问题，支持Nginx、uwsig日志分析，报文头自动添加服务器外网IP便于识别，不用每一台服务器都设置别名。压缩后新增的日志tar大小通知，日志文件过期自动删除，单日志文件过大提醒，一秒内同IP多次请求通知（防CC攻击）等功能</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/gitdagray/mern_stack_course">gitdagray&#x2F;mern_stack_course</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/cornflourblue/react-18-redux-jwt-authentication-example">cornflourblue&#x2F;react-18-redux-jwt-authentication-example</a>React 18 + Redux - JWT Authentication Example &amp; Tutorial</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/adrianhajdin/project_mern_memories">adrianhajdin&#x2F;project_mern_memories</a>“This is a code repository for the corresponding video tutorial. Using React, Node.js, Express &amp; MongoDB you’ll learn how to build a Full Stack MERN Application - from start to finish. The App is called “”Memories”” and it is a simple social media app that allows users to post interesting events that happened in their lives.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/usememos/memos">usememos&#x2F;memos</a>“An open source, lightweight note-taking service. Easily capture and share your great thoughts.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/gitdagray/redux_jwt_auth">gitdagray&#x2F;redux_jwt_auth</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/gitdagray/nodejs_jwt_auth">gitdagray&#x2F;nodejs_jwt_auth</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/MonadWizard/django_CRM_project">MonadWizard&#x2F;django_CRM_project</a>Customer Management System using Django </li>
-<li><a target="_blank" rel="noopener" href="https://github.com/MonadWizard/React_Django_auth">MonadWizard&#x2F;React_Django_auth</a>“djoser auth registration, login, update from mail conformation”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/RodolfoMoralesTH/Contact-Keeper">RodolfoMoralesTH&#x2F;Contact-Keeper</a>MERN stack app with Express Server </li>
-<li><a target="_blank" rel="noopener" href="https://github.com/themusharraf/datafram">themusharraf&#x2F;datafram</a>Copy data from excel to database in django </li>
-<li><a target="_blank" rel="noopener" href="https://github.com/themusharraf/Login_Register">themusharraf&#x2F;Login_Register</a>one push full version</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/themusharraf/E-commerce">themusharraf&#x2F;E-commerce</a>GreatKart online shop full 🍒</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/njoromyke/mern-fullstack-interview">njoromyke&#x2F;mern-fullstack-interview</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/haris18896/customer-mangment-platform">haris18896&#x2F;customer-mangment-platform</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/haris18896/mediacms">haris18896&#x2F;mediacms</a>“MediaCMS is a modern, fully featured open source video and media CMS, written in Python&#x2F;Django and React, featuring a REST API.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/divanov11/proshop_django">divanov11&#x2F;proshop_django</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ErdemOzsoy13/Proshop">ErdemOzsoy13&#x2F;Proshop</a>PropShop Ecommerce Website With Django + React</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/hyechanshin/ProShop">hyechanshin&#x2F;ProShop</a>PropShop Ecommerce Website With Django + React</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ahyiru/huxy-admin">ahyiru&#x2F;huxy-admin</a>“Huxy Admin is a customizable admin dashboard template based on React. Built with Webpack, @huxy&#x2F;pack, useRouter, useStore, etc.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/kaizen-cmd/Docker-React-Django-Nginx-PostgreSQL-Production-Template">kaizen-cmd&#x2F;Docker-React-Django-Nginx-PostgreSQL-Production-Template</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/mikelp13/react-useful-custom-hooks">mikelp13&#x2F;react-useful-custom-hooks</a>“react custom hooks : useInput, useHover, useDebounce, useScroll&#x2F;useInfinitePagination, useRequest”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/linkedweb/auth_system">linkedweb&#x2F;auth_system</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/sanjay-arya/react-auth-demo">sanjay-arya&#x2F;react-auth-demo</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zidanDirk/react-jwt-cn">zidanDirk&#x2F;react-jwt-cn</a>在 React Router 中使用 JWT</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jameshenry2020/complete-authentication-with-JWT-and-Social-Auth-in-django-rest-framework-and-react">jameshenry2020&#x2F;complete-authentication-with-JWT-and-Social-Auth-in-django-rest-framework-and-react</a>this is a django rest framework project authentication with jwt and Oauth </li>
-<li><a target="_blank" rel="noopener" href="https://github.com/taniarascia/takenote">taniarascia&#x2F;takenote</a>📝  ‎ A web-based notes app for developers.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/bonface221/smart-notes-">bonface221&#x2F;smart-notes-</a>Smart notes -django app</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/bonface221/djoser-tutorial">bonface221&#x2F;djoser-tutorial</a>Django authentication using djoser and django rest framework and using react in the frontend</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/scalablescripts/react-auth">scalablescripts&#x2F;react-auth</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/k8scat/DjangoBlog">k8scat&#x2F;DjangoBlog</a>🍺基于Django的博客系统</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/wuyouzhuguli/SpringAll">wuyouzhuguli&#x2F;SpringAll</a>循序渐进，学习Spring Boot、Spring Boot &amp; Shiro、Spring Batch、Spring Cloud、Spring Cloud Alibaba、Spring Security &amp; Spring Security OAuth2，博客Spring系列源码：<a target="_blank" rel="noopener" href="https://mrbird.cc/">https://mrbird.cc</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/isxiaochen/Chen-API">isxiaochen&#x2F;Chen-API</a>一个丰富的API开放调用平台，为开发者提供便捷、实用、安全的API调用体验</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/newpanjing/simpleui">newpanjing&#x2F;simpleui</a>A modern theme based on vue+element-ui for django admin.一款基于vue+element-ui的django admin现代化主题。全球20000+网站都在使用！喜欢可以点个star✨</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/newpanjing/myblog">newpanjing&#x2F;myblog</a>python开发的博客系统，基于django和django-simpleui</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/myminwang/online">myminwang&#x2F;online</a>Python3+Django+MySQL+Xadmin 在线学习平台</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/myminwang/myblog">myminwang&#x2F;myblog</a>Python+Django+MySQL 博客系统</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/xyjw/diango-vue">xyjw&#x2F;diango-vue</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/caoqianming/django-vue-admin">caoqianming&#x2F;django-vue-admin</a>“基于RBAC模型权限控制的中小型应用的基础开发平台,前后端分离,后端采用django+django-rest-framework,前端采用vue+ElementUI,移动端采用uniapp+uView(可发布h5和小程序).”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/mtianyan/VueDjangoAntdProBookShop">mtianyan&#x2F;VueDjangoAntdProBookShop</a>Vue前台 + Django3.1 + DjangoRestful Framework + Ant Design Pro V4 开发的二手书商城网站及后台管理</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/QingdaoU/OnlineJudgeDeploy">QingdaoU&#x2F;OnlineJudgeDeploy</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zongzibinbin/MallChat">zongzibinbin&#x2F;MallChat</a>mallchat的后端项目，是一个既能购物又能聊天的电商系统。以互联网企业级开发规范的要求来实现它，电商该有的购物车，订单，支付，推荐，搜索，拉新，促活，推送，物流，客服，它都必须有。持续更新ing。。（点个star，不迷路）</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/MrWQ/sqlfather-docker">MrWQ&#x2F;sqlfather-docker</a>用docker对鱼皮的sqlfather进行了打包封装</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/MrWQ/ip_watcher">MrWQ&#x2F;ip_watcher</a>端口监控</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/safak/nextadmin">safak&#x2F;nextadmin</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/WebDevSimplified/face-api.js">WebDevSimplified&#x2F;face-api.js</a>JavaScript API for face detection and face recognition in the browser and nodejs with tensorflow.js</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/WebDevSimplified/react-todo-list">WebDevSimplified&#x2F;react-todo-list</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/gitdagray/react_jwt_auth">gitdagray&#x2F;react_jwt_auth</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/bezkoder/react-hooks-jwt-auth">bezkoder&#x2F;react-hooks-jwt-auth</a>“React Hooks JWT Auth using React Router, Axios, Bootstrap: Token based Authentication &amp; Authorization”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/1lrh/lrhaoo">1lrh&#x2F;lrhaoo</a>前后端分离的博客网站，基于react+redux+antd+flask+jwt+sqlalchemy+docker</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jackchen0120/todo-nodejs-api">jackchen0120&#x2F;todo-nodejs-api</a>NodeJS全栈开发之后端接口技术栈基于Node.js+Express+Mysql实现RESTFUL API</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jackchen0120/react-ts-antd">jackchen0120&#x2F;react-ts-antd</a>NodeJS全栈开发之前端基于 React全家桶+TypeScript+Antd 构建用户界面，功能包括：登录，注册，找回密码，自动登录，登出，错误页面，todoList增删改查CRUD</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/PlumDong/react-demo-heima">PlumDong&#x2F;react-demo-heima</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/P1kaj1uu/heima-react-pc">P1kaj1uu&#x2F;heima-react-pc</a>仿照黑马React极客园PC项目（React Hooks + TypeScript + Mobx + Antd）</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/bezkoder/react-jwt-auth">bezkoder&#x2F;react-jwt-auth</a>React JWT Authentication &amp; Authorization example - React.js Login and Registration example</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Yuezi32/vite-react-app-2023summer">Yuezi32&#x2F;vite-react-app-2023summer</a>基于Vite4的React项目全家桶</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/miguelgrinberg/react-microblog">miguelgrinberg&#x2F;react-microblog</a>Code for my React Mega-Tutorial course.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/521xueweihan/GitHub520">521xueweihan&#x2F;GitHub520</a>:kissing_heart: 让你“爱”上 GitHub，解决访问时图裂、加载慢的问题。（无需安装）</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/obabichev/react-token-auth">obabichev&#x2F;react-token-auth</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/app-generator/react-datta-able">app-generator&#x2F;react-datta-able</a>React Node JS - Datta Able (Free Product) | AppSeed</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/app-generator/api-server-flask">app-generator&#x2F;api-server-flask</a>Flask API Server - Open-Source API Server | AppSeed</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/app-generator/flask-datta-able">app-generator&#x2F;flask-datta-able</a>Datta Able - Open-Source Flask Dashboard | AppSeed</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/bauerem/uploader-downloader-template">bauerem&#x2F;uploader-downloader-template</a>A template for Flask+React(+Docker) webapps that need &#x2F;api&#x2F;upload and &#x2F;api&#x2F;download routes.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/CharlyJazz/Upload-Download-Files">CharlyJazz&#x2F;Upload-Download-Files</a>“Examples of how upload and download files using differents approach like S3, Web Sockets, Streams, GCP Storage (Work in Progress)”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/myogeshchavan97/react-upload-download-files">myogeshchavan97&#x2F;react-upload-download-files</a>Drag and Drop file upload with image preview and download file functionality using MERN stack</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/lucas-issa/simple-react-dropzone">lucas-issa&#x2F;simple-react-dropzone</a>“Implements some simple functionalities over react-dropzone that should solve most cases of file upload, delete and download, keeping all flexibility of dropzone, if needed.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/vasut02/File-Upload-And-Downlad">vasut02&#x2F;File-Upload-And-Downlad</a>“Tech Stack: PostgreSQL , sequelize , express js , react js “</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/kentcdodds/bookshelf">kentcdodds&#x2F;bookshelf</a>Build a ReactJS App workshop</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/calmound/book-admin-react">calmound&#x2F;book-admin-react</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/erdemozg/nextjs-flask-custom-jwt-auth">erdemozg&#x2F;nextjs-flask-custom-jwt-auth</a>a simple project to demonstrate custom jwt authentication in a nextjs app with a flask rest api</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/DiegoAndresMarmota/Autenticacion-JWT-Flask-React">DiegoAndresMarmota&#x2F;Autenticacion-JWT-Flask-React</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/dternyak/React-Redux-Flask">dternyak&#x2F;React-Redux-Flask</a>Boilerplate application for a Python&#x2F;Flask JWT Backend and a Javascript&#x2F;React&#x2F;Redux Front-End with Material UI.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Huachao/vscode-restclient">Huachao&#x2F;vscode-restclient</a>REST Client Extension for Visual Studio Code</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/mortegac/4geeks-api-flask-jwt">mortegac&#x2F;4geeks-api-flask-jwt</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/melakhvision/docker-openvpn-web-ui">melakhvision&#x2F;docker-openvpn-web-ui</a>(self-proclaimed) best OpenVPN-web-ui container on GitHub</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zainawi/chatwoot-bot">zainawi&#x2F;chatwoot-bot</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/dexboy21/chatwoot-docker">dexboy21&#x2F;chatwoot-docker</a>Docker instance of chatwoot</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/huan/docker-simple-mail-forwarder">huan&#x2F;docker-simple-mail-forwarder</a>Simplest and Smallest Email Forward Service based on Docker.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jod35/Flask-React-Recipes">jod35&#x2F;Flask-React-Recipes</a>This is code for a series of videos where I build a full-stack web application with ReactJS and the Flask framework.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ahnaf-zamil/zreddit">ahnaf-zamil&#x2F;zreddit</a>A Reddit clone made with Python and React</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ahnaf-zamil/flask-react-session-authenticaton-tutorial">ahnaf-zamil&#x2F;flask-react-session-authenticaton-tutorial</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/timothymiller/cloudflare-ddns">timothymiller&#x2F;cloudflare-ddns</a>🎉🌩️ Dynamic DNS (DDNS) service based on Cloudflare! Access your home network remotely via a custom domain name without a static IP!</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/cloudflare/certbot-dns-cloudflare">cloudflare&#x2F;certbot-dns-cloudflare</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/P3TERX/GeoLite.mmdb">P3TERX&#x2F;GeoLite.mmdb</a>“MaxMind’s GeoIP2 GeoLite2 Country, City, and ASN databases”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/onFocusAT/fail2ban-geo">onFocusAT&#x2F;fail2ban-geo</a>geoiplookup on iptables-multiport action with country code pattern</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/m0jo/fail2ban-tightvncserver">m0jo&#x2F;fail2ban-tightvncserver</a>Fail2Ban Tighvncserver ruleset</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/linuxserver/docker-webtop">linuxserver&#x2F;docker-webtop</a>“Ubuntu, Alpine, Arch, and Fedora based Webtop images, Linux in a web browser supporting popular desktop environments.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Stirling-Tools/Stirling-PDF">Stirling-Tools&#x2F;Stirling-PDF</a>#1 Locally hosted web application that allows you to perform various operations on PDF files</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/x11vnc/x11vnc-desktop">x11vnc&#x2F;x11vnc-desktop</a>Docker&#x2F;Singularity image for Ubuntu with X11 and VNC</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/lrvl/debian-i3-novnc-docker">lrvl&#x2F;debian-i3-novnc-docker</a>Debian with i3 tiling window manager - Accessible in the browser using noVNC</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/galjabari/debian-desktop-novnc">galjabari&#x2F;debian-desktop-novnc</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/dmotte/desktainer">dmotte&#x2F;desktainer</a>🖥 Remote desktop in a container</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ConSol/docker-headless-vnc-container">ConSol&#x2F;docker-headless-vnc-container</a>Collection of Docker images with headless VNC environments</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/8cH9azbsFifZ/debian-novnc">8cH9azbsFifZ&#x2F;debian-novnc</a>Debian with NoVNC</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/fennerm/arch-i3-novnc-docker">fennerm&#x2F;arch-i3-novnc-docker</a>Docker container with arch linux and i3wm</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jessfraz/dotfiles">jessfraz&#x2F;dotfiles</a>My dotfiles. Buyer beware ;)</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/UmutAlihan/big_crawler">UmutAlihan&#x2F;big_crawler</a>youtube voice to text</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/t3l3machus/ssh-log-alert">t3l3machus&#x2F;ssh-log-alert</a>Receive email alerts on successful ssh logins based on a predefined IP whitelist OR a predefined IP country origin whitelist (using mailgun)</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/DeanRickles/arch-plasma">DeanRickles&#x2F;arch-plasma</a>Create a baseline archlinux environment using KDE plasma with novnc and webockify pre-configured for others to use for their containers.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/binhex/arch-pycharm">binhex&#x2F;arch-pycharm</a>Docker build script for Arch Linux base with PyCharm</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ponsfrilus/arch-novnc">ponsfrilus&#x2F;arch-novnc</a>Docker container running ArchLinux accessible through novnc in a browser</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/theasp/docker-novnc">theasp&#x2F;docker-novnc</a>noVNC Display Container for Docker</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/martindavid/flask-react-docker-app">martindavid&#x2F;flask-react-docker-app</a>“An example of using Flask, React + NextJs and Docker”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/lassegit/flask-reactjs">lassegit&#x2F;flask-reactjs</a>“Flask, ReactJS&#x2F;Redux and webpack Boilerplate”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/app-generator/react-flask-authentication">app-generator&#x2F;react-flask-authentication</a>React Flask Authentication - Open-Source Full-stack Project | AppSeed </li>
-<li><a target="_blank" rel="noopener" href="https://github.com/imoyao/idealyard">imoyao&#x2F;idealyard</a>使用 Vue 和 Flask 搭建前后端分离的 RESTful 个人博客</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/hsadler/flask-vue-project-seed">hsadler&#x2F;flask-vue-project-seed</a>SPA quick start using Python Flask and Vue.js. Containerized with Docker.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/rapando/flask-vue-mysql-docker">rapando&#x2F;flask-vue-mysql-docker</a>The full tutorial is at <a target="_blank" rel="noopener" href="https://medium.com/@samy_raps/flask-vue-mysql-on-docker-part-i-setting-up-320d55a85971">https://medium.com/@samy_raps/flask-vue-mysql-on-docker-part-i-setting-up-320d55a85971</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/weivis/NewBlog">weivis&#x2F;NewBlog</a>我的新个人博客主页 基于Flask + Vue + Element</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/youfulife/downloader">youfulife&#x2F;downloader</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/wangy8961/flask-vuejs-madblog">wangy8961&#x2F;flask-vuejs-madblog</a>基于 Flask 和 Vue.js 前后端分离的微型博客项目，支持多用户、Markdown文章（喜欢&#x2F;收藏文章）、粉丝关注、用户评论（点赞）、动态通知、站内私信、黑名单、邮件支持、管理后台、权限管理、RQ任务队列、Elasticsearch全文搜索、Linux VPS部署、Docker容器部署等</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/cair/pyVNC">cair&#x2F;pyVNC</a>VNC Client Library for Python</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/QiangZiBro/Qdotfiles">QiangZiBro&#x2F;Qdotfiles</a>“🚀 Qdotfiles: A Unix configuration manager, caring for your developing environment.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/gpakosz/.tmux">gpakosz&#x2F;.tmux</a>“🇫🇷 Oh my tmux! My self-contained, pretty &amp; versatile tmux configuration made with ❤️”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/miguelgrinberg/cygwin-installer">miguelgrinberg&#x2F;cygwin-installer</a>A script that simplifies the installation of Cygwin</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ajayrandhawa/Hidden-Screen-Capture">ajayrandhawa&#x2F;Hidden-Screen-Capture</a>It is primary designed to be hidden and monitoring the computer activity. Take a screenshot of desktop in hidden mode using Visual C++ and save automatically to ‘jpeg’ file in every 30 second. 60+ Most Popular antivirus not detect this application while it is running on background.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/swharden/pyScreenCapture">swharden&#x2F;pyScreenCapture</a>Screen capture video (with cursor) using Python</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ra1nty/DXcam">ra1nty&#x2F;DXcam</a>A Python high-performance screen capture library for Windows using Desktop Duplication API</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/XZB-1248/Spark">XZB-1248&#x2F;Spark</a>“✨Spark is a web-based, cross-platform and full-featured Remote Administration Tool (RAT) written in Go that allows you control all your devices anywhere. Spark是一个Go编写的，网页UI、跨平台以及多功能的远程控制和监控工具，你可以随时随地监控和控制所有设备。”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jumpserver/jumpserver">jumpserver&#x2F;jumpserver</a>JumpServer 是广受欢迎的开源堡垒机，是符合 4A 规范的专业运维安全审计系统。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/marph91/joppy">marph91&#x2F;joppy</a>Python interface for the Joplin data API</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/oobabooga/text-generation-webui">oobabooga&#x2F;text-generation-webui</a>“A Gradio web UI for Large Language Models. Supports transformers, GPTQ, AWQ, EXL2, llama.cpp (GGUF), Llama models.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ggerganov/llama.cpp">ggerganov&#x2F;llama.cpp</a>LLM inference in C&#x2F;C++</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/portapps/nextcloud-portable">portapps&#x2F;nextcloud-portable</a>🚀 Nextcloud portable for Windows</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/trinib/AdGuard-WireGuard-Unbound-DNScrypt">trinib&#x2F;AdGuard-WireGuard-Unbound-DNScrypt</a>Linux ultimate self-hosted network security guide ║ Linux 终极自托管网络安全指南 ║ Guía definitiva de seguridad de red autohospedada de Linux ║ लिनक्स परम स्व-होस्टेड नेटवर्क सुरक्षा गाइड ║ Окончательное руководство по безопасности собственной сети Linux</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/pirate/wireguard-docs">pirate&#x2F;wireguard-docs</a>“📖 Unofficial WireGuard Documentation: Setup, Usage, Configuration, and full example setups for VPNs supporting both servers &amp; roaming clients.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Nyr/wireguard-install">Nyr&#x2F;wireguard-install</a>“WireGuard road warrior installer for Ubuntu, Debian, AlmaLinux, Rocky Linux, CentOS and Fedora”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/angristan/wireguard-install">angristan&#x2F;wireguard-install</a>WireGuard VPN installer for Linux servers</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/pooya-mohammadi/face-detection-flask-nginx-gunicorn-docker">pooya-mohammadi&#x2F;face-detection-flask-nginx-gunicorn-docker</a>“This is a minimal implementation of face-detection models using flask, gunicorn, nginx, docker, and docker-compose”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/egeucak/api-doc-gpt">egeucak&#x2F;api-doc-gpt</a>ChatGPT for Openapi</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/taojy123/eave">taojy123&#x2F;eave</a>优雅的接口文档制作工具 | A Restful Api Document Builder For Pythonista</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Allen7D/mini-shop-server">Allen7D&#x2F;mini-shop-server</a>基于 Flask 框架开发的微信小程序后端项目，用于构建小程序商城后台 （电商相关；rbac权限管理；附带自动生成Swagger 风格的API 文档；可作「Python 项目毕设」）—- 相关博客链接:🌟</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/yuxiaojie/api_demo">yuxiaojie&#x2F;api_demo</a>自动生成 Swagger API 文档</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/itbdw/ip-database">itbdw&#x2F;ip-database</a>免费IP离线数据库，支持IPV4+IPV6 ，国家、省、市、县、运营商</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/dnomd343/ClearDNS">dnomd343&#x2F;ClearDNS</a>容器化的无污染DNS服务</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/pmkol/easymosdns">pmkol&#x2F;easymosdns</a>简化Mosdns基本功能使用的辅助脚本，仅需几分钟即可搭建一台支持ECS的无污染DNS服务器</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/bieberg0n/bjdns">bieberg0n&#x2F;bjdns</a>A dns server which can protect yourself against DNS poisoning in China. &#x2F; 抗污染 带缓存的dns服务器</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/elliotgao2/toapi">elliotgao2&#x2F;toapi</a>Every web site provides APIs.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/postmanlabs/httpbin">postmanlabs&#x2F;httpbin</a>“HTTP Request &amp; Response Service, written in Python + Flask.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/postrational/tldr">postrational&#x2F;tldr</a>📚 Collaborative cheatsheets for console commands</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Vu1nT0tal/IDA-Pro-tips">Vu1nT0tal&#x2F;IDA-Pro-tips</a>IDA Pro每周小技巧</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/xdlinux/xidian-scripts">xdlinux&#x2F;xidian-scripts</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/csflyer/USTCrank">csflyer&#x2F;USTCrank</a>中科大 (USTC) 研究生入学考试成绩与排名查询</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ustclug/neatdns">ustclug&#x2F;neatdns</a>anti-pollution DNS server</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ustclug/blogs">ustclug&#x2F;blogs</a>USTCLUG 同学们的博客列表</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ustclug/rb-backup">ustclug&#x2F;rb-backup</a>基于 rsync 和 ssh 的远程备份脚本，利用 btrfs snapshot 实现增量备份……</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zzh1996/HTTP-Proxy">zzh1996&#x2F;HTTP-Proxy</a>A simple HTTP proxy server</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zzh1996/yjs-grade-automatic-notification">zzh1996&#x2F;yjs-grade-automatic-notification</a>USTC 研究生成绩自动通知脚本</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zzh1996/ustc-yjs-course">zzh1996&#x2F;ustc-yjs-course</a>USTC 研究生课程信息和选课名单爬虫</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ustclug/lug-vpn-web">ustclug&#x2F;lug-vpn-web</a>LUG VPN 申请系统</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zzh1996/chatgpt-telegram-bot">zzh1996&#x2F;chatgpt-telegram-bot</a>ChatGPT Telegram bot</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/tianon/dockerfiles">tianon&#x2F;dockerfiles</a>A semi-random collection of odds and ends.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/freeasbird/mos-chinadns">freeasbird&#x2F;mos-chinadns</a>ChinaDNS改进版。3分钟配置。支持DoH，IPv6，EDNS Client Subnet(ECS)，按域名与IP分流。高性能，也适合低运算力设备。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/lingochamp/Multi-Scale-BERT-AES">lingochamp&#x2F;Multi-Scale-BERT-AES</a>“Demo for the paper “”On the Use of BERT for Automated Essay Scoring: Joint Learning of Multi-Scale Essay Representation”””</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/lingochamp/OnlineScorer-Wechat">lingochamp&#x2F;OnlineScorer-Wechat</a>流利说在线录音打分微信版SDK</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/yangchuansheng/love-gfw">yangchuansheng&#x2F;love-gfw</a>🔥以社会主义核心价值观为指导思想，实现 Linux 和 MacOS 设备的全局智能分流</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/HMBSbige/DNServer">HMBSbige&#x2F;DNServer</a>自用 DNS 分流服务器</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Semporia/Clash">Semporia&#x2F;Clash</a>Clash for Windows &amp; ClashX Pro  自用节点订阅、分流规则、参考配置</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/LONG-9621/Pcap_Analyzer">LONG-9621&#x2F;Pcap_Analyzer</a>python写的数据流量分析器</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/hamdiibnizhar/Essay_Grading">hamdiibnizhar&#x2F;Essay_Grading</a>NLP Essay Scoring</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/askmrsinh/regression-aes">askmrsinh&#x2F;regression-aes</a>“Automated Essay Scoring as NLP, regression problem.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zabir-nabil/nlp-auto-essay-scoring">zabir-nabil&#x2F;nlp-auto-essay-scoring</a>NLP Automated Essay Scoring with BERT</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/DUOMO/TransGPT">DUOMO&#x2F;TransGPT</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zzsj0928/luci-app-pushbot">zzsj0928&#x2F;luci-app-pushbot</a>PushBot running on openwrt</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zfl9/ss-tproxy">zfl9&#x2F;ss-tproxy</a>搭建 SS&#x2F;SSR&#x2F;V2Ray&#x2F;Trojan&#x2F;Socks5 透明代理的 Shell 脚本</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/arloor/ddnspod">arloor&#x2F;ddnspod</a>基于DNSPod用户API实现的纯Shell动态域名客户端</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/cskefu/cskefu">cskefu&#x2F;cskefu</a>🌲 春松客服，开源客服系统</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/kylemanna/docker-openvpn">kylemanna&#x2F;docker-openvpn</a>🔒 OpenVPN server in a Docker container complete with an EasyRSA PKI CA</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/crazygit/family-media-center">crazygit&#x2F;family-media-center</a>Family Media Center with Jellyfin aira2 tiny_media_manage kodi samba openwrt</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/lisaac/openwrt-in-docker">lisaac&#x2F;openwrt-in-docker</a>openwrt running in docker</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/RMerl/asuswrt-merlin.ng">RMerl&#x2F;asuswrt-merlin.ng</a>Third party firmware for Asus routers (newer codebase)</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Nyr/openvpn-install">Nyr&#x2F;openvpn-install</a>“OpenVPN road warrior installer for Ubuntu, Debian, AlmaLinux, Rocky Linux, CentOS and Fedora”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/brannondorsey/naive-hashcat">brannondorsey&#x2F;naive-hashcat</a>Crack password hashes without the fuss :cat2:</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/caronc/apprise">caronc&#x2F;apprise</a>Apprise - Push Notifications that work with just about every platform!</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/GyulyVGC/sniffnet">GyulyVGC&#x2F;sniffnet</a>Comfortably monitor your Internet traffic 🕵️‍♂️</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/funggtopp/onlyoffice-chinese-fonts">funggtopp&#x2F;onlyoffice-chinese-fonts</a>旨在解决onlyoffice-document-server中的中文字体名称显示问题</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/xbeeant/onlyoffice-ce-docker-license">xbeeant&#x2F;onlyoffice-ce-docker-license</a>Onlyoffice with license patch and mobile editing restored</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/xbeeant/oo-chinese-license">xbeeant&#x2F;oo-chinese-license</a>onlyoffice 中文包 及 license解决</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/solarpowerinncr/docker-oracle11g-">solarpowerinncr&#x2F;docker-oracle11g-</a>Oracle Database 11gR2 docker file</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jaspeen/oracle-11g">jaspeen&#x2F;oracle-11g</a>Docker image for Oracle 11g database</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/vufa/deepin-wine-wechat-arch">vufa&#x2F;deepin-wine-wechat-arch</a>Tencent WeChat on Deepin Wine(com.qq.weixin.deepin) For Archlinux</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/CharlesPikachu/DecryptLogin">CharlesPikachu&#x2F;DecryptLogin</a>DecryptLogin: APIs for loginning some websites by using requests.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/xm9304/Taobao_spider">xm9304&#x2F;Taobao_spider</a>淘宝的模拟登录，有requests和selenium两个版本</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/getpelican/pelican">getpelican&#x2F;pelican</a>Static site generator that supports Markdown and reST syntax. Powered by Python.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Riroaki/Lemon-Questionnare-Platform">Riroaki&#x2F;Lemon-Questionnare-Platform</a>🍋简易问卷平台，基于Flask+Vue🍋</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/wells2333/sg-exam">wells2333&#x2F;sg-exam</a>基于Spring Boot搭建的新一代教学管理平台，提供权限管理、考试、问卷、练习等功能</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/lajos182/myQuestionaire">lajos182&#x2F;myQuestionaire</a>调查问卷</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jianhu-chen/Course-Choosing-SSE-USTC">jianhu-chen&#x2F;Course-Choosing-SSE-USTC</a>中科大软件学院研究生选课辅助系统</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ambertests/charles_to_postman">ambertests&#x2F;charles_to_postman</a>Script for converting Charlesproxy output to a Postman json file</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/sibtc/simple-ajax-crud">sibtc&#x2F;simple-ajax-crud</a>“Example created for the blog post “”How to Implement CRUD Using Ajax and Json”””</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/tobyqin/pywiki">tobyqin&#x2F;pywiki</a>“a flask based wiki, using markdown files as backend. completely file based!”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/pyexcel/pyexcel-xlsx">pyexcel&#x2F;pyexcel-xlsx</a>“A wrapper library to read, manipulate and write data in xlsx and xlsm format using openpyxl”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/atlopes/zintbarcode">atlopes&#x2F;zintbarcode</a>Provides a VFP connector to the Zint Barcode Generator library.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/atlopes/csv">atlopes&#x2F;csv</a>A VFP class to process CSV files.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jeessy2/ddns-go">jeessy2&#x2F;ddns-go</a>“Simple and easy to use DDNS. Support Aliyun, Tencent Cloud, Dnspod, Cloudflare, Callback, Huawei Cloud, Baidu Cloud, Porkbun, GoDaddy, Namecheap, NameSilo…”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/pencil1/ApiTestManage">pencil1&#x2F;ApiTestManage</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/louislam/uptime-kuma">louislam&#x2F;uptime-kuma</a>A fancy self-hosted monitoring tool</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/tiny-pilot/tinypilot">tiny-pilot&#x2F;tinypilot</a>Use your Raspberry Pi as a browser-based KVM.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/autoliuweijie/FastBERT">autoliuweijie&#x2F;FastBERT</a>The score code of FastBERT (ACL2020)</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/simonepri/lm-scorer">simonepri&#x2F;lm-scorer</a>📃Language Model based sentences scoring library</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Tiiiger/bert_score">Tiiiger&#x2F;bert_score</a>BERT score for text generation</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/nextcloud/all-in-one">nextcloud&#x2F;all-in-one</a>📦 The official Nextcloud installation method. Provides easy deployment and maintenance with most features included in this one Nextcloud instance.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/talesam/nextcloud">talesam&#x2F;nextcloud</a>Executando Nextcloud em docker com perfeição + Ngnix Proxy Manager + Redis + Postgre + Onlyoffice</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Fly-Pluche/Exam_system_database">Fly-Pluche&#x2F;Exam_system_database</a>Python课程设计， 智慧校园考试系统，包括用户管理，注册机构，配置题库，答题功能，查看历史功能</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/anonymousKo/exam_system">anonymousKo&#x2F;exam_system</a>Python课程设计， 智慧校园考试系统，包括用户管理，注册机构，配置题库，答题功能</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/orvice/ss-panel">orvice&#x2F;ss-panel</a>rm</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/leopardciaw/R619AC">leopardciaw&#x2F;R619AC</a>基于LEDE 竞斗云2.0，自动编译OpenWRT-P2W_R619AC_128M</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/honghushui123/R619AC-1">honghushui123&#x2F;R619AC-1</a>基于LEDE 竞斗云2.0，自动编译OpenWRT-P2W_R619AC_128M</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/vfp9/csv">vfp9&#x2F;csv</a>A VFP class to process CSV files.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/chancelyg/syncmemo">chancelyg&#x2F;syncmemo</a>支持跨平台访问的文本&#x2F;图片便签的Web服务</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/realpython/flask-boilerplate">realpython&#x2F;flask-boilerplate</a>“Boilerplate template for a Python Flask application with Flask-SQLAlchemy, Flask-WTF, Fabric, Coverage, and Bootstrap”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/M-Kepler/keplerblog">M-Kepler&#x2F;keplerblog</a>Flask 入门项目</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jason229295479/flask_goods">jason229295479&#x2F;flask_goods</a>进销存管理系统</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/sapicd/sapic">sapicd&#x2F;sapic</a>sapic(picbed) - 基于Flask的Web自建图床，可存储到又拍云、七牛云、阿里云OSS、腾讯云COS、GitHub、Gitee、S3等，支持自定义扩展。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/vioan/flask-apache-gunicorn-systemd">vioan&#x2F;flask-apache-gunicorn-systemd</a>“Flask app deployment using Apache, Gunicorn and systemd”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ericcgu/Flask-Gunicorn-Nginx-Postgres-Docker">ericcgu&#x2F;Flask-Gunicorn-Nginx-Postgres-Docker</a>Flask-Gunicorn-Postgres-Docker</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1749,7 +1472,7 @@ echo 12345 | tee - -
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
