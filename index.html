@@ -606,7 +606,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-06-15 06:20:41" itemprop="dateModified" datetime="2024-06-15T06:20:41+08:00">2024-06-15</time>
+                <time title="修改时间：2024-06-15 06:35:54" itemprop="dateModified" datetime="2024-06-15T06:35:54+08:00">2024-06-15</time>
               </span>
 
           
@@ -623,62 +623,34 @@
           <p>原文 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/ed9dbaabfee4">https://www.jianshu.com/p/ed9dbaabfee4</a></p>
 <p>一、挂载iso格式镜像<br>1、将镜像文件拷贝到linux系统上。</p>
 <p>2、执行命令：mount -t iso9660 -o loop &#x2F;root&#x2F;xxx.iso &#x2F;mnt</p>
-<p>[<a href="mailto:&#114;&#x6f;&#111;&#116;&#64;&#104;&#x30;&#55;&#100;&#x30;&#x37;&#49;&#x38;&#52;&#x2e;&#x73;&#113;&#97;&#x2e;&#101;&#117;&#x39;&#x35;">&#114;&#x6f;&#111;&#116;&#64;&#104;&#x30;&#55;&#100;&#x30;&#x37;&#49;&#x38;&#52;&#x2e;&#x73;&#113;&#97;&#x2e;&#101;&#117;&#x39;&#x35;</a> &#x2F;root]#mount -t iso9660 -o loop alinux-test.iso &#x2F;mnt</p>
-<p>mount: &#x2F;root&#x2F;alinux-test.iso is already mounted</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@h07d07184.sqa.eu95 /root]#mount -t iso9660 -o loop alinux-test.iso /mnt</span><br><span class="line"></span><br><span class="line">mount: /root/alinux-test.iso is already mounted</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>3、查看&#x2F;mnt文件夹，即可查看到镜像的文件。</p>
-<p>[<a href="mailto:&#x72;&#x6f;&#x6f;&#116;&#64;&#104;&#x30;&#55;&#100;&#x30;&#x37;&#x31;&#x38;&#x34;&#x2e;&#x73;&#113;&#97;&#x2e;&#x65;&#x75;&#57;&#x35;">&#x72;&#x6f;&#x6f;&#116;&#64;&#104;&#x30;&#55;&#100;&#x30;&#x37;&#x31;&#x38;&#x34;&#x2e;&#x73;&#113;&#97;&#x2e;&#x65;&#x75;&#57;&#x35;</a> &#x2F;root]#ls &#x2F;mnt</p>
-<p>apptmp_run.over boot dev home lib64 media opt root run srv tmp varbin data etc lib lost+found mnt proc rr_moved sbin sys usr</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@h07d07184.sqa.eu95 /root]#ls /mnt</span><br><span class="line"></span><br><span class="line">apptmp_run.over boot dev home lib64 media opt root run srv tmp varbin data etc lib lost+found mnt proc rr_moved sbin sys usr</span><br></pre></td></tr></table></figure>
+
 <p>4、卸载：umount &#x2F;mnt</p>
 <p>二、挂载qcow2格式镜像</p>
 <ol>
 <li>首先检查当前系统的kernel对NBD模块的支持（NBD:network block device），加载nbd这个module</li>
 </ol>
-<p>[root@jay-linux kvm_demo]# grep NBD &#x2F;boot&#x2F;config-3.5.0</p>
-<p>CONFIG_BLK_DEV_NBD&#x3D;m</p>
-<p>[root@jay-linux kvm_demo]# modinfo nbd</p>
-<p>filename:      &#x2F;lib&#x2F;modules&#x2F;3.5.0&#x2F;kernel&#x2F;drivers&#x2F;block&#x2F;nbd.ko</p>
-<p>license:        GPL</p>
-<p>description:    Network Block Device</p>
-<p>srcversion:    56F31584CC2EB73E6F1DA69</p>
-<p>depends:</p>
-<p>intree:        Y</p>
-<p>vermagic:      3.5.0 SMP mod_unload modversions</p>
-<p>parm:          nbds_max:number of network block devices to initialize (default: 16) (int)</p>
-<p>parm:          max_part:number of partitions per device (default: 0) (int)</p>
-<p>parm:          debugflags:flags for controlling debug output (int)</p>
-<p>[root@jay-linux kvm_demo]# modprobe nbd max_part&#x3D;16</p>
-<p>[root@jay-linux kvm_demo]# lsmod | grep nbd</p>
-<p>nbd                    7593  0</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">[root@jay-linux kvm_demo]# grep NBD /boot/config-3.5.0</span><br><span class="line"></span><br><span class="line">CONFIG_BLK_DEV_NBD=m</span><br><span class="line"></span><br><span class="line">[root@jay-linux kvm_demo]# modinfo nbd</span><br><span class="line"></span><br><span class="line">filename:      /lib/modules/3.5.0/kernel/drivers/block/nbd.ko</span><br><span class="line"></span><br><span class="line">license:        GPL</span><br><span class="line"></span><br><span class="line">description:    Network Block Device</span><br><span class="line"></span><br><span class="line">srcversion:    56F31584CC2EB73E6F1DA69</span><br><span class="line"></span><br><span class="line">depends:</span><br><span class="line"></span><br><span class="line">intree:        Y</span><br><span class="line"></span><br><span class="line">vermagic:      3.5.0 SMP mod_unload modversions</span><br><span class="line"></span><br><span class="line">parm:          nbds_max:number of network block devices to initialize (default: 16) (int)</span><br><span class="line"></span><br><span class="line">parm:          max_part:number of partitions per device (default: 0) (int)</span><br><span class="line"></span><br><span class="line">parm:          debugflags:flags for controlling debug output (int)</span><br><span class="line"></span><br><span class="line">[root@jay-linux kvm_demo]# modprobe nbd max_part=16</span><br><span class="line"></span><br><span class="line">[root@jay-linux kvm_demo]# lsmod | grep nbd</span><br><span class="line"></span><br><span class="line">nbd                    7593  0</span><br></pre></td></tr></table></figure>
+
 <ol start="2">
 <li>将qcow2镜像映射为网络块设备(nbd)，命令如下：</li>
 </ol>
-<p>[<a href="mailto:&#x72;&#x6f;&#111;&#116;&#64;&#x68;&#48;&#55;&#x64;&#48;&#x37;&#x31;&#x38;&#52;&#46;&#x73;&#x71;&#97;&#46;&#101;&#x75;&#57;&#x35;">&#x72;&#x6f;&#111;&#116;&#64;&#x68;&#48;&#55;&#x64;&#48;&#x37;&#x31;&#x38;&#52;&#46;&#x73;&#x71;&#97;&#46;&#101;&#x75;&#57;&#x35;</a> &#x2F;mnt]#qemu-nbd -c &#x2F;dev&#x2F;nbd0 &#x2F;root&#x2F;Alinux-2.1.0-OUT-1220.qcow2</p>
-<p>[<a href="mailto:&#114;&#x6f;&#x6f;&#116;&#x40;&#x68;&#48;&#55;&#x64;&#48;&#x37;&#49;&#56;&#52;&#x2e;&#115;&#113;&#97;&#46;&#x65;&#117;&#57;&#x35;">&#114;&#x6f;&#x6f;&#116;&#x40;&#x68;&#48;&#55;&#x64;&#48;&#x37;&#49;&#56;&#52;&#x2e;&#115;&#113;&#97;&#46;&#x65;&#117;&#57;&#x35;</a> &#x2F;mnt]# ll &#x2F;dev&#x2F;nbd0*</p>
-<p>brw-rw—- 1 root disk 43, 0 Jan 10 10:17 &#x2F;dev&#x2F;nbd0</p>
-<p>brw-rw—- 1 root disk 43, 1 Jan 10 10:17 &#x2F;dev&#x2F;nbd0p1</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@h07d07184.sqa.eu95 /mnt]#qemu-nbd -c /dev/nbd0 /root/Alinux-2.1.0-OUT-1220.qcow2</span><br><span class="line"></span><br><span class="line">[root@h07d07184.sqa.eu95 /mnt]# ll /dev/nbd0*</span><br><span class="line"></span><br><span class="line">brw-rw---- 1 root disk 43, 0 Jan 10 10:17 /dev/nbd0</span><br><span class="line"></span><br><span class="line">brw-rw---- 1 root disk 43, 1 Jan 10 10:17 /dev/nbd0p1</span><br></pre></td></tr></table></figure>
+
 <ol start="3">
 <li>像普通block设备那样使用刚才映射好的网络块设备的分区即可，命令行如下：</li>
 </ol>
-<p>[<a href="mailto:&#114;&#111;&#x6f;&#x74;&#64;&#x68;&#48;&#x37;&#100;&#x30;&#x37;&#x31;&#x38;&#x34;&#x2e;&#x73;&#x71;&#97;&#46;&#x65;&#117;&#x39;&#53;">&#114;&#111;&#x6f;&#x74;&#64;&#x68;&#48;&#x37;&#100;&#x30;&#x37;&#x31;&#x38;&#x34;&#x2e;&#x73;&#x71;&#97;&#46;&#x65;&#117;&#x39;&#53;</a> &#x2F;mnt]#mount &#x2F;dev&#x2F;nbd0p1 &#x2F;mnt&#x2F;[<a href="mailto:&#114;&#111;&#x6f;&#116;&#x40;&#x68;&#x30;&#55;&#100;&#x30;&#55;&#x31;&#x38;&#52;&#46;&#115;&#x71;&#x61;&#46;&#x65;&#x75;&#57;&#53;">&#114;&#111;&#x6f;&#116;&#x40;&#x68;&#x30;&#55;&#100;&#x30;&#55;&#x31;&#x38;&#52;&#46;&#115;&#x71;&#x61;&#46;&#x65;&#x75;&#57;&#53;</a> &#x2F;mnt]#ls &#x2F;mnt&#x2F; </p>
-<p>apptmp_run.over boot dev home lib64 media opt root sbin sys usrbin data etc lib lost+found mnt proc run srv tmp var</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@h07d07184.sqa.eu95 /mnt]#mount /dev/nbd0p1 /mnt/[root@h07d07184.sqa.eu95 /mnt]#ls /mnt/ </span><br><span class="line"></span><br><span class="line">apptmp_run.over boot dev home lib64 media opt root sbin sys usrbin data etc lib lost+found mnt proc run srv tmp var</span><br></pre></td></tr></table></figure>
+
 <ol start="4">
 <li>使用完这个qcow2镜像后，卸载已挂载的nbd设备，解除qcow2镜像与nbd设备的关联。</li>
 </ol>
-<p>[root@jay-linux kvm_demo]# umount &#x2F;mnt&#x2F;</p>
-<p>[root@jay-linux kvm_demo]# qemu-nbd -d &#x2F;dev&#x2F;nbd0</p>
-<p>&#x2F;dev&#x2F;nbd0 disconnected</p>
-<p>三、挂载vhd格式镜像（与qcow2方法相似）<br>[<a href="mailto:&#x72;&#x6f;&#111;&#x74;&#x40;&#104;&#x30;&#x37;&#x64;&#x30;&#x37;&#49;&#56;&#x34;&#46;&#x73;&#113;&#x61;&#x2e;&#x65;&#117;&#x39;&#53;">&#x72;&#x6f;&#111;&#x74;&#x40;&#104;&#x30;&#x37;&#x64;&#x30;&#x37;&#49;&#56;&#x34;&#46;&#x73;&#113;&#x61;&#x2e;&#x65;&#117;&#x39;&#53;</a> &#x2F;root]#ll &#x2F;dev&#x2F;nbd0*</p>
-<p>brw-rw—- 1 root disk 43, 0 Jan 10 10:31 &#x2F;dev&#x2F;nbd0</p>
-<p>[<a href="mailto:&#x72;&#x6f;&#111;&#x74;&#x40;&#104;&#x30;&#55;&#100;&#48;&#55;&#49;&#56;&#52;&#46;&#x73;&#113;&#97;&#46;&#x65;&#117;&#57;&#53;">&#x72;&#x6f;&#111;&#x74;&#x40;&#104;&#x30;&#55;&#100;&#48;&#55;&#49;&#56;&#52;&#46;&#x73;&#113;&#97;&#46;&#x65;&#117;&#57;&#53;</a> &#x2F;root]#qemu-nbd -c &#x2F;dev&#x2F;nbd0 aliyun-test.vhd[<a href="mailto:&#114;&#111;&#x6f;&#x74;&#x40;&#104;&#48;&#55;&#100;&#48;&#x37;&#x31;&#56;&#x34;&#46;&#115;&#113;&#97;&#46;&#x65;&#117;&#57;&#53;">&#114;&#111;&#x6f;&#x74;&#x40;&#104;&#48;&#55;&#100;&#48;&#x37;&#x31;&#56;&#x34;&#46;&#115;&#113;&#97;&#46;&#x65;&#117;&#57;&#53;</a> &#x2F;root]#ll &#x2F;dev&#x2F;nbd0*</p>
-<p>brw-rw—- 1 root disk 43, 0 Jan 10 10:32 &#x2F;dev&#x2F;nbd0</p>
-<p>brw-rw—- 1 root disk 43, 1 Jan 10 10:32 &#x2F;dev&#x2F;nbd0p1</p>
-<p>[<a href="mailto:&#114;&#111;&#x6f;&#x74;&#x40;&#x68;&#x30;&#x37;&#100;&#48;&#x37;&#x31;&#x38;&#52;&#x2e;&#115;&#113;&#97;&#x2e;&#101;&#x75;&#x39;&#53;">&#114;&#111;&#x6f;&#x74;&#x40;&#x68;&#x30;&#x37;&#100;&#48;&#x37;&#x31;&#x38;&#52;&#x2e;&#115;&#113;&#97;&#x2e;&#101;&#x75;&#x39;&#53;</a> &#x2F;root]#mount &#x2F;dev&#x2F;nbd0p1 &#x2F;mnt[<a href="mailto:&#114;&#x6f;&#x6f;&#116;&#x40;&#x68;&#x30;&#x37;&#x64;&#48;&#x37;&#49;&#x38;&#52;&#46;&#115;&#x71;&#x61;&#x2e;&#101;&#117;&#57;&#x35;">&#114;&#x6f;&#x6f;&#116;&#x40;&#x68;&#x30;&#x37;&#x64;&#48;&#x37;&#49;&#x38;&#52;&#46;&#115;&#x71;&#x61;&#x2e;&#101;&#117;&#57;&#x35;</a> &#x2F;root]#ls &#x2F;mnt&#x2F;</p>
-<p>bin boot dev etc home lib lib64 lost+found media mnt opt proc root run sbin srv sys tmp usr var</p>
-<p>[<a href="mailto:&#x72;&#x6f;&#x6f;&#116;&#64;&#x68;&#x30;&#x37;&#100;&#48;&#x37;&#49;&#x38;&#52;&#x2e;&#x73;&#113;&#97;&#46;&#x65;&#117;&#x39;&#53;">&#x72;&#x6f;&#x6f;&#116;&#64;&#x68;&#x30;&#x37;&#100;&#48;&#x37;&#49;&#x38;&#52;&#x2e;&#x73;&#113;&#97;&#46;&#x65;&#117;&#x39;&#53;</a> &#x2F;root]#umount &#x2F;mnt&#x2F;</p>
-<p>[<a href="mailto:&#114;&#x6f;&#111;&#116;&#x40;&#104;&#x30;&#x37;&#x64;&#48;&#55;&#x31;&#56;&#52;&#x2e;&#115;&#x71;&#97;&#46;&#101;&#x75;&#57;&#53;">&#114;&#x6f;&#111;&#116;&#x40;&#104;&#x30;&#x37;&#x64;&#48;&#55;&#x31;&#56;&#52;&#x2e;&#115;&#x71;&#97;&#46;&#101;&#x75;&#57;&#53;</a> &#x2F;root]#qemu-nbd -d &#x2F;dev&#x2F;nbd0</p>
-<p>&#x2F;dev&#x2F;nbd0 disconnected</p>
-<p>[<a href="mailto:&#x72;&#x6f;&#x6f;&#x74;&#x40;&#x68;&#x30;&#x37;&#100;&#48;&#55;&#49;&#x38;&#x34;&#x2e;&#x73;&#113;&#97;&#x2e;&#x65;&#x75;&#x39;&#53;">&#x72;&#x6f;&#x6f;&#x74;&#x40;&#x68;&#x30;&#x37;&#100;&#48;&#55;&#49;&#x38;&#x34;&#x2e;&#x73;&#113;&#97;&#x2e;&#x65;&#x75;&#x39;&#53;</a> &#x2F;root]#</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@jay-linux kvm_demo]# umount /mnt/</span><br><span class="line"></span><br><span class="line">[root@jay-linux kvm_demo]# qemu-nbd -d /dev/nbd0</span><br><span class="line"></span><br><span class="line">/dev/nbd0 disconnected</span><br></pre></td></tr></table></figure>
 
+<p>三、挂载vhd格式镜像（与qcow2方法相似）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@h07d07184.sqa.eu95 /root]#ll /dev/nbd0*</span><br><span class="line"></span><br><span class="line">brw-rw---- 1 root disk 43, 0 Jan 10 10:31 /dev/nbd0</span><br><span class="line"></span><br><span class="line">[root@h07d07184.sqa.eu95 /root]#qemu-nbd -c /dev/nbd0 aliyun-test.vhd[root@h07d07184.sqa.eu95 /root]#ll /dev/nbd0*</span><br><span class="line"></span><br><span class="line">brw-rw---- 1 root disk 43, 0 Jan 10 10:32 /dev/nbd0</span><br><span class="line"></span><br><span class="line">brw-rw---- 1 root disk 43, 1 Jan 10 10:32 /dev/nbd0p1</span><br><span class="line"></span><br><span class="line">[root@h07d07184.sqa.eu95 /root]#mount /dev/nbd0p1 /mnt[root@h07d07184.sqa.eu95 /root]#ls /mnt/</span><br><span class="line"></span><br><span class="line">bin boot dev etc home lib lib64 lost+found media mnt opt proc root run sbin srv sys tmp usr var</span><br><span class="line"></span><br><span class="line">[root@h07d07184.sqa.eu95 /root]#umount /mnt/</span><br><span class="line"></span><br><span class="line">[root@h07d07184.sqa.eu95 /root]#qemu-nbd -d /dev/nbd0</span><br><span class="line"></span><br><span class="line">/dev/nbd0 disconnected</span><br><span class="line"></span><br><span class="line">[root@h07d07184.sqa.eu95 /root]#</span><br></pre></td></tr></table></figure>
       
     </div>
 
