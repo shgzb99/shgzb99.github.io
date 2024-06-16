@@ -178,6 +178,196 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/10/%E5%A6%82%E4%BD%95%E5%9C%A8Debian-12%E4%B8%8A%E5%AE%89%E8%A3%85Proxmox-VE-8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="英雄本色">
+      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="英雄本色的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/06/10/%E5%A6%82%E4%BD%95%E5%9C%A8Debian-12%E4%B8%8A%E5%AE%89%E8%A3%85Proxmox-VE-8/" class="post-title-link" itemprop="url">如何在Debian 12上安装Proxmox VE 8</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-06-10 19:54:04 / 修改时间：20:06:14" itemprop="dateCreated datePublished" datetime="2024-06-10T19:54:04+08:00">2024-06-10</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>转载 <a target="_blank" rel="noopener" href="https://echowings.github.io/zh-cn/p/%E5%A6%82%E4%BD%95%E5%9C%A8debian-12%E4%B8%8A%E5%AE%89%E8%A3%85proxmox-ve-8/">https://echowings.github.io/zh-cn/p/%E5%A6%82%E4%BD%95%E5%9C%A8debian-12%E4%B8%8A%E5%AE%89%E8%A3%85proxmox-ve-8/</a><br>更改Debian 12的apt安装源</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"> #备份 /et/apt/source.list</span><br><span class="line">cp /etc/apt/sources.list /etc/apt/sources.list-bak</span><br><span class="line"></span><br><span class="line">#选项 1: 使用官方debian 12 源</span><br><span class="line">tee /etc/apt/sources.list &lt;&lt; &quot;EOF&quot;</span><br><span class="line">deb http://deb.debian.org/debian bookworm main non-free-firmware</span><br><span class="line">deb-src http://deb.debian.org/debian bookworm main non-free-firmware</span><br><span class="line"></span><br><span class="line">deb http://deb.debian.org/debian-security/ bookworm-security main non-free-firmware</span><br><span class="line">deb-src http://deb.debian.org/debian-security/ bookworm-security main non-free-firmware</span><br><span class="line"></span><br><span class="line">deb http://deb.debian.org/debian bookworm-updates main non-free-firmware</span><br><span class="line">deb-src http://deb.debian.org/debian bookworm-updates main non-free-firmware</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">#选项 2:使用中科大mirrors.utsc.edu.cn源</span><br><span class="line"># Downlaod and Install debian 12 sourcelist</span><br><span class="line">curl -fsSL https://mirrors.ustc.edu.cn/repogen/conf/debian-https-4-bookworm -o  /etc/apt/sources.list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">apt update &amp;&amp; apt -y dist-upgrade</span><br><span class="line"></span><br><span class="line">apt install -y neovim net-tools</span><br></pre></td></tr></table></figure>
+
+<p>网卡更名，把网卡名字还原为ethx(可选操作)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">export PATH=$PATH:/usr/sbin:/home/$(whoami)/.local/bin</span><br><span class="line">echo &quot;export PATH=$PATH:/usr/sbin:/home/$(whoami)/.local/bin&quot; &gt;&gt; ~/.bashrc</span><br><span class="line"></span><br><span class="line">cp /etc/default/grub /etc/default/grub-bak</span><br><span class="line">sed -i &#x27;/GRUB_CMDLINE_LINUX=/s/&quot;$/net.ifnames=0 biosdevname=0&quot;/&#x27; /etc/default/grub</span><br><span class="line"></span><br><span class="line">#更改网卡名字 enp2s0 更改为eth0，根据你实际网卡名字更改</span><br><span class="line">sed -i &#x27;s/enp2s0/eth0/&#x27; /etc/network/interfaces</span><br><span class="line">update-grub</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 重启系统生效</span><br><span class="line">systemctl reboot</span><br></pre></td></tr></table></figure>
+<p>更改hosts文件的hostname</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ipv4_addr=$(ip -4 route get 8.8.8.8 | awk &#123;&#x27;print $7&#x27;&#125; | tr -d &#x27;\n&#x27;)</span><br><span class="line">echo $ipv4_addr</span><br><span class="line">sed -i &quot;s/127.0.1.1/$&#123;ipv4_addr&#125;/g&quot; /etc/hosts</span><br><span class="line">cat /etc/hosts </span><br><span class="line"></span><br><span class="line">hostname --ip-address</span><br></pre></td></tr></table></figure>
+<p>更换PVE Sourcelist</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">#可选操作，2选1</span><br><span class="line">#选项 1: PVE官方sourcelist</span><br><span class="line">tee /etc/apt/sources.list.d/pve-install-repo.list &lt;&lt; &quot;EOF&quot;</span><br><span class="line">deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"># 选项2: 中科大国内镜像</span><br><span class="line">tee /etc/apt/sources.list.d/pve-install-repo.list &lt;&lt; &quot;EOF&quot;</span><br><span class="line">deb [arch=amd64] https://mirrors.ustc.edu.cn/proxmox/debian/pve bullseye pve-no-subscription</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">#安装gpg密钥</span><br><span class="line">#如下操作2选1</span><br><span class="line">#选项 1: 官方站点</span><br><span class="line">wget http://download.proxmox.com/debian/proxmox-release-bookworm.gpg  -O /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg</span><br><span class="line"></span><br><span class="line">#选项2: 中科大镜像</span><br><span class="line">wget https://mirrors.ustc.edu.cn/proxmox/debian/proxmox-release-bookworm.gpg -O /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#Ceph源更改</span><br><span class="line">#二选一</span><br><span class="line"></span><br><span class="line">#选项 1: pve官方源</span><br><span class="line">echo &quot;deb http://download.proxmox.com/debian/ceph-quincy bookworm no-subscription&quot; &gt; /etc/apt/sources.list.d/ceph.list</span><br><span class="line"></span><br><span class="line">#选项 2: 中科大国内镜像</span><br><span class="line">echo &quot;deb https://mirrors.ustc.edu.cn/proxmox/debian/ceph-quincy bookworm no-subscription&quot; &gt; /etc/apt/sources.list.d/ceph.list</span><br><span class="line"></span><br><span class="line"># 更新并安装</span><br><span class="line">apt update &amp;&amp; apt  -y full-upgrade</span><br><span class="line"></span><br><span class="line"># Install proxmxo ve kernel</span><br><span class="line">apt install pve-kernel-6.2</span><br><span class="line"></span><br><span class="line"># 重启系统</span><br><span class="line">systemctl reboot</span><br></pre></td></tr></table></figure>
+<p>安装proxmox ve软件包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># 安装proxmox ve 软件包</span><br><span class="line">apt install -y  proxmox-ve postfix open-iscsi</span><br><span class="line"></span><br><span class="line">#移除debian 12的内核</span><br><span class="line">apt remove linux-image-amd64 &#x27;linux-image-6.1*&#x27;</span><br><span class="line">update-grub</span><br><span class="line"></span><br><span class="line"># 移除 OS-PROBER</span><br><span class="line">apt remove  -y os-prober</span><br><span class="line"></span><br><span class="line"># 关闭登录pve 未订阅提醒对话框</span><br><span class="line">sed -Ezi.bak &quot;s/(Ext.Msg.show\(\&#123;\s+title: gettext\(&#x27;No valid sub)/void\(\&#123; \/\/\1/g&quot; /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js &amp;&amp; systemctl restart pveproxy.service</span><br><span class="line"></span><br><span class="line"># 删除pve 企业源</span><br><span class="line">rm -f /etc/apt/sources.list.d/pve-enterprise.list</span><br><span class="line"></span><br><span class="line"># 安装 openvswitch-switch</span><br><span class="line">apt install -y  openvswitch-switch</span><br></pre></td></tr></table></figure>
+<p>更改中科大 lxc模板源</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp /usr/share/perl5/PVE/APLInfo.pm /usr/share/perl5/PVE/APLInfo.pm_back</span><br><span class="line">sed -i &#x27;s|http://download.proxmox.com|https://mirrors.ustc.edu.cn/proxmox|g&#x27; /usr/share/perl5/PVE/APLInfo.pm</span><br></pre></td></tr></table></figure>
+<p>参考文档<br><a target="_blank" rel="noopener" href="https://pve.proxmox.com/wiki/Install_Proxmox_VE_on_Debian_12_Bookworm">Install Proxmox VE on Debian 12 Bookworm</a><br><a target="_blank" rel="noopener" href="https://wiki.debian.org/SourcesList">Debian SourcesList</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/10/OpenWRT%E6%90%AD%E5%BB%BAOpenVPN%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="英雄本色">
+      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="英雄本色的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/06/10/OpenWRT%E6%90%AD%E5%BB%BAOpenVPN%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">OpenWRT搭建OpenVPN服务器</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-06-10 11:44:49 / 修改时间：12:02:51" itemprop="dateCreated datePublished" datetime="2024-06-10T11:44:49+08:00">2024-06-10</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>转载 <a target="_blank" rel="noopener" href="https://www.vnf.cc/2019/11/openwrt-openvpn-server/">https://www.vnf.cc/2019/11/openwrt-openvpn-server/</a></p>
+<p>本文主要实现在OpenWRT路由器系统下搭建OpenVPN服务器方便远程连接</p>
+<p>之前一直是在OpenWRT使用Openconnect VPN,因为是SSLVPN使用起来结合CISCO的anyconnect客户端是很方便的，但是由于现在ISP连这种基于SSL的流量也有可以做识别并封公网IP，所以不得不考虑切换至基于UDP的OpenVPN了。</p>
+<p>下面主要分三步：</p>
+<p>（1）在OpenWRT安装并配置好OpenVPN</p>
+<p>（2）配置多用户方案</p>
+<p>（3）结合Luci去显示OpenVPN</p>
+<p>那么现在开始吧，目前系统是使用了最新的OpenWRT 19.07.0-rc1, 同时适用于OpenWrt 18.06.4</p>
+<p>1.在OpenWRT安装并配置好OpenVPN</p>
+<p>先安装好本次所需的全部软件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">opkg update</span><br><span class="line">opkg install openvpn-easy-rsa openvpn-mbedtls luci-app-openvpn</span><br></pre></td></tr></table></figure>
+<p>配置防火墙开放相应端口</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># Configure firewall</span><br><span class="line">uci rename firewall.@zone[0]=&quot;lan&quot;</span><br><span class="line">uci rename firewall.@zone[1]=&quot;wan&quot;</span><br><span class="line">uci rename firewall.@forwarding[0]=&quot;lan_wan&quot;</span><br><span class="line">uci del_list firewall.lan.device=&quot;tun0&quot;</span><br><span class="line">uci add_list firewall.lan.device=&quot;tun0&quot;</span><br><span class="line">uci -q delete firewall.vpn</span><br><span class="line">uci set firewall.ovpn=&quot;rule&quot;</span><br><span class="line">uci set firewall.ovpn.name=&quot;Allow-OpenVPN&quot;</span><br><span class="line">uci set firewall.ovpn.src=&quot;wan&quot;</span><br><span class="line">uci set firewall.ovpn.dest_port=&quot;1194&quot;</span><br><span class="line">uci set firewall.ovpn.proto=&quot;udp&quot;</span><br><span class="line">uci set firewall.ovpn.target=&quot;ACCEPT&quot;</span><br><span class="line">uci commit firewall</span><br><span class="line">/etc/init.d/firewall restart</span><br><span class="line">OpenWRT Firewall</span><br></pre></td></tr></table></figure>
+
+<p>生成服务器和客户端证书</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"># Configuration parameters</span><br><span class="line">export EASYRSA_PKI=&quot;/etc/easy-rsa/pki&quot;</span><br><span class="line">export EASYRSA_REQ_CN=&quot;ovpnca&quot;</span><br><span class="line"> </span><br><span class="line"># Remove and re-initialize the PKI directory</span><br><span class="line">easyrsa --batch init-pki</span><br><span class="line"> </span><br><span class="line"># Generate DH parameters</span><br><span class="line"># 此步会较久</span><br><span class="line">easyrsa --batch gen-dh</span><br><span class="line"> </span><br><span class="line"># Create a new CA</span><br><span class="line">easyrsa --batch build-ca nopass</span><br><span class="line"> </span><br><span class="line"># Generate a keypair and sign locally for a server</span><br><span class="line">easyrsa --batch build-server-full server nopass</span><br><span class="line"> </span><br><span class="line"># Generate a keypair and sign locally for a client</span><br><span class="line">easyrsa --batch build-client-full client nopass</span><br></pre></td></tr></table></figure>
+<p>生成服务器配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"># Generate TLS PSK</span><br><span class="line">OVPN_PKI=&quot;/etc/easy-rsa/pki&quot;</span><br><span class="line">openvpn --genkey --secret $&#123;OVPN_PKI&#125;/tc.pem</span><br><span class="line"> </span><br><span class="line"># Configuration parameters</span><br><span class="line">OVPN_DIR=&quot;/etc/openvpn&quot;</span><br><span class="line">OVPN_PKI=&quot;/etc/easy-rsa/pki&quot;</span><br><span class="line">OVPN_DEV=&quot;$(uci get firewall.lan.device | sed -e &quot;s/^.*\s//&quot;)&quot;</span><br><span class="line">OVPN_PORT=&quot;$(uci get firewall.ovpn.dest_port)&quot;</span><br><span class="line">OVPN_PROTO=&quot;$(uci get firewall.ovpn.proto)&quot;</span><br><span class="line">OVPN_POOL=&quot;192.168.8.0 255.255.255.0&quot;</span><br><span class="line">OVPN_DNS=&quot;$&#123;OVPN_POOL%.* *&#125;.1&quot;</span><br><span class="line">OVPN_DOMAIN=&quot;$(uci get dhcp.@dnsmasq[0].domain)&quot;</span><br><span class="line">OVPN_DH=&quot;$(cat $&#123;OVPN_PKI&#125;/dh.pem)&quot;</span><br><span class="line">OVPN_TC=&quot;$(sed -e &quot;/^#/d;/^\w/N;s/\n//&quot; $&#123;OVPN_PKI&#125;/tc.pem)&quot;</span><br><span class="line">OVPN_CA=&quot;$(openssl x509 -in $&#123;OVPN_PKI&#125;/ca.crt)&quot;</span><br><span class="line">NL=$&#x27;\n&#x27;</span><br><span class="line"> </span><br><span class="line"># Configure VPN server</span><br><span class="line">umask u=rw,g=,o=</span><br><span class="line">grep -l -r -e &quot;TLS Web Server Auth&quot; &quot;$&#123;OVPN_PKI&#125;/issued&quot; \</span><br><span class="line">| sed -e &quot;s/^.*\///;s/\.\w*$//&quot; \</span><br><span class="line">| while read -r OVPN_ID</span><br><span class="line">do</span><br><span class="line">OVPN_CERT=&quot;$(openssl x509 -in $&#123;OVPN_PKI&#125;/issued/$&#123;OVPN_ID&#125;.crt)&quot;</span><br><span class="line">OVPN_KEY=&quot;$(cat $&#123;OVPN_PKI&#125;/private/$&#123;OVPN_ID&#125;.key)&quot;</span><br><span class="line">cat &lt;&lt; EOF &gt; $&#123;OVPN_DIR&#125;/$&#123;OVPN_ID&#125;.conf</span><br><span class="line">verb 3</span><br><span class="line">user nobody</span><br><span class="line">group nogroup</span><br><span class="line">dev $&#123;OVPN_DEV&#125;</span><br><span class="line">port $&#123;OVPN_PORT&#125;</span><br><span class="line">proto $&#123;OVPN_PROTO&#125;</span><br><span class="line">server $&#123;OVPN_POOL&#125;</span><br><span class="line">topology subnet</span><br><span class="line">client-to-client</span><br><span class="line">keepalive 10 120</span><br><span class="line">persist-tun</span><br><span class="line">persist-key</span><br><span class="line">push &quot;dhcp-option DNS $&#123;OVPN_DNS&#125;&quot;</span><br><span class="line">push &quot;dhcp-option DOMAIN $&#123;OVPN_DOMAIN&#125;&quot;</span><br><span class="line">push &quot;redirect-gateway def1&quot;</span><br><span class="line">push &quot;persist-tun&quot;</span><br><span class="line">push &quot;persist-key&quot;</span><br><span class="line">&lt;dh&gt;$&#123;NL&#125;$&#123;OVPN_DH&#125;$&#123;NL&#125;&lt;/dh&gt;</span><br><span class="line">&lt;tls-crypt&gt;$&#123;NL&#125;$&#123;OVPN_TC&#125;$&#123;NL&#125;&lt;/tls-crypt&gt;</span><br><span class="line">&lt;ca&gt;$&#123;NL&#125;$&#123;OVPN_CA&#125;$&#123;NL&#125;&lt;/ca&gt;</span><br><span class="line">&lt;cert&gt;$&#123;NL&#125;$&#123;OVPN_CERT&#125;$&#123;NL&#125;&lt;/cert&gt;</span><br><span class="line">&lt;key&gt;$&#123;NL&#125;$&#123;OVPN_KEY&#125;$&#123;NL&#125;&lt;/key&gt;</span><br><span class="line">EOF</span><br><span class="line">done</span><br><span class="line">/etc/init.d/openvpn restart</span><br></pre></td></tr></table></figure>
+<p>OVPN_POOL&#x3D;”192.168.8.0 255.255.255.0” 定义的地址池不要和内网已有的地址冲突 push “redirect-gateway def1” 是将OpenVPN的网关作为默认网关，会创建默认路由指向OpenVPN的网关，如果只是需要访问家里的网络，可将这条按需要修改，如push “route 192.168.1.0 255.255.255.0 192.168.8.1”</p>
+<p>用ip addr show tun0和cat &#x2F;var&#x2F;run&#x2F;openvpn.server.status确认一下OpenVPN运行状态</p>
+<p>OpenVPN Status</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">生成客户端ovpn文件</span><br><span class="line"></span><br><span class="line"># 先确定使用DDNS还是公网IP作为OpenVPN连接使用，并配置好OVPN_SERV参数，本次以DDNS地址为例子</span><br><span class="line">OVPN_SERV=&quot;ddns.example.com&quot;</span><br><span class="line"></span><br><span class="line"># Configuration parameters</span><br><span class="line">OVPN_DIR=&quot;/etc/openvpn&quot;</span><br><span class="line">OVPN_PKI=&quot;/etc/easy-rsa/pki&quot;</span><br><span class="line">OVPN_DEV=&quot;$(uci get firewall.lan.device | sed -e &quot;s/^.*\s//&quot;)&quot;</span><br><span class="line">OVPN_PORT=&quot;$(uci get firewall.ovpn.dest_port)&quot;</span><br><span class="line">OVPN_PROTO=&quot;$(uci get firewall.ovpn.proto)&quot;</span><br><span class="line">OVPN_TC=&quot;$(sed -e &quot;/^#/d;/^\w/N;s/\n//&quot; $&#123;OVPN_PKI&#125;/tc.pem)&quot;</span><br><span class="line">OVPN_CA=&quot;$(openssl x509 -in $&#123;OVPN_PKI&#125;/ca.crt)&quot;</span><br><span class="line">NL=$&#x27;\n&#x27;</span><br><span class="line"> </span><br><span class="line"># Generate VPN client profiles</span><br><span class="line">umask u=rw,g=,o=</span><br><span class="line">grep -l -r -e &quot;TLS Web Client Auth&quot; &quot;$&#123;OVPN_PKI&#125;/issued&quot; \</span><br><span class="line">| sed -e &quot;s/^.*\///;s/\.\w*$//&quot; \</span><br><span class="line">| while read -r OVPN_ID</span><br><span class="line">do</span><br><span class="line">OVPN_CERT=&quot;$(openssl x509 -in $&#123;OVPN_PKI&#125;/issued/$&#123;OVPN_ID&#125;.crt)&quot;</span><br><span class="line">OVPN_KEY=&quot;$(cat $&#123;OVPN_PKI&#125;/private/$&#123;OVPN_ID&#125;.key)&quot;</span><br><span class="line">cat &lt;&lt; EOF &gt; $&#123;OVPN_DIR&#125;/$&#123;OVPN_ID&#125;.ovpn</span><br><span class="line">verb 3</span><br><span class="line">dev $&#123;OVPN_DEV%%[0-9]*&#125;</span><br><span class="line">nobind</span><br><span class="line">client</span><br><span class="line">remote $&#123;OVPN_SERV&#125; $&#123;OVPN_PORT&#125; $&#123;OVPN_PROTO&#125;</span><br><span class="line">auth-nocache</span><br><span class="line">remote-cert-tls server</span><br><span class="line">&lt;tls-crypt&gt;$&#123;NL&#125;$&#123;OVPN_TC&#125;$&#123;NL&#125;&lt;/tls-crypt&gt;</span><br><span class="line">&lt;ca&gt;$&#123;NL&#125;$&#123;OVPN_CA&#125;$&#123;NL&#125;&lt;/ca&gt;</span><br><span class="line">&lt;cert&gt;$&#123;NL&#125;$&#123;OVPN_CERT&#125;$&#123;NL&#125;&lt;/cert&gt;</span><br><span class="line">&lt;key&gt;$&#123;NL&#125;$&#123;OVPN_KEY&#125;$&#123;NL&#125;&lt;/key&gt;</span><br><span class="line">EOF</span><br><span class="line">done</span><br><span class="line">ls $&#123;OVPN_DIR&#125;/*.ovpn</span><br></pre></td></tr></table></figure>
+<p>将该ovpn导入到OpenVPN的客户端就可以链接上OpenVPN服务器</p>
+<p>Connection Status</p>
+<p>至此一般的OpenVPN Server配置已经完成，目前存在的问题就是一个证书只能连接上一个客户端，下一步就是将会配置多用户的方案。</p>
+<p>2.多用户模式</p>
+<p>多用户方案有两种，一种是生成多个证书文件，每个用户单独使用一个证书；另外一种就是使用单证书配合用户密码的形式。</p>
+<p>这两种都会贴一下配置，因为连回家主要是为了方便，所以会以用户名密码的方式为主。</p>
+<p>多证书方式：</p>
+<p>需要生成另外一组用户公钥和私钥</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Configuration parameters</span><br><span class="line">export EASYRSA_PKI=&quot;/etc/easy-rsa/pki&quot;</span><br><span class="line"> </span><br><span class="line"># Add one more client</span><br><span class="line">easyrsa --batch build-client-full client1 nopass</span><br></pre></td></tr></table></figure>
+<p>然后在&#x2F;etc&#x2F;easy-rsa&#x2F;pki&#x2F;issued找到client1.crt,在&#x2F;etc&#x2F;easy-rsa&#x2F;pki&#x2F;private找到client1.key</p>
+<p>将client1.crt的cert和client1.key的key替换ovpn文件中的段即可生成给第二位用户的ovpn文件</p>
+<p>单证书多用户模式：</p>
+<p>创建用户认证脚本(checkpsw.sh)</p>
+<p>&#x2F;etc&#x2F;openvpn&#x2F;checkpsw.sh</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">###########################################################</span><br><span class="line"># checkpsw.sh (C) 2004 Mathias Sundman &lt;mathias@openvpn.se&gt;</span><br><span class="line">#</span><br><span class="line"># This script will authenticate OpenVPN users against</span><br><span class="line"># a plain text file. The passfile should simply contain</span><br><span class="line"># one row per user with the username first followed by</span><br><span class="line"># one or more space(s) or tab(s) and then the password.</span><br><span class="line"></span><br><span class="line">PASSFILE=&quot;/etc/openvpn/psw-file&quot;</span><br><span class="line">LOG_FILE=&quot;/etc/openvpn/openvpn-password.log&quot;</span><br><span class="line">TIME_STAMP=`date &quot;+%Y-%m-%d %T&quot;`</span><br><span class="line"></span><br><span class="line">###########################################################</span><br><span class="line"></span><br><span class="line">if [ ! -r &quot;$&#123;PASSFILE&#125;&quot; ]; then</span><br><span class="line">  echo &quot;$&#123;TIME_STAMP&#125;: Could not open password file \&quot;$&#123;PASSFILE&#125;\&quot; for reading.&quot; &gt;&gt; $&#123;LOG_FILE&#125;</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">CORRECT_PASSWORD=`awk &#x27;!/^;/&amp;&amp;!/^#/&amp;&amp;$1==&quot;&#x27;$&#123;username&#125;&#x27;&quot;&#123;print $2;exit&#125;&#x27; $&#123;PASSFILE&#125;`</span><br><span class="line"></span><br><span class="line">if [ &quot;$&#123;CORRECT_PASSWORD&#125;&quot; = &quot;&quot; ]; then </span><br><span class="line">  echo &quot;$&#123;TIME_STAMP&#125;: User does not exist: username=\&quot;$&#123;username&#125;\&quot;, password=\&quot;$&#123;password&#125;\&quot;.&quot; &gt;&gt; $&#123;LOG_FILE&#125;</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">if [ &quot;$&#123;password&#125;&quot; = &quot;$&#123;CORRECT_PASSWORD&#125;&quot; ]; then </span><br><span class="line">  echo &quot;$&#123;TIME_STAMP&#125;: Successful authentication: username=\&quot;$&#123;username&#125;\&quot;.&quot; &gt;&gt; $&#123;LOG_FILE&#125;</span><br><span class="line">  exit 0</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">echo &quot;$&#123;TIME_STAMP&#125;: Incorrect password: username=\&quot;$&#123;username&#125;\&quot;, password=\&quot;$&#123;password&#125;\&quot;.&quot; &gt;&gt; $&#123;LOG_FILE&#125;</span><br><span class="line">exit 1</span><br></pre></td></tr></table></figure>
+<p>配置执行权限</p>
+<p>chmod +x &#x2F;etc&#x2F;openvpn&#x2F;checkpsw.sh</p>
+<p>配置用户密码文件</p>
+<p>&#x2F;etc&#x2F;openvpn&#x2F;psw-file</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">user1 passwd1</span><br><span class="line">user2 passwd2</span><br></pre></td></tr></table></figure>
+<p>修改服务端配置文件</p>
+<p>在&#x2F;etc&#x2F;openvpn&#x2F;server.conf后面添加</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">script-security 3</span><br><span class="line">auth-user-pass-verify /etc/openvpn/checkpsw.sh via-env</span><br><span class="line">username-as-common-name</span><br><span class="line">verify-client-cert none</span><br></pre></td></tr></table></figure>
+<p>修改客户端配置文件</p>
+<p>删除掉<cert>和<key></p>
+<p>添加如下内容:</p>
+<p>auth-user-pass</p>
+<p>那样就可以使用用户密码登录了。</p>
+<p>3.OpenWRT Luci集成</p>
+<p>这一步主要是方便在OpenWRT的Web界面方便看到OpenVPN的状态信息</p>
+<p>确保已经安装好</p>
+<p>opkg install luci-app-openvpn</p>
+<p>通过命令修改luci配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># Provide VPN instance management</span><br><span class="line">ls /etc/openvpn/*.conf \</span><br><span class="line">| while read -r OVPN_CONF</span><br><span class="line">do</span><br><span class="line">OVPN_ID=&quot;$(basename $&#123;OVPN_CONF%.*&#125; | sed -e &quot;s/\W/_/g&quot;)&quot;</span><br><span class="line">uci -q delete openvpn.$&#123;OVPN_ID&#125;</span><br><span class="line">uci set openvpn.$&#123;OVPN_ID&#125;=&quot;openvpn&quot;</span><br><span class="line">uci set openvpn.$&#123;OVPN_ID&#125;.enabled=&quot;1&quot;</span><br><span class="line">uci set openvpn.$&#123;OVPN_ID&#125;.config=&quot;$&#123;OVPN_CONF&#125;&quot;</span><br><span class="line">done</span><br><span class="line">uci commit openvpn</span><br><span class="line">/etc/init.d/openvpn restart</span><br></pre></td></tr></table></figure>
+<p>Luci Status</p>
+<p>refer:</p>
+<p>1.<a target="_blank" rel="noopener" href="https://openwrt.org/docs/guide-user/services/vpn/openvpn/basic">OpenVPN basic</a></p>
+<p>2.<a target="_blank" rel="noopener" href="http://www.89cool.com/811.html">Openvpn 2.4 设置用户密码认证</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/10/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E7%AE%A1%E7%90%86-GitHub-%E4%B8%8A-star-%E7%9A%84%E9%A1%B9%E7%9B%AE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -872,7 +1062,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-count">26</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

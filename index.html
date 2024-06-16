@@ -178,6 +178,162 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/16/linux%E7%A3%81%E7%9B%98%E9%95%9C%E5%83%8F%E6%8A%80%E6%9C%AF-Linux-%E4%B8%8B%E4%BD%BF%E7%94%A8-dd-%E5%92%8C-gzip-%E5%91%BD%E4%BB%A4%E6%9D%A5%E4%BB%A3%E6%9B%BF-Ghost-%E5%81%9A%E7%A3%81%E7%9B%98%E9%95%9C%E5%83%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="英雄本色">
+      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="英雄本色的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/06/16/linux%E7%A3%81%E7%9B%98%E9%95%9C%E5%83%8F%E6%8A%80%E6%9C%AF-Linux-%E4%B8%8B%E4%BD%BF%E7%94%A8-dd-%E5%92%8C-gzip-%E5%91%BD%E4%BB%A4%E6%9D%A5%E4%BB%A3%E6%9B%BF-Ghost-%E5%81%9A%E7%A3%81%E7%9B%98%E9%95%9C%E5%83%8F/" class="post-title-link" itemprop="url">linux磁盘镜像技术,Linux 下使用 dd 和 gzip 命令来代替 Ghost 做磁盘镜像</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-06-16 08:38:58 / 修改时间：08:43:23" itemprop="dateCreated datePublished" datetime="2024-06-16T08:38:58+08:00">2024-06-16</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>原文</p>
+<h3 id="1-使用-dd-和-gzip-命令来代替-Ghost-做磁盘镜像"><a href="#1-使用-dd-和-gzip-命令来代替-Ghost-做磁盘镜像" class="headerlink" title="1.使用 dd 和 gzip 命令来代替 Ghost 做磁盘镜像"></a>1.使用 dd 和 gzip 命令来代替 Ghost 做磁盘镜像</h3><p>在 Linux 下，其实可以使用 dd 和 gzip 命令来代替 Ghost 做磁盘镜像。</p>
+<p>要使用 dd 和 gzip 备份，可以执行命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dd if=/dev/sda status=progress| gzip -c &gt; sda.dd.gz</span><br><span class="line">也可以不用压缩命令</span><br><span class="line">dd if=/dev/sda status=progress bs=32M &gt; sda.dd.gz</span><br><span class="line">bs的添加非常重要，可以提升速度</span><br></pre></td></tr></table></figure>
+<p>在还原时，可以执行下列命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gzip -dc sda.dd.gz | dd status=progress of=/dev/sda bs=1M</span><br></pre></td></tr></table></figure>
+<p>值得注意的是，还原时需要使用如 Live CD 之类的 Linux 引导系统。</p>
+<p>生成gzip文件可以节省空间和时间，需要可以给gzip 加-9参数。使用bs&#x3D;1M参数是否会影响数据，这个有待评估。</p>
+<p>先将第二块硬盘挂载，然后cd 到其挂载点的备份目录，开始备份硬盘到某个文件。</p>
+<h3 id="2-linux-unix-dd命令是一个非常好的管理磁盘命令"><a href="#2-linux-unix-dd命令是一个非常好的管理磁盘命令" class="headerlink" title="2. linux&#x2F;unix dd命令是一个非常好的管理磁盘命令"></a>2. linux&#x2F;unix dd命令是一个非常好的管理磁盘命令</h3><p>dd命令作用：指定大小的块拷贝一个文件，并在拷贝的同时进行指定的转换，起到一个初始化磁盘的作用</p>
+<p>备份：</p>
+<p>[root@server ~]# dd if&#x3D;&#x2F;dev&#x2F;sda of&#x3D;&#x2F;dev&#x2F;sdb &#x3D;&gt; 备份整个磁盘到另外一个磁盘</p>
+<p>[root@server ~]# dd if&#x3D;&#x2F;dev&#x2F;sdb of&#x3D;sda.bak &#x3D;&gt;备份整个磁盘为某个文件</p>
+<p>[root@server ~]# dd if&#x3D;&#x2F;dev&#x2F;sda | gzip &gt; sda.bak.gz &#x3D;&gt; 备份并且压缩</p>
+<p>[root@server ~]#dd if&#x3D;&#x2F;dev&#x2F;sda1 bs&#x3D;1M | gzip &gt; sda1.dd.gz</p>
+<p>[root@server ~]# dd if&#x3D;&#x2F;dev&#x2F;sdaof&#x3D;dbt.bak count&#x3D;1 bs&#x3D;512 skip&#x3D;446</p>
+<p>&#x3D;&gt;跳过前446字节备份磁盘第一扇区的后66字节DPT信息到指定文件<br>重要参数：</p>
+<ul>
+<li>bs&#x3D;32M</li>
+<li>status&#x3D;progress</li>
+</ul>
+<h3 id="3-Linux中的虚拟设备-dev-null、-dev-zero、-dev-random和-dev-urandom"><a href="#3-Linux中的虚拟设备-dev-null、-dev-zero、-dev-random和-dev-urandom" class="headerlink" title="3.Linux中的虚拟设备&#x2F;dev&#x2F;null、&#x2F;dev&#x2F;zero、&#x2F;dev&#x2F;random和&#x2F;dev&#x2F;urandom"></a>3.Linux中的虚拟设备&#x2F;dev&#x2F;null、&#x2F;dev&#x2F;zero、&#x2F;dev&#x2F;random和&#x2F;dev&#x2F;urandom</h3><p>Unix&#x2F;Linux将每一个设备都当成一个文件，放在&#x2F;dev目录下。这些文件有的对应着一个真实存在的物理设备；有的则代表一个虚拟设备，提供一些特定的功能。</p>
+<p>下面介绍三个常用的虚拟设备：</p>
+<p>&#x2F;dev&#x2F;null<br>“空”设备，也有人称它为黑洞。任何输入到这个“设备”的数据都将被直接丢弃。最常用的用法是把不需要的输出重定向到这个文件。例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ run.sh 1&gt;/dev/null 2&gt;&amp;1  #将标准输出和错误输出重定向到/dev/null，运行这个脚本不会输出任何信息到终端</span><br></pre></td></tr></table></figure>
+<p>&#x2F;dev&#x2F;zero<br>“零”设备，可以无限的提供空字符（0x00，ASCII代码NUL）。常用来生成一个特定大小的文件。例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dd if=/dev/zero of=./output.txt bs=1024 count=1 #产生一个1k大小的文件output.txt</span><br></pre></td></tr></table></figure>
+<p>&#x2F;dev&#x2F;random和&#x2F;dev&#x2F;urandom<br>随机数设备，提供不间断的随机字节流。二者的区别是&#x2F;dev&#x2F;random产生随机数据依赖系统中断，当系统中断不足时，&#x2F;dev&#x2F;random设备会“挂起”，因而产生数据速度较慢，但随机性好；&#x2F;dev&#x2F;urandom不依赖系统中断，数据产生速度快，但随机性较低。<br>读取这两个文件的输出如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ cat /dev/random | od -x</span><br><span class="line">0000000 34fa b5ea 0901 b7e0 27a9 623a 0879 d9eb</span><br><span class="line">0000020 d212 4f6f d928 6637 84a4 8ec5 fc2c 4896</span><br><span class="line">$ cat /dev/urandom | od -x | head -n 5</span><br><span class="line">0000000 8048 4dbd 07c9 2119 02d0 221b 89ba af7f</span><br><span class="line">0000020 3d6f 6a72 3752 4a09 5a47 a3fb dc98 ed9f</span><br><span class="line">0000040 f3e8 e82d 6748 2e14 de80 7554 bb52 f56c</span><br><span class="line">0000060 de73 0e51 262f 5a63 af69 b45c ee49 c1bf</span><br><span class="line">0000100 76b4 6db5 4e5b e438 70fb d207 a28c 04a8</span><br></pre></td></tr></table></figure>
+<p>在上面的例子中，读取&#x2F;dev&#x2F;random文件在输出了两行之后就停住了（系统中断不足），而&#x2F;dev&#x2F;urandom产生数据速度很快，没有任何停顿。</p>
+<p>下面这个例子，利用&#x2F;dev&#x2F;urandom设备产生一个128位的随机字符串：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ str=$(cat /dev/urandom | od -x | tr -d &#x27; &#x27; | head -n 1)</span><br><span class="line">$ echo $&#123;str:7&#125;</span><br><span class="line">17539187d2e8b8e26d49bec90465c14d </span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/16/linux%E4%B8%8B%E5%88%A9%E7%94%A8dd%E5%91%BD%E4%BB%A4%E5%A4%87%E4%BB%BD-gzip%E5%8E%8B%E7%BC%A9-ssh%E8%BF%9C%E7%A8%8B%E6%8B%B7%E8%B4%9D%E5%A4%87%E4%BB%BD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="英雄本色">
+      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="英雄本色的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/06/16/linux%E4%B8%8B%E5%88%A9%E7%94%A8dd%E5%91%BD%E4%BB%A4%E5%A4%87%E4%BB%BD-gzip%E5%8E%8B%E7%BC%A9-ssh%E8%BF%9C%E7%A8%8B%E6%8B%B7%E8%B4%9D%E5%A4%87%E4%BB%BD/" class="post-title-link" itemprop="url">linux下利用dd命令备份 gzip压缩 ssh远程拷贝备份</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-06-16 08:36:18 / 修改时间：08:38:10" itemprop="dateCreated datePublished" datetime="2024-06-16T08:36:18+08:00">2024-06-16</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>原文 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/yuanjiex/p/15588746.html">https://www.cnblogs.com/yuanjiex/p/15588746.html</a></p>
+<p>把远程主机磁盘备份到本地</p>
+<p>ssh user@ip “dd if&#x3D;&#x2F;dev&#x2F;sda | gzip -1 -“ | dd of&#x3D;.&#x2F;backup.gz</p>
+<p>把本地磁盘备份到远程主机</p>
+<p>dd if&#x3D;&#x2F;dev&#x2F;sda | gzip -1 - | ssh user@ip “dd of&#x3D;backup.gz”</p>
+<p>把远程备份恢复到本地</p>
+<p>ssh user@ip “dd if&#x3D;&#x2F;path&#x2F;to&#x2F;backup.gz” | gunzip | dd of&#x3D;&#x2F;path&#x2F;to&#x2F;restore</p>
+<p>把本地备份恢复到远程主机</p>
+<p>dd if&#x3D;&#x2F;path&#x2F;to&#x2F;backup.gz | ssh user@ip “gunzip | dd of&#x3D;&#x2F;dev&#x2F;sda”</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/15/rysnc%E5%91%BD%E4%BB%A4%E8%BF%87%E6%BB%A4%E8%A7%84%E5%88%99%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -856,176 +1012,6 @@ echo 12345 | tee - -
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/12/publish-obsidian-post-to-wordpress/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="英雄本色">
-      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="英雄本色的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/06/12/publish-obsidian-post-to-wordpress/" class="post-title-link" itemprop="url">publish-obsidian-post-to-wordpress</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2024-06-12 21:24:54 / 修改时间：21:26:00" itemprop="dateCreated datePublished" datetime="2024-06-12T21:24:54+08:00">2024-06-12</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>转载 <a target="_blank" rel="noopener" href="https://einverne.github.io/post/2023/08/publish-obsidian-post-to-wordpress.html">https://einverne.github.io/post/2023/08/publish-obsidian-post-to-wordpress.html</a></p>
-<p>如何快速分享 Obsidian 中的笔记是从我开始使用 Obsidian 之后一直在思考的问题，在之前，因为我所有的笔记都是通过 Markdown 来存放在本地的，如果我想要分享一个笔记，一般就是将笔记移动到 <code>Blog/_post</code> 目录下，因为我使用一个 Git 仓库来管理我所有的笔记（Vault）然后使用 git submodule 的方式来将我的 <a target="_blank" rel="noopener" href="https://blog.einverne.info/">Jekyll 博客</a>，<a target="_blank" rel="noopener" href="https://invest.einverne.info/">Hexo 博客</a> 放到我的统一的笔记库里面。所以当我想要发布一篇笔记的时候，就是将笔记移动到对应的博客的目录，然后在使用 git commit 提交，push 来发布，之后的过程都是通过 CI 自动完成的。</p>
-<p>虽然这样的方式我已经使用了很多年了，也没有什么大的问题，唯一的问题就是因为发布博客对 Markdown 的标题有一些限制，所以发布之前都得进行重命名。并且我没有办法做到一键发布，大部分的情况下我都必需打开终端，然后进行提交。直到我发现了一款叫做 [[obsidian-wordpress]] 的插件。</p>
-<p>这个<a target="_blank" rel="noopener" href="https://github.com/devbean/obsidian-wordpress">插件</a>完美的解决了我想要快速分享一篇笔记，然后还不需要我做任何调整，当完成初次的配置之后，基本上只需要点击一下就可以完成发布。</p>
-<p><img src="https://photo.einverne.info/images/2023/08/28/U9pC.png" alt="U9pC"></p>
-<p>这个插件使用 WordPress 的接口（XML-RPC 或 REST）来发布文章。</p>
-<h2 id="obsidian-wordpress"><a href="#obsidian-wordpress" class="headerlink" title="obsidian wordpress"></a>obsidian wordpress</h2><p><a target="_blank" rel="noopener" href="https://github.com/devbean/obsidian-wordpress">obsidian-wordpress</a> 是一款 Obsidian 下的插件，可以一键将笔记发布到 WordPress 站点中。该插件使用 XML-RPC 或 REST 接口进行发布。</p>
-<p>XML-RPC 是默认启用的，但有些站点可能由于安全问题而禁用它。 虽然有些共享主机可能默认禁用 XML-RPC，但是您无法启用它。 因此，如果禁用 XML-RPC，这个插件将不起作用。</p>
-<p>在 WodrPress 4.7 之后，REST API 会在默认情况下启用。 一些 REST API 需要额外的操作来保护可写 API。 历史上 REST 接口是通过安装插件实现的。 在 WordPress 5.6 版本之后，引入了应用程序密码来完成类似的工作。 因此在 WordPress 5.6 之后 ，应用程序密码是首选的。</p>
-<h2 id="初次设置"><a href="#初次设置" class="headerlink" title="初次设置"></a>初次设置</h2><p>在插件的设置中，找到 Profile，这里可以配置站点的信息，包括地址，API 类型，用户名，密码等。</p>
-<p><img src="https://photo.einverne.info/images/2023/08/28/UA2H.png" alt="UA2H"></p>
-<p>需要注意的是这里的密码，在最新版的 WordPress 中请使用应用程序密码，在用户管理下面生成。</p>
-<p>当完成以上的设置之后，在任意的笔记中，都可以在侧边栏中找到 WordPress 的按钮，然后点击，选择分类，一键完成发布。最近我有在写我的 <a target="_blank" rel="noopener" href="https://japan.einverne.info/">日本生活</a> ，其中所有的内容都是我在 Obsidian 中完成编写，然后发布的。我创建了一个单独的文件夹用来存放所有发布到该网站的内容，并且这些内容也可以很好的和我的其他笔记进行融合，并且在我修改了文章的内容之后，也可以快速进行一键发布。</p>
-<p>在以前我使用 WordPress 的时候，非常不方面的一点就是对其中文章内容的修改非常不方便，我不喜欢在线的编辑器，而如今 Obsidian 就成为了我的 WordPress 的本地编辑器。</p>
-<h2 id="图片怎么办"><a href="#图片怎么办" class="headerlink" title="图片怎么办"></a>图片怎么办</h2><p>文章中的图片我是我之前搭建的 [[Chevereto]] 图床，配合 macOS 下的 uPic，我设置了快捷键 Ctrl + Shift + U，就可以一键上传粘贴板中的内容。然后直接在 Obsidian 中使用即可。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/12/%E5%8F%8D%E6%9F%A5%E4%B8%80%E4%B8%AA%E5%9F%9F%E5%90%8D%E7%9A%84%E6%89%80%E6%9C%89%E5%AD%90%E5%9F%9F%E5%90%8D/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="英雄本色">
-      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="英雄本色的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/06/12/%E5%8F%8D%E6%9F%A5%E4%B8%80%E4%B8%AA%E5%9F%9F%E5%90%8D%E7%9A%84%E6%89%80%E6%9C%89%E5%AD%90%E5%9F%9F%E5%90%8D/" class="post-title-link" itemprop="url">反查一个域名的所有子域名</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2024-06-12 21:03:34 / 修改时间：21:18:38" itemprop="dateCreated datePublished" datetime="2024-06-12T21:03:34+08:00">2024-06-12</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>转载 <a target="_blank" rel="noopener" href="https://einverne.github.io/post/2023/09/subdomain-scanner.html">https://einverne.github.io/post/2023/09/subdomain-scanner.html</a></p>
-<p>前段时间看到一篇文章说因为 Nginx 的一个「特性」，在直接访问 IP ，并且没有配置默认证书的情况下 Nginx 就会返回一个 SSL 证书从而倒置域名的泄露，进而泄露了网站的源 IP，使得一些扫描网站，比如 [[censys]] 可以直接查询到域名背后的网站 IP，从而导致网站即使用了 CDN 也会遭受到攻击。在这个契机下，我又开始了衍生，因为在 censys，[[fofa]]，[[Shodan]] 等等网站上你只需要输入一个域名就可以获得所有这个站点相关的信息，那么有没有办法可以在只知道一个网站域名的情况下知道所有的二级域名呢。</p>
-<p>于是抱着这个新想法，进行了一番调查，果然还是有办法可以知道的。我最最朴素的想法就是写一个遍历，直接通过随机的字符串，<code>[a-z0-9\-]</code> 等等字符的组合，然后进行这些域名检查，ping，dig 的结果，如果有返回，可以认为这个子域名被启用了。但是很显然这个想法的效率太低了，并且遍历这么多无效的域名前缀很显然没有办法最快的找到所有的。</p>
-<p>然后我就找到了 [[MassDNS]]，一款使用 C 语言编写的高性能子域名扫描工具。它通过使用自定义的 DNS 解析器和并发查询来加快子域名的发现速度。MassDNS 支持使用字典文件进行子域名爆破，并提供了丰富的配置选项来优化扫描过程。 MassDNS 还支持自定义的 DNS 服务器，并可以通过设置最大查询时间和最大重试次数等参数来控制扫描过程中的超时和重试行为。此外，它还提供了多种输出格式，包括文本、JSON 和 CSV，以便用户根据需要对扫描结果进行分析和处理。 使用 MassDNS 进行子域名扫描非常简单，只需指定目标域名和字典文件即可开始扫描。它还提供了多线程支持，可以根据系统资源情况调整并发线程数量，以实现更快的扫描速度。</p>
-<p>然后我又循着脉络找到了 <a target="_blank" rel="noopener" href="https://github.com/shmilylty/OneForAll">OneForAll</a> 这样一个开源的工具，它是一个功能强大的子域名收集工具，集成了非常多的工具，从它的官方介绍上也可以看出来它收集子域名的思路和方法。</p>
-<ul>
-<li>利用成熟第三方的情报收集<ul>
-<li>利用证书收集子域名情报，比如通过 <code>censys_api</code>，<code>certspotter</code>，<code>crtsh</code> 等等</li>
-<li>常规检查收集子域<ul>
-<li>域传送漏洞利用<code>axfr</code></li>
-<li>检查跨域策略文件<code>cdx</code></li>
-<li>检查 HTTPS 证书<code>cert</code></li>
-<li>检查内容安全策略<code>csp</code></li>
-<li>检查 robots 文件<code>robots</code></li>
-<li>检查 sitemap 文件<code>sitemap</code></li>
-<li>利用 NSEC 记录遍历 DNS 域<code>dnssec</code></li>
-<li>NSEC3 记录</li>
-</ul>
-</li>
-<li>网络爬虫存档记录，<code>archivecrawl</code>，<code>commoncrawl</code></li>
-<li>通过第三方 DNS 数据集收集子域</li>
-<li>直接通过 DNS 查询收集，SRV记录，MX,NS,SOA,TXT记录</li>
-<li>利用威胁情报平台数据收集子域</li>
-<li>搜索引擎发现子域</li>
-</ul>
-</li>
-<li>通过字典，或者遍历来查询子域名</li>
-<li>通过 [[MassDNS]] 来多线程查询子域名</li>
-</ul>
-<h2 id="OneForAll-使用"><a href="#OneForAll-使用" class="headerlink" title="OneForAll 使用"></a>OneForAll 使用</h2><p>首先获取 OneForAll 的代码</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone git@github.com:shmilylty/OneForAll.git</span><br></pre></td></tr></table></figure>
-
-<p>通过 <a href="/post/2017/04/pyenv.html">pyenv</a> 或者其他熟悉的工具，安装 Python 依赖，然后执行</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 oneforall.py --target douban.com run</span><br></pre></td></tr></table></figure>
-
-<p>很快就能获得一个 CSV 的结果。</p>
-<h2 id="Other"><a href="#Other" class="headerlink" title="Other"></a>Other</h2><ul>
-<li>[[Findomain]]</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1095,7 +1081,7 @@ echo 12345 | tee - -
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-count">26</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
