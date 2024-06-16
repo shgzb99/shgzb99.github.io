@@ -178,6 +178,71 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/16/%E5%B0%8F%E9%99%88%E7%9A%84%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E7%AB%99/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="英雄本色">
+      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="英雄本色的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/06/16/%E5%B0%8F%E9%99%88%E7%9A%84%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E7%AB%99/" class="post-title-link" itemprop="url">小陈的容器镜像站</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-06-16 15:41:29 / 修改时间：15:45:06" itemprop="dateCreated datePublished" datetime="2024-06-16T15:41:29+08:00">2024-06-16</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>原文 <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/jaUb7sSLDBXrU3F7crtWPA">https://mp.weixin.qq.com/s/jaUb7sSLDBXrU3F7crtWPA</a></p>
+<h2 id="小陈的容器镜像站"><a href="#小陈的容器镜像站" class="headerlink" title="小陈的容器镜像站"></a>小陈的容器镜像站</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>由于不可抗力原因建立了镜像站，支持多平台容器镜像代理。</p>
+<p>镜像使用优先级：官方地址 &gt; 镜像地址 &gt; 阿里云地址</p>
+<h3 id="替换地址"><a href="#替换地址" class="headerlink" title="替换地址"></a>替换地址</h3><p>gcr.io   &gt;&gt;&gt;&gt;&gt;   gcr.chenby.cn<br>quay.io   &gt;&gt;&gt;&gt;&gt;   quay.chenby.cn<br>ghcr.io   &gt;&gt;&gt;&gt;&gt;   ghcr.chenby.cn<br>docker.io   &gt;&gt;&gt;&gt;&gt;   docker.chenby.cn<br>k8s.gcr.io   &gt;&gt;&gt;&gt;&gt;   k8s.chenby.cn<br>registry.k8s.io   &gt;&gt;&gt;&gt;&gt;   k8s.chenby.cn<br>docker.elastic.co   &gt;&gt;&gt;&gt;&gt;   elastic.chenby.cn<br>docker.cloudsmith.io   &gt;&gt;&gt;&gt;&gt;   cloudsmith.chenby.cn</p>
+<h3 id="配置Docker"><a href="#配置Docker" class="headerlink" title="配置Docker"></a>配置Docker</h3><p>使用 Docker Hub 官方镜像,可以加入到 daemon.json 文件中。<br>这样就可以使用正常的命令进行拉取镜像，系统会自动使用代理进行拉取。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir -p /etc/docker</span><br><span class="line">sudo tee /etc/docker/daemon.json &lt;&lt;-&#x27;EOF&#x27;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https://docker.chenby.cn&quot;]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"># docker.io 仓库：</span><br><span class="line">  # 官方地址：</span><br><span class="line">  docker pull docker.io/nginx:latest</span><br><span class="line">  docker pull docker.io/calico/node:v3.28.0</span><br><span class="line">  # 镜像地址：</span><br><span class="line">  docker pull docker.chenby.cn/library/nginx:latest</span><br><span class="line">  docker pull docker.chenby.cn/calico/node:v3.28.0</span><br><span class="line"></span><br><span class="line"># docker.elastic.co 仓库：</span><br><span class="line">  # 官方地址：</span><br><span class="line">  docker pull docker.elastic.co/apm/apm-server:8.14.0</span><br><span class="line">  # 镜像地址：</span><br><span class="line">  docker pull elastic.chenby.cn/apm/apm-server:8.14.0</span><br><span class="line">  # 阿里云地址：</span><br><span class="line">  docker pull registry.aliyuncs.com/chenby/apm-server:8.14.0</span><br><span class="line"></span><br><span class="line"># quay.io 仓库：</span><br><span class="line">  # 官方地址：</span><br><span class="line">  docker pull quay.io/ceph/ceph:v18.2.1</span><br><span class="line">  # 镜像地址：</span><br><span class="line">  docker pull quay.chenby.cn/ceph/ceph:v18.2.1</span><br><span class="line">  # 阿里云地址：</span><br><span class="line">  docker pull registry.aliyuncs.com/chenby/ceph:v18.2.1</span><br><span class="line"></span><br><span class="line"># k8s.gcr.io 仓库：</span><br><span class="line">  # 官方地址：</span><br><span class="line">  docker pull k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.8.2</span><br><span class="line">  # 镜像地址：</span><br><span class="line">  docker pull k8s.chenby.cn/kube-state-metrics/kube-state-metrics:v2.8.2</span><br><span class="line">  # 阿里云地址：</span><br><span class="line">  docker pull registry.aliyuncs.com/chenby/kube-state-metrics:v2.8.2</span><br><span class="line"></span><br><span class="line"># registry.k8s.io 仓库：</span><br><span class="line">  # 官方地址：</span><br><span class="line">  docker pull registry.k8s.io/sig-storage/nfsplugin:v4.2.0</span><br><span class="line">  # 镜像地址：</span><br><span class="line">  docker pull k8s.chenby.cn/sig-storage/nfsplugin:v4.2.0</span><br><span class="line">  # 阿里云地址：</span><br><span class="line">  docker pull registry.aliyuncs.com/chenby/nfsplugin:v4.2.0</span><br><span class="line"></span><br><span class="line"># gcr.io 仓库：</span><br><span class="line">  # 官方地址：</span><br><span class="line">  docker pull gcr.io/kaniko-project/executor:v1.23.1</span><br><span class="line">  # 镜像地址：</span><br><span class="line">  docker pull gcr.chenby.cn/kaniko-project/executor:v1.23.1</span><br><span class="line">  # 阿里云地址：</span><br><span class="line">  docker pull registry.aliyuncs.com/chenby/executor:v1.23.1</span><br><span class="line"></span><br><span class="line"># ghcr.io 仓库：</span><br><span class="line">  # 官方地址：</span><br><span class="line">  docker pull ghcr.io/coroot/coroot:1.1.0</span><br><span class="line">  # 镜像地址：</span><br><span class="line">  docker pull ghcr.chenby.cn/coroot/coroot:1.1.0</span><br><span class="line">  # 阿里云地址：</span><br><span class="line">  docker pull registry.aliyuncs.com/chenby/coroot:1.1.0</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">关于</span><br><span class="line"></span><br><span class="line">https://www.oiox.cn/</span><br><span class="line"></span><br><span class="line">https://www.oiox.cn/index.php/start-page.html</span><br><span class="line"></span><br><span class="line">CSDN、GitHub、51CTO、知乎、开源中国、思否、博客园、掘金、简书、华为云、阿里云、腾讯云、哔哩哔哩、今日头条、新浪微博、个人博客</span><br><span class="line"></span><br><span class="line">全网可搜《小陈运维》</span><br><span class="line"></span><br><span class="line">文章主要发布于微信公众号</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/16/Git-%E4%B8%8D%E8%A6%81%E5%8F%AA%E4%BC%9A-Pull-%E5%92%8C-Push%EF%BC%8C%E8%BF%99%E4%BA%94%E6%9D%A1%E6%8F%90%E9%AB%98%E6%95%88%E7%8E%87%E7%9A%84%E5%91%BD%E4%BB%A4%E5%BE%97%E6%8E%8C%E6%8F%A1%EF%BC%81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1080,68 +1145,6 @@ echo 12345 | tee - -
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/13/dd%E5%91%BD%E4%BB%A4%E6%98%BE%E7%A4%BA%E8%BF%9B%E5%BA%A6%E5%8F%8A%E6%89%8B%E5%8A%A8%E8%BF%81%E7%A7%BB%E7%B3%BB%E7%BB%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="英雄本色">
-      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="英雄本色的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/06/13/dd%E5%91%BD%E4%BB%A4%E6%98%BE%E7%A4%BA%E8%BF%9B%E5%BA%A6%E5%8F%8A%E6%89%8B%E5%8A%A8%E8%BF%81%E7%A7%BB%E7%B3%BB%E7%BB%9F/" class="post-title-link" itemprop="url">dd命令显示进度及手动迁移系统</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2024-06-13 14:31:54 / 修改时间：14:32:42" itemprop="dateCreated datePublished" datetime="2024-06-13T14:31:54+08:00">2024-06-13</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>转载 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/grumpyhippo/p/11260161.html#:~:text=dd%E5%91%BD%E4%BB%A4%E6%98%BE%E7%A4%BA%E8%BF%9B%E5%BA%A6%201.%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%AA%97%E5%8F%A3%E6%89%A7%E8%A1%8Cdd%E5%91%BD%E4%BB%A4%202.%E5%8F%A6%E5%BC%80%E4%B8%80%E4%B8%AA%E7%AA%97%E5%8F%A3%EF%BC%8C%E6%89%A7%E8%A1%8Cwatch%20-n%205,pkill%20-USR1%20-x%20dd%203.%E5%9C%A8%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%89%A7%E8%A1%8Cdd%E5%91%BD%E4%BB%A4%E7%9A%84%E7%AA%97%E5%8F%A3%E5%8D%B3%E5%8F%AF%E6%98%BE%E7%A4%BAdd%E6%89%A7%E8%A1%8C%E8%BF%9B%E5%BA%A6%EF%BC%8C%E7%9B%B4%E5%88%B0%E4%BB%BB%E5%8A%A1%E5%AE%8C%E6%88%90">https://www.cnblogs.com/grumpyhippo/p/11260161.html#:~:text=dd%E5%91%BD%E4%BB%A4%E6%98%BE%E7%A4%BA%E8%BF%9B%E5%BA%A6%201.%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%AA%97%E5%8F%A3%E6%89%A7%E8%A1%8Cdd%E5%91%BD%E4%BB%A4%202.%E5%8F%A6%E5%BC%80%E4%B8%80%E4%B8%AA%E7%AA%97%E5%8F%A3%EF%BC%8C%E6%89%A7%E8%A1%8Cwatch%20-n%205,pkill%20-USR1%20-x%20dd%203.%E5%9C%A8%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%89%A7%E8%A1%8Cdd%E5%91%BD%E4%BB%A4%E7%9A%84%E7%AA%97%E5%8F%A3%E5%8D%B3%E5%8F%AF%E6%98%BE%E7%A4%BAdd%E6%89%A7%E8%A1%8C%E8%BF%9B%E5%BA%A6%EF%BC%8C%E7%9B%B4%E5%88%B0%E4%BB%BB%E5%8A%A1%E5%AE%8C%E6%88%90</a></p>
-<p>dd命令显示进度<br>1.第一个窗口执行dd命令<br>2.另开一个窗口，执行watch -n 5 pkill -USR1 -x dd<br>3.在第一个执行dd命令的窗口即可显示dd执行进度，直到任务完成</p>
-<p>dd 网络磁盘克隆<br>dd if&#x3D;&#x2F;dev&#x2F;sda |ssh xxx.xxx.xxx.xxx “dd of&#x3D;&#x2F;dev&#x2F;sda bs&#x3D;4M”</p>
-<p>linux手动迁移方法<br>1.在目标机器挂起live CD，并配置可通IP地址，开启ssh服务器，设置root密码。2.在原机执行dd if&#x3D;&#x2F;dev&#x2F;sda |ssh xxx.xxx.xxx.xxx “dd of&#x3D;&#x2F;dev&#x2F;sda bs&#x3D;4M”<br>3.第二步完成后再目标机live CD系统中将boot所在分区挂载起来，执行grub-install –root-directory&#x3D;&#x2F;mnt&#x2F;boot &#x2F;dev&#x2F;sda<br>4.目标机reboot<br>5.启动时进入grub&gt;<br>6.ls查看boot所在分区，例如查询可知在（hd0,msdos1）。执行：set root&#x3D;(hd0,msdos1);set prefix&#x3D;(hd0,msdos1)&#x2F;grub2;insmod normal;normal<br>7.执行完以上即可进入系统<br>8.进入系统后执行grub2-install &#x2F;dev&#x2F;sda<br>9.reboot目标机完成迁移。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1211,7 +1214,7 @@ echo 12345 | tee - -
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
