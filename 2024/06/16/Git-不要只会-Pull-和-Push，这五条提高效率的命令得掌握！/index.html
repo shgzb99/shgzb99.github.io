@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="原文 https:&#x2F;&#x2F;www.51cto.com&#x2F;article&#x2F;789341.html 1官方解释：当您想记录工作目录和索引的当前状态，但又想返回一个干净的工作目录时，请使用git stash。该命令将保存本地修改，并恢复工作目录以匹配头部提交。 使用 Git 作为代码版本管理，早已是现在开发工程师必备的技能。可大多数工程师还是只会最基本的保存、拉取、推送，遇到一些commit管理的问题就束手无">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git 不要只会 Pull 和 Push，这五条提高效率的命令得掌握！">
+<meta property="og:url" content="http://example.com/2024/06/16/Git-%E4%B8%8D%E8%A6%81%E5%8F%AA%E4%BC%9A-Pull-%E5%92%8C-Push%EF%BC%8C%E8%BF%99%E4%BA%94%E6%9D%A1%E6%8F%90%E9%AB%98%E6%95%88%E7%8E%87%E7%9A%84%E5%91%BD%E4%BB%A4%E5%BE%97%E6%8E%8C%E6%8F%A1%EF%BC%81/index.html">
+<meta property="og:site_name" content="英雄本色的博客">
+<meta property="og:description" content="原文 https:&#x2F;&#x2F;www.51cto.com&#x2F;article&#x2F;789341.html 1官方解释：当您想记录工作目录和索引的当前状态，但又想返回一个干净的工作目录时，请使用git stash。该命令将保存本地修改，并恢复工作目录以匹配头部提交。 使用 Git 作为代码版本管理，早已是现在开发工程师必备的技能。可大多数工程师还是只会最基本的保存、拉取、推送，遇到一些commit管理的问题就束手无">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s9.51cto.com/oss/202405/28/c9839b7866970b4664a6341cdff0763e23e837.png">
+<meta property="og:image" content="https://s7.51cto.com/oss/202405/28/c4b89ad67a1d89b6890155f392e52fc57e6966.png">
+<meta property="og:image" content="https://s7.51cto.com/oss/202405/28/37dd70d3238ff7a9b074495ae42589f17e8e47.png">
+<meta property="og:image" content="https://s4.51cto.com/oss/202405/28/e37d4d6153331731b7d977006f0848fb138727.png">
+<meta property="og:image" content="https://s9.51cto.com/oss/202405/28/d4e2d3420773029c6473585e3a51a5ff127ec3.png">
+<meta property="og:image" content="https://s2.51cto.com/oss/202405/28/42f6acb510ba7c151cb8762d6a23afbbc2f70e.png">
+<meta property="og:image" content="https://s9.51cto.com/oss/202405/28/d64070f309916ca4f827544aabbf997259be0e.png">
+<meta property="og:image" content="https://s6.51cto.com/oss/202405/28/c17358a62fc80f610b698922db519a9698fbfc.png">
+<meta property="og:image" content="https://s4.51cto.com/oss/202405/28/68c7ac3175264836276956fba335ac7dece8b0.png">
+<meta property="og:image" content="https://s7.51cto.com/oss/202405/28/476ec8255ac7ad3386f7864157c0790cbb15e1.png">
+<meta property="og:image" content="https://s9.51cto.com/oss/202405/28/a905b9606820a53af1521847761225fcb29e02.png">
+<meta property="og:image" content="https://s9.51cto.com/oss/202405/28/03e140392e1fa007f919937bf5a17efb70bf3d.png">
+<meta property="og:image" content="https://s4.51cto.com/oss/202405/28/51bb44915b8498736e7682df2f4c80fbef36ec.png">
+<meta property="og:image" content="https://s8.51cto.com/oss/202405/28/410a4f751a209927051257ed8cb0b17f1b7efa.png">
+<meta property="og:image" content="https://s9.51cto.com/oss/202405/28/392b5c285286ab539091296bcfc1ab56576ede.png">
+<meta property="og:image" content="https://s3.51cto.com/oss/202405/28/4925fd110cdd09a6ada903d0772a85f0e9f7fe.png">
+<meta property="og:image" content="https://s7.51cto.com/oss/202405/28/b24c6a930756d4e251d985cfa82b2cbd02cc55.png">
+<meta property="og:image" content="https://s7.51cto.com/oss/202405/28/c1a37ad359070e1a4a4600ba59f159f073f371.png">
+<meta property="og:image" content="https://s3.51cto.com/oss/202405/28/91f36e6853e7a762d96142ab86dcf085dd3484.png">
+<meta property="og:image" content="https://s6.51cto.com/oss/202405/28/164cce2872101853ea7931ec60648226f48eb0.png">
+<meta property="og:image" content="https://s2.51cto.com/oss/202405/28/346d80a06fd45b808688305b6193c29056cdfd.png">
+<meta property="og:image" content="https://s5.51cto.com/oss/202405/28/b9c6b7094dfc137949e065ba747cfacb2ba77a.png">
+<meta property="og:image" content="https://s2.51cto.com/oss/202405/28/620314664175a9752cc467583bc25bd1f30c6c.png">
+<meta property="og:image" content="https://s3.51cto.com/oss/202405/28/7410638705ec208d3a949361f15476aa981a09.png">
+<meta property="article:published_time" content="2024-06-16T07:18:25.000Z">
+<meta property="article:modified_time" content="2024-06-16T07:38:22.226Z">
+<meta property="article:author" content="英雄本色">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s9.51cto.com/oss/202405/28/c9839b7866970b4664a6341cdff0763e23e837.png">
+
+<link rel="canonical" href="http://example.com/2024/06/16/Git-%E4%B8%8D%E8%A6%81%E5%8F%AA%E4%BC%9A-Pull-%E5%92%8C-Push%EF%BC%8C%E8%BF%99%E4%BA%94%E6%9D%A1%E6%8F%90%E9%AB%98%E6%95%88%E7%8E%87%E7%9A%84%E5%91%BD%E4%BB%A4%E5%BE%97%E6%8E%8C%E6%8F%A1%EF%BC%81/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Git 不要只会 Pull 和 Push，这五条提高效率的命令得掌握！ | 英雄本色的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">英雄本色的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录生活，分享感悟</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/16/Git-%E4%B8%8D%E8%A6%81%E5%8F%AA%E4%BC%9A-Pull-%E5%92%8C-Push%EF%BC%8C%E8%BF%99%E4%BA%94%E6%9D%A1%E6%8F%90%E9%AB%98%E6%95%88%E7%8E%87%E7%9A%84%E5%91%BD%E4%BB%A4%E5%BE%97%E6%8E%8C%E6%8F%A1%EF%BC%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="英雄本色">
+      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="英雄本色的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Git 不要只会 Pull 和 Push，这五条提高效率的命令得掌握！
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-06-16 15:18:25 / 修改时间：15:38:22" itemprop="dateCreated datePublished" datetime="2024-06-16T15:18:25+08:00">2024-06-16</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>原文 <a target="_blank" rel="noopener" href="https://www.51cto.com/article/789341.html">https://www.51cto.com/article/789341.html</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">官方解释：当您想记录工作目录和索引的当前状态，但又想返回一个干净的工作目录时，请使用git stash。该命令将保存本地修改，并恢复工作目录以匹配头部提交。</span><br></pre></td></tr></table></figure>
+<p>使用 Git 作为代码版本管理，早已是现在开发工程师必备的技能。可大多数工程师还是只会最基本的保存、拉取、推送，遇到一些commit管理的问题就束手无策，或者用一些不优雅的方式解决。</p>
+<p>本文分享我在开发工作中实践过的实用命令。这些都能够大大提高工作效率，还能解决不少疑难场景。下面会介绍命令，列出应用场景，手摸手教学使用，让同学们看完即学会。</p>
+<h3 id="stash"><a href="#stash" class="headerlink" title="stash"></a>stash</h3><h3 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h3><p>官方解释：当您想记录工作目录和索引的当前状态，但又想返回一个干净的工作目录时，请使用git stash。该命令将保存本地修改，并恢复工作目录以匹配头部提交。</p>
+<p>stash 命令能够将还未 commit 的代码存起来，让你的工作目录变得干净。</p>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><p>我猜你心里一定在想：为什么要变干净？</p>
+<p>应用场景：某一天你正在 feature 分支开发新需求，突然产品经理跑过来说线上有bug，必须马上修复。而此时你的功能开发到一半，于是你急忙想切到 master 分支，然后你就会看到以下报错：</p>
+<p><img src="https://s9.51cto.com/oss/202405/28/c9839b7866970b4664a6341cdff0763e23e837.png"><br>图片</p>
+<p>因为当前有文件更改了，需要提交commit保持工作区干净才能切分支。由于情况紧急，你只有急忙 commit 上去，commit 信息也随便写了个“暂存代码”，于是该分支提交记录就留了一条黑历史…(真人真事，看过这种提交)</p>
+<p>命令使用<br>如果你学会 stash，就不用那么狼狈了。你只需要：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git stash</span><br></pre></td></tr></table></figure>
+<p>就这么简单，代码就被存起来了。</p>
+<p>当你修复完线上问题，切回 feature 分支，想恢复代码也只需要：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git stash apply</span><br></pre></td></tr></table></figure>
+<h3 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># 保存当前未commit的代码</span><br><span class="line">git stash</span><br><span class="line"></span><br><span class="line"># 保存当前未commit的代码并添加备注</span><br><span class="line">git stash save &quot;备注的内容&quot;</span><br><span class="line"></span><br><span class="line"># 列出stash的所有记录</span><br><span class="line">git stash list</span><br><span class="line"></span><br><span class="line"># 删除stash的所有记录</span><br><span class="line">git stash clear</span><br><span class="line"></span><br><span class="line"># 应用最近一次的stash</span><br><span class="line">git stash apply</span><br><span class="line"></span><br><span class="line"># 应用最近一次的stash，随后删除该记录</span><br><span class="line">git stash pop</span><br><span class="line"></span><br><span class="line"># 删除最近的一次stash</span><br><span class="line">git stash drop</span><br></pre></td></tr></table></figure>
+<p>当有多条 stash，可以指定操作stash，首先使用stash list 列出所有记录：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git stash list</span><br><span class="line">stash@&#123;0&#125;: WIP on ...</span><br><span class="line">stash@&#123;1&#125;: WIP on ...</span><br><span class="line">stash@&#123;2&#125;: On ...</span><br></pre></td></tr></table></figure>
+<p>应用第二条记录：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git stash apply stash@&#123;1&#125;</span><br></pre></td></tr></table></figure>
+<p>pop，drop 同理。</p>
+<h3 id="vscode-集成"><a href="#vscode-集成" class="headerlink" title="vscode 集成"></a>vscode 集成</h3><p>stash 代码：</p>
+<p><img src="https://s7.51cto.com/oss/202405/28/c4b89ad67a1d89b6890155f392e52fc57e6966.png"><br>图片</p>
+<p>填写备注内容，也可以不填直接Enter：</p>
+<p><img src="https://s7.51cto.com/oss/202405/28/37dd70d3238ff7a9b074495ae42589f17e8e47.png"><br>图片</p>
+<p>在STASHES菜单中可以看到保存的stash：</p>
+<p><img src="https://s4.51cto.com/oss/202405/28/e37d4d6153331731b7d977006f0848fb138727.png"><br>图片</p>
+<p>先点击stash记录旁的小箭头，再点击 apply 或者 pop 都可恢复 stash：</p>
+<p><img src="https://s9.51cto.com/oss/202405/28/d4e2d3420773029c6473585e3a51a5ff127ec3.png"><br>图片</p>
+<h3 id="reset-–soft"><a href="#reset-–soft" class="headerlink" title="reset –soft"></a>reset –soft</h3><h3 id="描述-1"><a href="#描述-1" class="headerlink" title="描述"></a>描述</h3><p>完全不接触索引文件或工作树（但会像所有模式一样，将头部重置为）。这使您的所有更改的文件更改为“要提交的更改”。</p>
+<p>回退你已提交的 commit，并将 commit 的修改内容放回到暂存区。</p>
+<p>一般我们在使用 reset 命令时，git reset –hard会被提及的比较多，它能让 commit 记录强制回溯到某一个节点。而git reset –soft的作用正如其名，–soft(柔软的) 除了回溯节点外，还会保留节点的修改内容。</p>
+<h3 id="应用场景-1"><a href="#应用场景-1" class="headerlink" title="应用场景"></a>应用场景</h3><p>回溯节点，为什么要保留修改内容？</p>
+<p>应用场景1：有时候手滑不小心把不该提交的内容 commit 了，这时想改回来，只能再 commit 一次，又多一条“黑历史”。</p>
+<p>应用场景2：规范些的团队，一般对于 commit 的内容要求职责明确，颗粒度要细，便于后续出现问题排查。本来属于两块不同功能的修改，一起 commit 上去，这种就属于不规范。这次恰好又手滑了，一次性 commit 上去。</p>
+<h3 id="命令使用"><a href="#命令使用" class="headerlink" title="命令使用"></a>命令使用</h3><p>学会reset –soft之后，你只需要：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 恢复最近一次 commit</span><br><span class="line">git reset --soft HEAD^</span><br></pre></td></tr></table></figure>
+<p>reset –soft相当于后悔药，给你重新改过的机会。对于上面的场景，就可以再次修改重新提交，保持干净的 commit 记录。</p>
+<p>以上说的是还未 push 的commit。对于已经 push 的 commit，也可以使用该命令，不过再次 push 时，由于远程分支和本地分支有差异，需要强制推送git push -f来覆盖被 reset 的 commit。</p>
+<p>还有一点需要注意，在reset –soft指定 commit 号时，会将该 commit 到最近一次 commit 的所有修改内容全部恢复，而不是只针对该 commit。</p>
+<p>举个例子：</p>
+<p>commit 记录有 c、b、a。</p>
+<p><img src="https://s2.51cto.com/oss/202405/28/42f6acb510ba7c151cb8762d6a23afbbc2f70e.png"><br>图片</p>
+<p>reset 到 a。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset --soft 1a900ac29eba73ce817bf959f82ffcb0bfa38f75</span><br></pre></td></tr></table></figure>
+<p>此时的 HEAD 到了 a，而 b、c 的修改内容都回到了暂存区。</p>
+<p><img src="https://s9.51cto.com/oss/202405/28/d64070f309916ca4f827544aabbf997259be0e.png"><br>图片</p>
+<h3 id="cherry-pick"><a href="#cherry-pick" class="headerlink" title="cherry-pick"></a>cherry-pick</h3><h3 id="描述-2"><a href="#描述-2" class="headerlink" title="描述"></a>描述</h3><p>给定一个或多个现有提交，应用每个提交引入的更改，为每个提交记录一个新的提交。这需要您的工作树清洁（没有从头提交的修改）。</p>
+<p>将已经提交的 commit，复制出新的 commit 应用到分支里</p>
+<h3 id="应用场景-2"><a href="#应用场景-2" class="headerlink" title="应用场景"></a>应用场景</h3><p>commit 都提交了，为什么还要复制新的出来？</p>
+<p>应用场景1：有时候版本的一些优化需求开发到一半，可能其中某一个开发完的需求要临时上，或者某些原因导致待开发的需求卡住了已开发完成的需求上线。这时候就需要把 commit 抽出来，单独处理。</p>
+<p>应用场景2：有时候开发分支中的代码记录被污染了，导致开发分支合到线上分支有问题，这时就需要拉一条干净的开发分支，再从旧的开发分支中，把 commit 复制到新分支。</p>
+<h3 id="命令使用-1"><a href="#命令使用-1" class="headerlink" title="命令使用"></a>命令使用</h3><h3 id="复制单个"><a href="#复制单个" class="headerlink" title="复制单个"></a>复制单个</h3><p>现在有一条feature分支，commit 记录如下：</p>
+<p><img src="https://s6.51cto.com/oss/202405/28/c17358a62fc80f610b698922db519a9698fbfc.png"><br>图片</p>
+<p>需要把 b 复制到另一个分支，首先把 commitHash 复制下来，然后切到 master 分支。</p>
+<p><img src="https://s4.51cto.com/oss/202405/28/68c7ac3175264836276956fba335ac7dece8b0.png"><br>图片</p>
+<p>当前 master 最新的记录是 a，使用cherry-pick把 b 应用到当前分支。</p>
+<p><img src="https://s7.51cto.com/oss/202405/28/476ec8255ac7ad3386f7864157c0790cbb15e1.png"><br>图片</p>
+<p>完成后看下最新的 log，b 已经应用到 master，作为最新的 commit 了。可以看到 commitHash 和之前的不一样，但是提交时间还是保留之前的。</p>
+<h3 id="复制多个"><a href="#复制多个" class="headerlink" title="复制多个"></a>复制多个</h3><p>以上是单个 commit 的复制，下面再来看看 cherry-pick 多个 commit 要如何操作。</p>
+<p>一次转移多个提交：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git cherry-pick commit1 commit2</span><br></pre></td></tr></table></figure>
+<p>上面的命令将 commit1 和 commit2 两个提交应用到当前分支。</p>
+<p>多个连续的commit，也可区间复制：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git cherry-pick commit1^..commit2</span><br></pre></td></tr></table></figure>
+<p>上面的命令将 commit1 到 commit2 这个区间的 commit 都应用到当前分支（包含commit1、commit2），commit1 是最早的提交。</p>
+<h3 id="cherry-pick-代码冲突"><a href="#cherry-pick-代码冲突" class="headerlink" title="cherry-pick 代码冲突"></a>cherry-pick 代码冲突</h3><p>在cherry-pick多个commit时，可能会遇到代码冲突，这时cherry-pick会停下来，让用户决定如何继续操作。下面看看怎么解决这种场景。</p>
+<p><img src="https://s9.51cto.com/oss/202405/28/a905b9606820a53af1521847761225fcb29e02.png"><br>图片</p>
+<p>还是 feature 分支，现在需要把 c、d、e 都复制到 master 分支上。先把起点c和终点e的 commitHash 记下来。</p>
+<p><img src="https://s9.51cto.com/oss/202405/28/03e140392e1fa007f919937bf5a17efb70bf3d.png"><br>图片</p>
+<p>切到 master 分支，使用区间的cherry-pick。可以看到 c 被成功复制，当进行到 d 时，发现代码冲突，cherry-pick中断了。这时需要解决代码冲突，重新提交到暂存区。</p>
+<p><img src="https://s4.51cto.com/oss/202405/28/51bb44915b8498736e7682df2f4c80fbef36ec.png"><br>图片</p>
+<p>然后使用cherry-pick –continue让cherry-pick继续进行下去。最后 e 也被复制进来，整个流程就完成了。</p>
+<p>以上是完整的流程，但有时候可能需要在代码冲突后，放弃或者退出流程：</p>
+<p>放弃 cherry-pick：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git cherry-pick --abort</span><br></pre></td></tr></table></figure>
+<p>回到操作前的样子，就像什么都没发生过。</p>
+<p>退出 cherry-pick：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git cherry-pick --quit</span><br></pre></td></tr></table></figure>
+<p>不回到操作前的样子。即保留已经cherry-pick成功的 commit，并退出cherry-pick流程。</p>
+<h3 id="revert"><a href="#revert" class="headerlink" title="revert"></a>revert</h3><h3 id="描述-3"><a href="#描述-3" class="headerlink" title="描述"></a>描述</h3><p>给定一个或多个现有提交，恢复相关提交引入的更改，并记录一些这些更改的新提交。这就要求你的工作树是干净的（没有来自头部的修改）。</p>
+<p>将现有的提交还原，恢复提交的内容，并生成一条还原记录。</p>
+<h3 id="应用场景-3"><a href="#应用场景-3" class="headerlink" title="应用场景"></a>应用场景</h3><p>应用场景：有一天测试突然跟你说，你开发上线的功能有问题，需要马上撤回，否则会影响到系统使用。这时可能会想到用 reset 回退，可是你看了看分支上最新的提交还有其他同事的代码，用 reset 会把这部分代码也撤回了。由于情况紧急，又想不到好方法，还是任性的使用 reset，然后再让同事把他的代码合一遍（同事听到想打人），于是你的技术形象在同事眼里一落千丈。</p>
+<h3 id="命令使用-2"><a href="#命令使用-2" class="headerlink" title="命令使用"></a>命令使用</h3><h4 id="revert-普通提交"><a href="#revert-普通提交" class="headerlink" title="revert 普通提交"></a>revert 普通提交</h4><p>学会 revert 之后，立马就可以拯救这种尴尬的情况。</p>
+<p>现在 master 记录如下：</p>
+<p><img src="https://s8.51cto.com/oss/202405/28/410a4f751a209927051257ed8cb0b17f1b7efa.png"><br>图片</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git revert 21dcd937fe555f58841b17466a99118deb489212</span><br></pre></td></tr></table></figure>
+<p>revert 掉自己提交的 commit。</p>
+<p><img src="https://s9.51cto.com/oss/202405/28/392b5c285286ab539091296bcfc1ab56576ede.png"><br>图片</p>
+<p>因为 revert 会生成一条新的提交记录，这时会让你编辑提交信息，编辑完后 :wq 保存退出就好了。</p>
+<p><img src="https://s3.51cto.com/oss/202405/28/4925fd110cdd09a6ada903d0772a85f0e9f7fe.png"><br>图片</p>
+<p>再来看下最新的 log，生成了一条 revert 记录，虽然自己之前的提交记录还是会保留着，但你修改的代码内容已经被撤回了。</p>
+<h3 id="revert-合并提交"><a href="#revert-合并提交" class="headerlink" title="revert 合并提交"></a>revert 合并提交</h3><p>在 git 的 commit 记录里，还有一种类型是合并提交，想要 revert 合并提交，使用上会有些不一样。</p>
+<p><img src="https://s7.51cto.com/oss/202405/28/b24c6a930756d4e251d985cfa82b2cbd02cc55.png"><br>图片</p>
+<p>现在的 master 分支里多了条合并提交。</p>
+<p><img src="https://s7.51cto.com/oss/202405/28/c1a37ad359070e1a4a4600ba59f159f073f371.png"><br>图片</p>
+<p>使用刚刚同样的 revert 方法，会发现命令行报错了。为什么会这样？在官方文档中有解释。</p>
+<p>通常无法 revert 合并，因为您不知道合并的哪一侧应被视为主线。此选项指定主线的父编号（从1开始），并允许 revert 反转相对于指定父编号的更改</p>
+<p>我的理解是因为合并提交是两条分支的交集节点，而 git 不知道需要撤销的哪一条分支，需要添加参数 -m 指定主线分支，保留主线分支的代码，另一条则被撤销。</p>
+<p>-m 后面要跟一个 parent number 标识出”主线”，一般使用 1 保留主分支代码。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git revert -m 1 &lt;commitHash&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="revert-合并提交后，再次合并分支会失效"><a href="#revert-合并提交后，再次合并分支会失效" class="headerlink" title="revert 合并提交后，再次合并分支会失效"></a>revert 合并提交后，再次合并分支会失效</h3><p>还是上面的场景，在 master 分支 revert 合并提交后，然后切到 feature 分支修复好 bug，再合并到 master 分支时，会发现之前被 revert 的修改内容没有重新合并进来。</p>
+<p>因为使用 revert 后， feature 分支的 commit 还是会保留在 master 分支的记录中，当你再次合并进去时，git 判断有相同的 commitHash，就忽略了相关 commit 修改的内容。</p>
+<p>这时就需要 revert 掉之前 revert 的合并提交，有点拗口，接下来看操作吧。</p>
+<p><img src="https://s3.51cto.com/oss/202405/28/91f36e6853e7a762d96142ab86dcf085dd3484.png"><br>图片</p>
+<p>现在 master 的记录是这样的。</p>
+<p><img src="https://s6.51cto.com/oss/202405/28/164cce2872101853ea7931ec60648226f48eb0.png"><br>图片</p>
+<p>再次使用 revert，之前被 revert 的修改内容就又回来了。</p>
+<h3 id="reflog"><a href="#reflog" class="headerlink" title="reflog"></a>reflog</h3><h3 id="描述-4"><a href="#描述-4" class="headerlink" title="描述"></a>描述</h3><p>此命令管理重录中记录的信息。</p>
+<p>如果说reset –soft是后悔药，那 reflog 就是强力后悔药。它记录了所有的 commit 操作记录，便于错误操作后找回记录。</p>
+<h3 id="应用场景-4"><a href="#应用场景-4" class="headerlink" title="应用场景"></a>应用场景</h3><p>应用场景：某天你眼花，发现自己在其他人分支提交了代码还推到远程分支，这时因为分支只有你的最新提交，就想着使用reset –hard，结果紧张不小心记错了 commitHash，reset 过头，把同事的 commit 搞没了。没办法，reset –hard是强制回退的，找不到 commitHash 了，只能让同事从本地分支再推一次（同事瞬间拳头就硬了，怎么又是你）。于是，你的技术形象又一落千丈。</p>
+<h3 id="命令使用-3"><a href="#命令使用-3" class="headerlink" title="命令使用"></a>命令使用</h3><p><img src="https://s2.51cto.com/oss/202405/28/346d80a06fd45b808688305b6193c29056cdfd.png"><br>图片</p>
+<p>分支记录如上，想要 reset 到 b。</p>
+<p><img src="https://s5.51cto.com/oss/202405/28/b9c6b7094dfc137949e065ba747cfacb2ba77a.png"><br>图片</p>
+<p>误操作 reset 过头，b 没了，最新的只剩下 a。</p>
+<p><img src="https://s2.51cto.com/oss/202405/28/620314664175a9752cc467583bc25bd1f30c6c.png"><br>图片</p>
+<p>这时用git reflog查看历史记录，把错误提交的那次 commitHash 记下。</p>
+<p><img src="https://s3.51cto.com/oss/202405/28/7410638705ec208d3a949361f15476aa981a09.png"><br>图片</p>
+<p>再次 reset 回去，就会发现 b 回来了。</p>
+<h3 id="设置-Git-短命令"><a href="#设置-Git-短命令" class="headerlink" title="设置 Git 短命令"></a>设置 Git 短命令</h3><p>对我这种喜欢敲命令而不用图形化工具的爱好者来说，设置短命令可以很好的提高效率。下面介绍两种设置短命令的方式。</p>
+<p>方式一</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global alias.ps push</span><br></pre></td></tr></table></figure>
+<p>方式二<br>打开全局配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.gitconfig</span><br></pre></td></tr></table></figure>
+<p>写入内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[alias] </span><br><span class="line">        co = checkout</span><br><span class="line">        ps = push</span><br><span class="line">        pl = pull</span><br><span class="line">        mer = merge --no-ff</span><br><span class="line">        cp = cherry-pick</span><br></pre></td></tr></table></figure>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 等同于 git cherry-pick &lt;commitHash&gt;</span><br><span class="line">git cp &lt;commitHash&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本文主要分享了5个在开发中实用的 Git 命令和设置短命令的方式。</p>
+<ul>
+<li>stash：存储临时代码。</li>
+<li>reset –soft：软回溯，回退 commit 的同时保留修改内容。</li>
+<li>cherry-pick：复制 commit。</li>
+<li>revert：撤销 commit 的修改内容。</li>
+<li>reflog：记录了 commit 的历史操作。<br>文中列举的应用场景有部分不太恰当，只是想便于同学们理解，最重要的是要理解命令的作用是什么，活学活用才能发挥最大功效。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/06/16/linux%E7%A3%81%E7%9B%98%E9%95%9C%E5%83%8F%E6%8A%80%E6%9C%AF-Linux-%E4%B8%8B%E4%BD%BF%E7%94%A8-dd-%E5%92%8C-gzip-%E5%91%BD%E4%BB%A4%E6%9D%A5%E4%BB%A3%E6%9B%BF-Ghost-%E5%81%9A%E7%A3%81%E7%9B%98%E9%95%9C%E5%83%8F/" rel="prev" title="linux磁盘镜像技术,Linux 下使用 dd 和 gzip 命令来代替 Ghost 做磁盘镜像">
+      <i class="fa fa-chevron-left"></i> linux磁盘镜像技术,Linux 下使用 dd 和 gzip 命令来代替 Ghost 做磁盘镜像
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#stash"><span class="nav-number">1.</span> <span class="nav-text">stash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0"><span class="nav-number">2.</span> <span class="nav-text">描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">3.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">相关命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vscode-%E9%9B%86%E6%88%90"><span class="nav-number">5.</span> <span class="nav-text">vscode 集成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reset-%E2%80%93soft"><span class="nav-number">6.</span> <span class="nav-text">reset –soft</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0-1"><span class="nav-number">7.</span> <span class="nav-text">描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF-1"><span class="nav-number">8.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8"><span class="nav-number">9.</span> <span class="nav-text">命令使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cherry-pick"><span class="nav-number">10.</span> <span class="nav-text">cherry-pick</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0-2"><span class="nav-number">11.</span> <span class="nav-text">描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF-2"><span class="nav-number">12.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8-1"><span class="nav-number">13.</span> <span class="nav-text">命令使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E5%8D%95%E4%B8%AA"><span class="nav-number">14.</span> <span class="nav-text">复制单个</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E5%A4%9A%E4%B8%AA"><span class="nav-number">15.</span> <span class="nav-text">复制多个</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cherry-pick-%E4%BB%A3%E7%A0%81%E5%86%B2%E7%AA%81"><span class="nav-number">16.</span> <span class="nav-text">cherry-pick 代码冲突</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#revert"><span class="nav-number">17.</span> <span class="nav-text">revert</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0-3"><span class="nav-number">18.</span> <span class="nav-text">描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF-3"><span class="nav-number">19.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8-2"><span class="nav-number">20.</span> <span class="nav-text">命令使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#revert-%E6%99%AE%E9%80%9A%E6%8F%90%E4%BA%A4"><span class="nav-number">20.1.</span> <span class="nav-text">revert 普通提交</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#revert-%E5%90%88%E5%B9%B6%E6%8F%90%E4%BA%A4"><span class="nav-number">21.</span> <span class="nav-text">revert 合并提交</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#revert-%E5%90%88%E5%B9%B6%E6%8F%90%E4%BA%A4%E5%90%8E%EF%BC%8C%E5%86%8D%E6%AC%A1%E5%90%88%E5%B9%B6%E5%88%86%E6%94%AF%E4%BC%9A%E5%A4%B1%E6%95%88"><span class="nav-number">22.</span> <span class="nav-text">revert 合并提交后，再次合并分支会失效</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reflog"><span class="nav-number">23.</span> <span class="nav-text">reflog</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0-4"><span class="nav-number">24.</span> <span class="nav-text">描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF-4"><span class="nav-number">25.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8-3"><span class="nav-number">26.</span> <span class="nav-text">命令使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE-Git-%E7%9F%AD%E5%91%BD%E4%BB%A4"><span class="nav-number">27.</span> <span class="nav-text">设置 Git 短命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">28.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">29.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">英雄本色</p>
+  <div class="site-description" itemprop="description">英雄本色的博客，记录生活，分享感悟。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">英雄本色</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
