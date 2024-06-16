@@ -1236,7 +1236,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-06-16 16:10:37" itemprop="dateModified" datetime="2024-06-16T16:10:37+08:00">2024-06-16</time>
+                <time title="修改时间：2024-06-16 16:17:10" itemprop="dateModified" datetime="2024-06-16T16:17:10+08:00">2024-06-16</time>
               </span>
 
           
@@ -1255,28 +1255,17 @@
 <p>Docker 作为一种流行的容器化技术，可以让你快速、轻松地部署和管理你的博客。</p>
 <p>在本文中，我们将详细介绍如何使用 Docker 从零开始搭建个人博客。</p>
 <p>图片</p>
-<p>目录</p>
-<ol>
-<li><p>前提条件</p>
-</li>
-<li><p>选择博客平台</p>
-</li>
-<li><p>环境准备</p>
-</li>
-<li><p>克隆博客仓库</p>
-</li>
-<li><p>编写 Docker Compose 文件</p>
-</li>
-<li><p>配置环境变量</p>
-</li>
-<li><p>启动容器</p>
-</li>
-<li><p>访问博客</p>
-</li>
-<li><p>自定义博客</p>
-</li>
-<li><p>总结</p>
-</li>
+<h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><ol>
+<li>前提条件</li>
+<li>选择博客平台</li>
+<li>环境准备</li>
+<li>克隆博客仓库</li>
+<li>编写 Docker Compose 文件</li>
+<li>配置环境变量</li>
+<li>启动容器</li>
+<li>访问博客</li>
+<li>自定义博客</li>
+<li>总结</li>
 </ol>
 <h3 id="前提条件"><a href="#前提条件" class="headerlink" title="前提条件"></a>前提条件</h3><p>在开始之前，请确保你的系统已经安装了以下工具：</p>
 <ol>
@@ -1304,8 +1293,8 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose ps</span><br></pre></td></tr></table></figure>
 <p>如果一切顺利，你应该会看到 Hexo 容器正在运行。</p>
 <h3 id="访问博客"><a href="#访问博客" class="headerlink" title="访问博客"></a>访问博客</h3><p>打开浏览器，并访问 <a href="http://localhost:4000，你应该会看到">http://localhost:4000，你应该会看到</a> Hexo 的默认欢迎页面。 当然，我们继续深入探讨如何自定义和管理你的 Hexo 博客，包括更改主题、添加插件和部署到生产环境。</p>
-<p>图片</p>
-<p>图片</p>
+<p><img src="https://mmbiz.qpic.cn/sz_mmbiz_png/Ric3gNzlqMkt4XGpN2MTYqmShZvJOQmtXCgmtB5uhed14LHM2kbq9UOBL45JTY7xyzd3137geopFcd1Giba6KOIQ/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p><img src="https://mmbiz.qpic.cn/sz_mmbiz_jpg/Ric3gNzlqMkt4XGpN2MTYqmShZvJOQmtXuR8HhG1lOm66ROXTQ6G09aiaMqXpcqKsqRGCZlauO213ppXDg3ib6wxw/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"></p>
 <h3 id="自定义博客"><a href="#自定义博客" class="headerlink" title="自定义博客"></a>自定义博客</h3><h4 id="更改主题"><a href="#更改主题" class="headerlink" title="更改主题"></a>更改主题</h4><p>Hexo 有许多精美的主题，你可以在 Hexo 主题库[4] 中找到。以下是更改主题的步骤。</p>
 <ol>
 <li><p>选择主题：在 Hexo 主题库中选择一个你喜欢的主题，并记下其安装命令或 GitHub 仓库地址。</p>
@@ -1328,8 +1317,11 @@
 <li><p>安装插件：在博客根目录下运行安装命令。例如，安装 Hexo SEO 插件：</p>
 </li>
 </ol>
-<p>npm install hexo-generator-seo-friendly-sitemap –save<br>3. 配置插件：根据插件文档，打开 _config.yml 文件，添加相应的配置。例如，配置 SEO 插件：</p>
-<p>sitemap:<br>  path: sitemap.xml</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-generator-seo-friendly-sitemap --save</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>配置插件：根据插件文档，打开 _config.yml 文件，添加相应的配置。例如，配置 SEO 插件：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sitemap:</span><br><span class="line">  path: sitemap.xml</span><br></pre></td></tr></table></figure>
 <h4 id="部署到生产环境"><a href="#部署到生产环境" class="headerlink" title="部署到生产环境"></a>部署到生产环境</h4><p>将你的博客部署到云服务器或静态网站托管服务（如 GitHub Pages、Netlify）上，可以让全世界的人访问。以下是一些常见的部署方法。</p>
 <h5 id="部署到-GitHub-Pages"><a href="#部署到-GitHub-Pages" class="headerlink" title="部署到 GitHub Pages"></a>部署到 GitHub Pages</h5><ol>
 <li>安装部署插件：在博客根目录下运行以下命令：</li>
