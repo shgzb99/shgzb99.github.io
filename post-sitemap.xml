@@ -9,6 +9,14 @@
 
 
     <url>
+        <loc>http://example.com/2024/06/16/linux%E4%B8%AD%E7%9A%84%E5%B8%B8%E7%94%A8%E7%9A%84proxy-%E4%BB%A3%E7%90%86%E6%96%B9%E5%BC%8F/</loc>
+        <lastmod>2024-06-16T07:49:35.576Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>http://example.com/2024/06/16/%E5%B0%8F%E9%99%88%E7%9A%84%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E7%AB%99/</loc>
         <lastmod>2024-06-16T07:45:06.733Z</lastmod>
         <changefreq>weekly</changefreq>

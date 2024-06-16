@@ -178,6 +178,101 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/13/tee-%E8%AF%BB%E5%8F%96%E6%A0%87%E5%87%86%E8%BE%93%E5%85%A5%E5%B9%B6%E8%BE%93%E5%87%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="英雄本色">
+      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="英雄本色的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/06/13/tee-%E8%AF%BB%E5%8F%96%E6%A0%87%E5%87%86%E8%BE%93%E5%85%A5%E5%B9%B6%E8%BE%93%E5%87%BA/" class="post-title-link" itemprop="url">tee 读取标准输入并输出</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-06-13 22:12:44 / 修改时间：22:13:47" itemprop="dateCreated datePublished" datetime="2024-06-13T22:12:44+08:00">2024-06-13</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>转载 <a target="_blank" rel="noopener" href="https://einverne.github.io/post/2013/01/tee-command.html">https://einverne.github.io/post/2013/01/tee-command.html</a></p>
+<p>在执行 Linux 命令时，我们可以把输出重定向到文件中，比如 <code>ls &gt; a.txt</code>，这时我们就不能看到输出了，如果我们既想把输出保存到文件中，又想在屏幕上看到输出内容，就可以使用 tee 命令了。tee 命令读取标准输入，把这些内容同时输出到标准输出和（多个）文件中（read from standard input and write to standard output and files. Copy standard input to each FILE, and also to standard output. If a FILE is -, copy again to standard output.）。</p>
+<p>在 tee 中说道：tee 命令可以重定向标准输出到多个文件（<code>tee&#39;: Redirect output to multiple files. The </code>tee’ command copies standard input to standard output and also to any files given as arguments.  This is useful when you want not only to send some data down a pipe, but also to save a copy.）。要注意的是：在使用管道时，前一个命令的标准错误输出不会被 tee 读取。</p>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p>格式：</p>
+<pre><code>tee file
+</code></pre>
+<p>输出到标准输出的同时，保存到文件 file 中。如果文件不存在，则创建；如果已经存在，则覆盖之。当使用 <code>-a</code> 参数时不会覆盖，而是附加。</p>
+<p>格式：</p>
+<pre><code>tee -a file
+</code></pre>
+<p>输出到标准输出的同时，追加到文件 file 中。如果文件不存在，则创建；如果已经存在，就在末尾追加内容，而不是覆盖。</p>
+<p>格式：</p>
+<pre><code>tee -
+</code></pre>
+<p>输出到标准输出两次。（A FILE of <code>-&#39; causes </code>tee’ to send another copy of input to standard output, but this is typically not that useful as the copies are interleaved.）</p>
+<p>格式：</p>
+<pre><code>tee file1 file2 -
+</code></pre>
+<p>输出到标准输出两次，同时保存到 file1 和 file2 中。</p>
+<p>使用 tee 命令重复输出字符串</p>
+<pre><code>echo 12345 | tee
+12345
+
+echo 12345 | tee -
+12345
+12345
+echo 12345 | tee - -
+12345
+12345
+12345
+</code></pre>
+<p>使用 tee 命令把标准错误输出也保存到文件，默认情况下 tee 是不会将标准错误内容也保存到文件的，这个时候需要使用 <code>2&gt;$1</code></p>
+<pre><code>ls &quot;*&quot; 2&gt;&amp;1 | tee ls.txt
+</code></pre>
+<p>文件中就是</p>
+<pre><code>ls: cannot access &#39;*&#39;: No such file or directory
+</code></pre>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/13/dd%E5%91%BD%E4%BB%A4%E6%98%BE%E7%A4%BA%E8%BF%9B%E5%BA%A6%E5%8F%8A%E6%89%8B%E5%8A%A8%E8%BF%81%E7%A7%BB%E7%B3%BB%E7%BB%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1888,366 +1983,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/11/My-Github-Stars-3-4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="英雄本色">
-      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="英雄本色的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/06/11/My-Github-Stars-3-4/" class="post-title-link" itemprop="url">My Github Stars 3/4</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2024-06-11 08:26:46 / 修改时间：08:28:40" itemprop="dateCreated datePublished" datetime="2024-06-11T08:26:46+08:00">2024-06-11</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/midas-research/interpreting-AES-Integrated-Gradients">midas-research&#x2F;interpreting-AES-Integrated-Gradients</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jina-ai/clip-as-service">jina-ai&#x2F;clip-as-service</a>“🏄 Scalable embedding, reasoning, ranking for images and sentences with CLIP”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ikttan/asap-classification">ikttan&#x2F;asap-classification</a>asap-classification</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Snailclimb/JavaGuide">Snailclimb&#x2F;JavaGuide</a>「Java学习+面试指南」一份涵盖大部分 Java 程序员所需要掌握的核心知识。准备 Java 面试，首选 JavaGuide！</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/xujakai/Minesweeper">xujakai&#x2F;Minesweeper</a>基于扫雷游戏的破解，采用Python实现。通过计算未知区域的概率来确定是否有雷区</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/sheep426/MinesweeperPythonCrack">sheep426&#x2F;MinesweeperPythonCrack</a>用Python写的扫雷外挂</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/inamiotko/Signature_verification">inamiotko&#x2F;Signature_verification</a>Siganture verification using Siamese Neural Network. Used datasets contain 2 sets of data coming from different sources. The bigger set contains 2640 images of handwritten signatures while the smaller one contains 240 images. The accuracy of the trained model on bigger dataset reaches 100% and 82% on smaller one. </li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zone1511/WebSignature">zone1511&#x2F;WebSignature</a>A handwritten signature verification system for the web.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/nordine-marie/signature-recognition-MCYT-100">nordine-marie&#x2F;signature-recognition-MCYT-100</a>Handwritten signature analysis for identity verification</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ShahryarSaljoughi/HSV">ShahryarSaljoughi&#x2F;HSV</a>Handwritten Signature Verification - Simple Solution</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/mutluYapici/offlineHandwirttenSignatureVerification">mutluYapici&#x2F;offlineHandwirttenSignatureVerification</a>“A novel data augmentation method based on Cycle-GAN, and a new offline handwritten signature verification system based on CapsNet. “</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/wk-ff/IDN">wk-ff&#x2F;IDN</a>Inverse Discriminative Networks for Handwritten Signature Verification</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/seanbenhur/siamese_net">seanbenhur&#x2F;siamese_net</a>Signature verification system using Siamese networks</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Aftaab99/OfflineSignatureVerification">Aftaab99&#x2F;OfflineSignatureVerification</a>Writer independent offline signature verification using convolutional siamese networks</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/nhatlang19/TestGrader">nhatlang19&#x2F;TestGrader</a>“Bubble sheet multiple choice scanner and test grader using OMR, Java and OpenCV”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/rohan-rodrigues/OMR-Project">rohan-rodrigues&#x2F;OMR-Project</a>This is a java program that reads and analyzes scantrons</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/mrPrateek95/EQR-OMR">mrPrateek95&#x2F;EQR-OMR</a>A Java Applcation to detect OMR sheet tampering</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/MinhasKamal/ResultAnalysisTool">MinhasKamal&#x2F;ResultAnalysisTool</a>A Complete Package for Processing OMR Answer Sheet</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/mythrex/OMR-Scanner">mythrex&#x2F;OMR-Scanner</a>This project uses open cv to evaluate OMR sheets. We are trying to make this system as reliable as possible.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/kanjielu/jeeves">kanjielu&#x2F;jeeves</a>A smart wechat bot</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/nivance/image-similarity">nivance&#x2F;image-similarity</a>计算图片之间的相似度</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/prosperhitfz/Image-Similarity-OpenCV">prosperhitfz&#x2F;Image-Similarity-OpenCV</a>CV中五种图片相似度算法</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/neutron-1114/similar-picture">neutron-1114&#x2F;similar-picture</a>玩玩图片相似度判断</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/amirping/SandBOX">amirping&#x2F;SandBOX</a>“Face track , Detectation , And key Points FInder , With openIMAJ”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ashah03/alzheimers-facial-recognition">ashah03&#x2F;alzheimers-facial-recognition</a>A facial recognition system implemented with Java (using the OpenIMAJ library) with the goal of preventing Alzheimer’s patients from wandering out of their homes. Won 2nd place at ACSEF 2016.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Abberchabbers3/openimajfacialrecognition">Abberchabbers3&#x2F;openimajfacialrecognition</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/sarxos/webcam-capture">sarxos&#x2F;webcam-capture</a>“The goal of this project is to allow integrated or USB-connected webcams to be accessed directly from Java. Using provided libraries users are able to read camera images and detect motion. Main project consist of several sub projects - the root one, which contains required classes, build-in webcam driver compatible with Windows, Linux and Mac OS, which can stream images as fast as your camera can serve them (up to 50 FPS). Main project can be used standalone, but user is able to replace build-in driver with different one - such as OpenIMAJ, GStreamer, V4L4j, JMF, LTI-CIVIL, FMJ, etc.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/hefeiping0808/spider_async">hefeiping0808&#x2F;spider_async</a>异步爬虫</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/SparksFly8/Learning_Python">SparksFly8&#x2F;Learning_Python</a>本库托管了协程、SMTP邮件发送协议、 Python连接远程HBase、 异步爬虫代码和快速上手中英文词云图等代码，如果你觉得对你有用，别忘了star我哦。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Crypto-KK/aiohttp-spider">Crypto-KK&#x2F;aiohttp-spider</a>python链家网异步IO爬虫，使用aiosync、aiohttp和aiomysql，异步爬取数据和异步存入数据库</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/triplihua/async">triplihua&#x2F;async</a>简单的异步爬虫</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/CGLemon/ElephantArt">CGLemon&#x2F;ElephantArt</a>“A chinese chess(Xiangqi, 象棋) engine based on convolution neural network and Monte Carlo tree search which support UCCI protocol.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/sswv/bitstronger">sswv&#x2F;bitstronger</a>A Chinese chess gambling engine based on UCCI</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/milkpku/BetaElephant">milkpku&#x2F;BetaElephant</a>Chinese Chess UCCI engine</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/davidmallasen/LiveChess2FEN">davidmallasen&#x2F;LiveChess2FEN</a>Predict live chess games into FEN notation.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/adhisimon/Simple-DBF-Browser">adhisimon&#x2F;Simple-DBF-Browser</a>Free and opensource multiplatform DBF viewer</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/y10h/ydbf">y10h&#x2F;ydbf</a>Pythonic reader and writer for DBF&#x2F;XBase files</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/steelywing/dbfpy">steelywing&#x2F;dbfpy</a>“dbfpy (Python 3 port), base on <a target="_blank" rel="noopener" href="http://dbfpy.sourceforge.net/">http://dbfpy.sourceforge.net/</a>“</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Voral/qtDbf">Voral&#x2F;qtDbf</a>A simple DBF viewer and editor</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/rnelsonchem/simpledbf">rnelsonchem&#x2F;simpledbf</a>A simple DBF file converter for Python3</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/akadan47/dbf2csv">akadan47&#x2F;dbf2csv</a>Small command line utility to convert simple *.DBF files to *.CSV</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/phargogh/dbfpy3">phargogh&#x2F;dbfpy3</a>Port of DBFPY to Python 3</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ethanfurman/dbf">ethanfurman&#x2F;dbf</a>pure python dbf reader&#x2F;writer</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/albfernandez/javadbf">albfernandez&#x2F;javadbf</a>Java library for reading and writing Xbase (dBase&#x2F;DBF) files.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jamel/dbf">jamel&#x2F;dbf</a>Java library for fast reading DBF-files.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/iryndin/jdbf">iryndin&#x2F;jdbf</a>Java utility to read&#x2F;write DBF files</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/infused/dbf">infused&#x2F;dbf</a>“DBF is a small, fast Ruby library for reading dBase, xBase, Clipper, and FoxPro database files.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ebenolson/mdb2sqlite">ebenolson&#x2F;mdb2sqlite</a>Wrapper for mdbtools to convert MS Access mdb database files to sqlite.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/mdbtools/mdbtools">mdbtools&#x2F;mdbtools</a>MDB Tools - Read Access databases on *nix</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/paule32/keyBase">paule32&#x2F;keyBase</a>dBase for Linux</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/bcessa/linux-dbf2sql">bcessa&#x2F;linux-dbf2sql</a>Bash script to convert any DBase III or IV to a SQLite3 Database the easy and painless way</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/StevenBaby/chess">StevenBaby&#x2F;chess</a>基于 Pyside 和 UCCI 引擎的中国象棋程序</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Stanou01260/chessbot_python">Stanou01260&#x2F;chessbot_python</a>This chessbot uses computer vision and python to play chess automatically</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/linrock/chessboard-recognizer">linrock&#x2F;chessboard-recognizer</a>Uses neural networks to extract chess positions from images</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/daylen/chess-id">daylen&#x2F;chess-id</a>Board localization and piece recognition</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Linzertorte/ChineseChess">Linzertorte&#x2F;ChineseChess</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/xqbase/eleeye">xqbase&#x2F;eleeye</a>ElephantEye - a XiangQi (Chinese Chess) Engine for XQWizard with Strong AI</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/metterklume/chessputzer">metterklume&#x2F;chessputzer</a>Image recognition for chess positions</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Dirk94/ChessAI">Dirk94&#x2F;ChessAI</a>Chess AI written in Python</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/walker8088/ChessQ">walker8088&#x2F;ChessQ</a>“ChessQ is an Chinese chess GUI program, using Python and  PyQT  “</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Elucidation/ChessboardDetect">Elucidation&#x2F;ChessboardDetect</a>Hodgepodge of chessboard chessboard detection algorithms on images from actual matches.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/official-stockfish/Stockfish">official-stockfish&#x2F;Stockfish</a>A free and strong UCI chess engine</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/kochsebastian/ChessVisionBot">kochsebastian&#x2F;ChessVisionBot</a>Chessbot using computer vision to play on any chess website</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/lamesjim/Chess-AI">lamesjim&#x2F;Chess-AI</a>A Chess AI that uses a minimax algorithm with alpha-beta pruning</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/walker8088/UCCI_ChessEngines">walker8088&#x2F;UCCI_ChessEngines</a>本人收集的一些中国象棋UCCI引擎的源代码</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/thomasahle/sunfish">thomasahle&#x2F;sunfish</a>Sunfish: a Python Chess Engine in 111 lines of code</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/NeymarL/ChineseChess-AlphaZero">NeymarL&#x2F;ChineseChess-AlphaZero</a>Implement AlphaZero&#x2F;AlphaGo Zero methods on Chinese chess.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/itlwei/Chess">itlwei&#x2F;Chess</a>中国象棋 - in html5</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zhzyker/exphub">zhzyker&#x2F;exphub</a>Exphub[漏洞利用脚本库] 包括Webloigc、Struts2、Tomcat、Nexus、Solr、Jboss、Drupal的漏洞利用脚本，最新添加CVE-2020-14882、CVE-2020-11444、CVE-2020-10204、CVE-2020-10199、CVE-2020-1938、CVE-2020-2551、CVE-2020-2555、CVE-2020-2883、CVE-2019-17558、CVE-2019-6340</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zhzyker/vulmap">zhzyker&#x2F;vulmap</a>“Vulmap 是一款 web 漏洞扫描和验证工具, 可对 webapps 进行漏洞扫描, 并且具备漏洞验证功能”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/yefeijiang/Chinese-characters-code-table">yefeijiang&#x2F;Chinese-characters-code-table</a>Chinese characters code table 全部汉字20902个汉字的全拼|五笔|郑码|UNICODE|GBK|笔画数|部首|笔顺编号等编码</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jeurtr/TimeSeries_Predict">jeurtr&#x2F;TimeSeries_Predict</a>客流量时间序列预测模型</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/FutureBetter/face_recognition">FutureBetter&#x2F;face_recognition</a>人脸统计客流量</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/gh0stkey/Binary-Learning">gh0stkey&#x2F;Binary-Learning</a>二进制安全相关的学习笔记，感谢滴水逆向的所有老师辛苦教学。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/easegress-io/easegress">easegress-io&#x2F;easegress</a>A Cloud Native traffic orchestration system</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/bupticybee/elephantfish">bupticybee&#x2F;elephantfish</a>elephantfish: 一个只有124行的中国象棋引擎</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Trussin/Chinese-Chess-AI">Trussin&#x2F;Chinese-Chess-AI</a>A Chinese Chess program and a AI based on Monte Carlo Tree Search and  Neural Network（like AlphaGo）一个中国象棋程序和一个配套的基于蒙特卡洛算法及神经网络的人工智能（模仿阿尔法狗）</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/qinjiannet/screen-chess-qq">qinjiannet&#x2F;screen-chess-qq</a>QQ中国象棋（传统版）棋盘识别与自动下棋</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/java86/chess">java86&#x2F;chess</a>新中国象棋外挂（java语言）</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/chengstone/cchess-zero">chengstone&#x2F;cchess-zero</a>AlphaZero implemented Chinese chess. AlphaGo Zero &#x2F; AlphaZero实践项目，实现中国象棋。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/pengjiu/ChineseChess">pengjiu&#x2F;ChineseChess</a>ChineseChess 中国象棋AI版，在QQ象棋与高手对弈80%以上胜率</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/alibaba/otter">alibaba&#x2F;otter</a>阿里巴巴分布式数据库同步系统(解决中美异地机房)</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/alibaba/tengine">alibaba&#x2F;tengine</a>A distribution of Nginx with some advanced features</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/alibaba/easyexcel">alibaba&#x2F;easyexcel</a>快速、简洁、解决大文件内存溢出的java处理Excel工具</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/rustdesk/rustdesk">rustdesk&#x2F;rustdesk</a>“An open-source remote desktop, and alternative to TeamViewer.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/youyanggu/covid19_projections">youyanggu&#x2F;covid19_projections</a>COVID-19 Projections Using Machine Learning</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/hendrycks/apps">hendrycks&#x2F;apps</a>APPS: Automated Programming Progress Standard (NeurIPS 2021)</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jvns/dnspeep">jvns&#x2F;dnspeep</a>spy on the DNS queries your computer is making</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Heroic-Studio/Google-Mirrors">Heroic-Studio&#x2F;Google-Mirrors</a>Google谷歌、Wikipedia维基百科、谷歌学术镜像2024最新 新增各种镜像站</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/digitalocean/nginxconfig.io">digitalocean&#x2F;nginxconfig.io</a>⚙️ NGINX config generator on steroids 💉</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/xiaoymin/KettleInAction100">xiaoymin&#x2F;KettleInAction100</a>Kettle实战100篇博文</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Netflixxp/jcnf-box">Netflixxp&#x2F;jcnf-box</a>这是个人常用的服务器指令和一键脚本</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/dundee/gdu">dundee&#x2F;gdu</a>Fast disk usage analyzer with console interface written in Go</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/alibaba/DataX">alibaba&#x2F;DataX</a>DataX是阿里云DataWorks数据集成的开源版本。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/RobinLinus/snapdrop">RobinLinus&#x2F;snapdrop</a>A Progressive Web App for local file sharing </li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ziliang001/etl-kettle-web">ziliang001&#x2F;etl-kettle-web</a>“etl, kettle, web, spring, spring boot, mysql, mybatis, oracle, hadoop, hive, hbase：基于web版kettle开发的一套分布式综合调度,管理,ETL开发的用户专业版B&#x2F;S架构工具，并且升级为springboot（基于<a target="_blank" rel="noopener" href="https://github.com/JoeyBling/webkettle%EF%BC%89">https://github.com/JoeyBling/webkettle）</a>“</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ShenLiang-IR/ETL-Kettle">ShenLiang-IR&#x2F;ETL-Kettle</a>ETL（Kettle samples)</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/CN-CJ/KwaiTechnologyCommunication">CN-CJ&#x2F;KwaiTechnologyCommunication</a>快手大前端技术交流会2020</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/TurboWay/big_screen">TurboWay&#x2F;big_screen</a>数据大屏可视化</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jyc546/echart-project-bigScreen-">jyc546&#x2F;echart-project-bigScreen-</a>大屏展示</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/xkeyC/x_google_installer">xkeyC&#x2F;x_google_installer</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/sxhylkl/BigData_Plateform_Paper">sxhylkl&#x2F;BigData_Plateform_Paper</a>高校大数据融合治理平台大数据论文</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/somenzz/DataStandard">somenzz&#x2F;DataStandard</a>数据治理、数据标准相关的 web 工具</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/wjn0918/data_governance">wjn0918&#x2F;data_governance</a>数据治理整体架构</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/fengsong97/maturity-of-data">fengsong97&#x2F;maturity-of-data</a>数据成熟度小程序 数据治理</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/rabbitmask/WeblogicWeakPwd">rabbitmask&#x2F;WeblogicWeakPwd</a>Weblogic弱口令批量检测工具</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/rabbitmask/IP-Domain-Alive">rabbitmask&#x2F;IP-Domain-Alive</a>IP反查域名 + 批量进行存活性检测</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/rabbitmask/WeblogicScan">rabbitmask&#x2F;WeblogicScan</a>Weblogic一键漏洞检测工具，V1.5，更新时间：20200730</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/stascorp/rdpwrap">stascorp&#x2F;rdpwrap</a>RDP Wrapper Library</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Col-E/Recaf">Col-E&#x2F;Recaf</a>The modern Java bytecode editor</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/iwanttobefreak/docker-weblogic1036">iwanttobefreak&#x2F;docker-weblogic1036</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ran-jit/tomcat-cluster-redis-session-manager">ran-jit&#x2F;tomcat-cluster-redis-session-manager</a>Tomcat clustering redis session manager java client.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/onlyGuo/nginx-gui">onlyGuo&#x2F;nginx-gui</a>Nginx GUI Manager</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/1ultimat3/PcapViz">1ultimat3&#x2F;PcapViz</a>Visualize network topologies and collect graph statistics based on pcap files</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Vodkayu/Student-status-detection">Vodkayu&#x2F;Student-status-detection</a>2018年服务外包竞赛项目，项目名称为智慧教室学生状态监测系统，利用的Face++平台的人脸识别api，自建了教师端和学生端的微信小程序。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/53X/AI-enchanced-Essay-Scoring">53X&#x2F;AI-enchanced-Essay-Scoring</a>An implementation of a EMNLP 2016 paper</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/kangkona/ustc-offTopic">kangkona&#x2F;ustc-offTopic</a>offTopic in Automated Essay Scoring</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/evelinamorim/aes-pt">evelinamorim&#x2F;aes-pt</a>An Automatic Essay Scoring Framework for Portuguese Essays </li>
-<li><a target="_blank" rel="noopener" href="https://github.com/HatBoy/Pcap-Analyzer">HatBoy&#x2F;Pcap-Analyzer</a> Python编写的可视化的离线数据包分析器</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/USTC-iCourse/ustc-course">USTC-iCourse&#x2F;ustc-course</a>USTC iCourse - a popular course rating platform for USTC students</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/greyli/bluelog">greyli&#x2F;bluelog</a>The 2024 version: <a target="_blank" rel="noopener" href="https://github.com/greyli/greybook">https://github.com/greyli/greybook</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jfloff/alpine-python">jfloff&#x2F;alpine-python</a>“A small, more complete, Python Docker image based on Alpine Linux.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/iresty/Mio">iresty&#x2F;Mio</a>“ API statistics&#x2F;summary and health datas in NGINX based on OpenResty&#x2F;ngx_lua, just like NGINX Plus”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/timqian/chinese-independent-blogs">timqian&#x2F;chinese-independent-blogs</a>中文独立博客列表</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/wechathook/wechat.hook.sdk">wechathook&#x2F;wechat.hook.sdk</a>商用版微信开发SDK，非微信ipad&#x2F;mac&#x2F;android协议，已封装好全部API接口，可实现微信99%功能； 可开发微信群控、云控、微信机器人、个人号SCRM客服系统等， 微信二次开发SDK，微信个人号开发API接口协议。（提供源代码）</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/anhkgg/SuperWeChatPC">anhkgg&#x2F;SuperWeChatPC</a>超级微信电脑客户端，支持多开、防消息撤销、语音消息备份…开放WeChatSDK</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/google/adb-sync">google&#x2F;adb-sync</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/chengciming/wechatPc">chengciming&#x2F;wechatPc</a>PC微信hook源码，PC微信注入，逆向编程，可以制作微信机器人玩玩，仅供学习，请不要用于商业、违法途径，本人不对此源码造成的违法负责！</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zhengmin1989/WechatSportCheat">zhengmin1989&#x2F;WechatSportCheat</a>手把手教你当微信运动第一名 – 利用Android Hook进行微信运动作弊</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/hexiangtao/wechat4j">hexiangtao&#x2F;wechat4j</a>“用java实现的微信客户端，支持自动聊天, 消息监听，自动回复，添加好友，获取群成员列表,自动记录聊天记录，自动下载图片，语音，视频消息”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/wuliaokankan/WeChat.CRM.SDK">wuliaokankan&#x2F;WeChat.CRM.SDK</a>“微信开发sdk，微信二次开发SDK，微信开发API接口协议。非微信ipad协议、非mac协议,非安卓协议，api可实现微信99%功能； 无需扫码登录、可收发朋友圈、查看朋友圈、朋友圈互动点赞、评论、 好友列表、微信消息收发、发文本消息、图片消息、名片消息、动图表情、发文件、删好友 添加好友、微信转账、微信红包接收、分享小程序、分享名片、加通讯录好友、微信收藏、微信标签等！ 清理僵尸粉、消息群发、通过好友请求、 微信建群、微信拉人进群、踢群成员、邀请群成员、退群、改群名称、群列表、发布群公告、多群消息同步等”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ppwwyyxx/wechat-dump">ppwwyyxx&#x2F;wechat-dump</a>Cracking encrypted wechat message history from android</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/firesunCN/WechatEnhancement">firesunCN&#x2F;WechatEnhancement</a>仅供学习交流，禁止用于其他用途，请及时删除，禁止任何公司或个人发布与传播，不接受任何捐赠</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Gh0u1L5/WechatMagician">Gh0u1L5&#x2F;WechatMagician</a>“WechatMagician is a Xposed module written in Kotlin, that allows you to completely control your Wechat.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/sfyc23/EverydayWechat">sfyc23&#x2F;EverydayWechat</a>微信助手：1.每日定时给好友（女友）发送定制消息。2.机器人自动回复好友。3.群助手功能（例如：查询垃圾分类、天气、日历、电影实时票房、快递物流、PM2.5等）</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Miserlou/Zappa">Miserlou&#x2F;Zappa</a>Serverless Python</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/hantmac/Mastering_Go_ZH_CN">hantmac&#x2F;Mastering_Go_ZH_CN</a>《Mastering GO》中文译本，《玩转 GO》。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/sdushantha/wifi-password">sdushantha&#x2F;wifi-password</a>“Quickly fetch your WiFi password and if needed, generate a QR code of your WiFi to allow phones to easily connect”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/v2fly/fhs-install-v2ray">v2fly&#x2F;fhs-install-v2ray</a>Bash script for installing V2Ray in operating systems such as Debian &#x2F; CentOS &#x2F; Fedora &#x2F; openSUSE that support systemd</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/leeli73/GameKiller">leeli73&#x2F;GameKiller</a>针对中国国内游戏进行精准的DNS污染程序</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/oooldtoy/SSTAP_ip_crawl_tool">oooldtoy&#x2F;SSTAP_ip_crawl_tool</a>一个自动获取游戏远程ip，并自动写成SSTAP&#x2F;NETCH规则文件的脚本</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/xiaoqi2020/diyadhosts">xiaoqi2020&#x2F;diyadhosts</a>屏蔽各大游戏、视频、音乐网站，适合公司管控用，欢迎大家一起来完善</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/dreizehnutters/pypcapprint">dreizehnutters&#x2F;pypcapprint</a>pcap fingerprint wrapper</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/tanupoo/pypcap_dissector">tanupoo&#x2F;pypcap_dissector</a>yet another IP packet dissector</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/JaidedAI/EasyOCR">JaidedAI&#x2F;EasyOCR</a>“Ready-to-use OCR with 80+ supported languages and all popular writing scripts including Latin, Chinese, Arabic, Devanagari, Cyrillic and etc.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/rmvanarse/ps1_project">rmvanarse&#x2F;ps1_project</a>Automatic signature verification and authentication using computer vision</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/swetanjal/Automatic-Signature-Stability-Analysis-And-Verification-Using-Local-Features">swetanjal&#x2F;Automatic-Signature-Stability-Analysis-And-Verification-Using-Local-Features</a>“Implementation of the paper “”Automatic Signature Stability Analysis And Verification Using Local Features”” by MI Malik, 2014”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/adiah80/Automated-Signature-Verification">adiah80&#x2F;Automated-Signature-Verification</a>A framework for automatic signature verification built on top of a siamese neural net.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/DefUs3r/Automatic-Signature-Verification">DefUs3r&#x2F;Automatic-Signature-Verification</a>“Python implementation of Automatic Signature Stability Analysis And Verification Using Local Features by Muhammad Imran Malik, Marcus Liwicki, Andreas Dengel, Seiichi Uchida, Volkmar Frinken published in 2014 at14th International Conference on Frontiers in Handwriting Recognition and some experiments in Keras-Tensorflow on Automatic Signature Verification using CNNs in vanilla and Siamese architecture”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/sunnypwang/aes">sunnypwang&#x2F;aes</a>A Comparative Study of Pretrained Language Models for Automated Essay Scoring with Adversarial Inputs</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ikttan/maes">ikttan&#x2F;maes</a>Automated Essay Scoring with Shallow Linguistic Features</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/miaomiaosoft/PandaOCR">miaomiaosoft&#x2F;PandaOCR</a>PandaOCR - 多功能OCR图文识别+翻译+朗读+弹窗+公式+表格+图床+搜图+二维码</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/misbah4064/textDetection-Recognition">misbah4064&#x2F;textDetection-Recognition</a>Efficient Text Detection and Recognition on images</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/liuzhuang1024/Form-Detection">liuzhuang1024&#x2F;Form-Detection</a>表格中的文本检测</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/UXScripts/Signature-Inspector">UXScripts&#x2F;Signature-Inspector</a>Offline Signature Recognition and Verification - with python and opencv</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/DA-southampton/Tech_Aarticle">DA-southampton&#x2F;Tech_Aarticle</a>主要是我是日常看过的不错的文章的资源汇总，方便自己也分享给大家。有些我看过的，就会做简单的解读，没看过的，就先罗列一下，然后之后看了把解读更新上；涉及到搜索&#x2F;推荐&#x2F;自然语言处理。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/DA-southampton/NLP_ability">DA-southampton&#x2F;NLP_ability</a>总结梳理自然语言处理工程师(NLP)需要积累的各方面知识，包括面试题，各种基础知识，工程能力等等，提升核心竞争力</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/WerWolv/ImHex">WerWolv&#x2F;ImHex</a>“🔍 A Hex Editor for Reverse Engineers, Programmers and people who value their retinas when working at 3 AM.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/0000duck/Writer_Recognition">0000duck&#x2F;Writer_Recognition</a>手写笔迹鉴别</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zouhuigang/handwriting">zouhuigang&#x2F;handwriting</a>笔迹识别</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zouhuigang/weixin-python">zouhuigang&#x2F;weixin-python</a>“微信SDK - 包括微信支付,微信公众号,微信登陆,微信消息处理等”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zouhuigang/paper_checking_system">zouhuigang&#x2F;paper_checking_system</a>基于C#和C++开发的论文查重系统。千万字次级论文库秒级查重。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/TonyChen56/WeChatRobot">TonyChen56&#x2F;WeChatRobot</a>微信HOOK、微信机器人   wxhook，数据库解密 微信公众号采集 微信公众号爬虫，企业微信HOOK</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zouhuigang/WeChatRobot">zouhuigang&#x2F;WeChatRobot</a>PC版微信机器人</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/terrifyzhao/bert-utils">terrifyzhao&#x2F;bert-utils</a>一行代码使用BERT生成句向量，BERT做文本分类、文本相似度计算</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Ashish-Gore/Forge-or-Real-Signature-Detection-using-Deep-Learning">Ashish-Gore&#x2F;Forge-or-Real-Signature-Detection-using-Deep-Learning</a>“Signature verification is an important biometric technique that aims to detect whether a given signature is genuine or forged. It is essential in preventing falsification of documents in numerous financial, legal, and other commercial settings. This is a comparative analysis of different already known deep learning architectures to check which of those performs the best on the classification. It was solely for offline handwritten signatures.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/rrahulrroy/offline-handwritten-signature-verification-using-pytorch">rrahulrroy&#x2F;offline-handwritten-signature-verification-using-pytorch</a>“Offline handwritten signature using Pytorch. Here one-shot learning is used using a Siamese network, as the amount of dataset is small, and the dissimilarity between the original and forged signatures is observed.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/TeeeJaey/SignatureVerifier">TeeeJaey&#x2F;SignatureVerifier</a>A python  project that performs Handwritten signature Verification </li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ybtang56/Review-Handwritten-Signature-Verification">ybtang56&#x2F;Review-Handwritten-Signature-Verification</a>Review the state of art works of handwritten signature verification works</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/EB324/signature_verification">EB324&#x2F;signature_verification</a>Offline handwritten signature verification</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/luizgh/adversarial_signatures">luizgh&#x2F;adversarial_signatures</a>Characterizing and evaluating adversarial examples for Offline Handwritten Signature Verification</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/luizgh/sigver_wiwd">luizgh&#x2F;sigver_wiwd</a>Learned representation for Offline Handwritten Signature Verification. Models and code to extract features from signature images.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Nishant3815/Smart-Signature-Verification">Nishant3815&#x2F;Smart-Signature-Verification</a>The Web-App aims to reduce forgery cases through a new AI based Signature Verification System.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/hlamba28/Offline-Signature-Verification-using-Siamese-Network">hlamba28&#x2F;Offline-Signature-Verification-using-Siamese-Network</a>Identifying forged signatures using convolutional siamese networks implemented in Keras</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/sounakdey/SigNet">sounakdey&#x2F;SigNet</a>SigNet: Convolutional Siamese Network for Writer Independent Offline Signature Verification</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/netrapathak/Offline-Signature-Verification">netrapathak&#x2F;Offline-Signature-Verification</a>Implemented two papers for offline signature verification. Both use different deep learning techniques - Convolutional network and Siamese network.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/vadi95/Signature-Verification">vadi95&#x2F;Signature-Verification</a>Classify signature as genuine or forged using SVM</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/gnbaron/signature-recognition">gnbaron&#x2F;signature-recognition</a>Verify the authenticity of handwritten signatures through digital image processing and neural networks. ✍️</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jadevaibhav/Signature-verification-using-deep-learning">jadevaibhav&#x2F;Signature-verification-using-deep-learning</a>Using SigComp’11 dataset for signature verification</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/poplar1hhh/yipay">poplar1hhh&#x2F;yipay</a>翼支付大数据建模-风险用户识别-季军-代码文件</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/fastnlp/fastNLP">fastnlp&#x2F;fastNLP</a>fastNLP: A Modularized and Extensible NLP Framework. Currently still in incubation.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Turing-Project/WriteGPT">Turing-Project&#x2F;WriteGPT</a>基于开源GPT2.0的初代创作型人工智能 | 可扩展、可进化</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/songyingxin/BERT-pytorch">songyingxin&#x2F;BERT-pytorch</a>BERT 源码阅读</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/wangqi1996/AES-bert">wangqi1996&#x2F;AES-bert</a>use bert</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/fchollet/deep-learning-with-python-notebooks">fchollet&#x2F;deep-learning-with-python-notebooks</a>“Jupyter notebooks for the code samples of the book “”Deep Learning with Python”””</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jwpl190/WechatPCAPI">jwpl190&#x2F;WechatPCAPI</a>微信PC版的API接口，可通过Python调用微信获取好友、群、公众号列表，并收发消息等功能。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/kadanes/NLP-Project-AES">kadanes&#x2F;NLP-Project-AES</a>Course project for CS 7650 NLP (Georiga Tech)</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Gaurav-Pande/AES_DL">Gaurav-Pande&#x2F;AES_DL</a>Automated Essay Scoring using BERT</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/pmitros/discern">pmitros&#x2F;discern</a>“Library: This is an API wrapper for EASE, which is a tool to grade arbitrary free text responses. Most of the code is by Vik Paruchuri, under my supervision”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/foramhshah/Automated-Essay-Grading-System-Group-23-">foramhshah&#x2F;Automated-Essay-Grading-System-Group-23-</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/sathwikacharya/Automated-Essay-Grading">sathwikacharya&#x2F;Automated-Essay-Grading</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/venishpatel88/Automated-essay-grading">venishpatel88&#x2F;Automated-essay-grading</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/shamim-21/Essay_grading_system">shamim-21&#x2F;Essay_grading_system</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ZhaoBin-Li/Automated-Essay-Grading">ZhaoBin-Li&#x2F;Automated-Essay-Grading</a>“Computational Models of Cognition, Automated Essay Grading using Latent Semantic Analysis, by ZhaoBin Li and Owen Szafran”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/tanmaypandey7/essay-grading">tanmaypandey7&#x2F;essay-grading</a>Using LSTMs to automatically grade essays.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/RohanMaheshwari7/Automatic-Short-Answer-Grading">RohanMaheshwari7&#x2F;Automatic-Short-Answer-Grading</a>Scoring text answers</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/shawshany/TextSimilarScore">shawshany&#x2F;TextSimilarScore</a>compute similar scores of two text</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ogozuacik/automated_essay_scoring">ogozuacik&#x2F;automated_essay_scoring</a>Automated essay scoring using stylometric features on the texts</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Saiteja-Reddy/Automatic-Text-Scoring">Saiteja-Reddy&#x2F;Automatic-Text-Scoring</a>“Implementation of the paper - “”SKIPFLOW: Incorporating Neural Coherence Features for End-to-End Automatic Text Scoring”””</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/infparadox/Automatic-Text-Scoring-System">infparadox&#x2F;Automatic-Text-Scoring-System</a>End-to-End model which can perform automatic text scoring on essays.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/shibing624/EssaySocring">shibing624&#x2F;EssaySocring</a>英文作文自动评分系统，支持评分模型自训练，支持WEKA处理模型数据，支持自定义评分算法。Java开发。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/DQinYuan/chinese_province_city_area_mapper">DQinYuan&#x2F;chinese_province_city_area_mapper</a>一个用于提取简体中文字符串中省，市和区并能够进行映射，检验和简单绘图的python模块</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/shibing624/judger">shibing624&#x2F;judger</a>自动作文评分工具，支持中文、英文作文智能评分，支持评分模型自训练，支持WEKA处理模型数据，支持自定义评分算法。java开发。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/githubharald/SimpleHTR">githubharald&#x2F;SimpleHTR</a>Handwritten Text Recognition (HTR) system implemented with TensorFlow.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/xiaofengShi/CHINESE-OCR">xiaofengShi&#x2F;CHINESE-OCR</a>“[python3.6] 运用tf实现自然场景文字检测,keras&#x2F;pytorch实现ctpn+crnn+ctc实现不定长场景文字OCR识别”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/chineseocr/chineseocr">chineseocr&#x2F;chineseocr</a>yolo3+ocr</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jjcheer/ocrcn_tf2">jjcheer&#x2F;ocrcn_tf2</a>TensorFlow2.0的中文汉字手写体识别！OCR必备，欢迎star！</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/MrSUhj/ocr">MrSUhj&#x2F;ocr</a>英文手写体识别，如输入数据为手写英语作文扫描图片，经过模型给出该篇作文的文本形式。技术：OCR技术。应用场景：a) 高考等应试教育英语作文电子阅卷 ；b) 英文手写电子笔记的上传</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Youmna-H/Coherence_AES">Youmna-H&#x2F;Coherence_AES</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/midas-research/calling-out-bluff">midas-research&#x2F;calling-out-bluff</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ustcljw/fupugec-score">ustcljw&#x2F;fupugec-score</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Rokeer/co-attention">Rokeer&#x2F;co-attention</a>“Code for BEA 13 paper “”Co-Attention Based Neural Network for Source-Dependent Essay Scoring”””</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/openedx/edx-ora2">openedx&#x2F;edx-ora2</a>Open Response Assessment Suite</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/yuanqiangyuan/keywords_discern">yuanqiangyuan&#x2F;keywords_discern</a>利用hanlp实现数据库敏感字段识别。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/X-jun-0130/Easy_Lstm_Cnn">X-jun-0130&#x2F;Easy_Lstm_Cnn</a>Lstm+Cnn 预训练词向量 文本分类</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/openedx-unsupported/ease">openedx-unsupported&#x2F;ease</a>EASE (Enhanced AI Scoring Engine) is a library that allows for machine learning based classification of textual content.  This is useful for tasks such as scoring student essays.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/inuyasha2012/Automatic-Answer-Evaluation">inuyasha2012&#x2F;Automatic-Answer-Evaluation</a>This repo contains the code and documentation for automatic essay evaluation and short answer evaluation.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/abhishek0318/automatic-essay-grader">abhishek0318&#x2F;automatic-essay-grader</a>Automatic Essay Grader implemented using Keras.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/audreycs/Memory-Networks-Automated-Essay-Grading">audreycs&#x2F;Memory-Networks-Automated-Essay-Grading</a>“An implementation of paper “”A Memory-Augmented Neural Model for Automated Grading”” in PyTorch”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/SahilC/AutomaticEssayGrading">SahilC&#x2F;AutomaticEssayGrading</a>Automatic Essay Grading algorithms using machine learning. </li>
-<li><a target="_blank" rel="noopener" href="https://github.com/karthikprasad/automated-essay-grader">karthikprasad&#x2F;automated-essay-grader</a>grade an English essay</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ac4391/EssayGrader">ac4391&#x2F;EssayGrader</a>NLP project to grade standardized test essays using Neural Networks</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/m-chanakya/AutoEssayGrading">m-chanakya&#x2F;AutoEssayGrading</a>SMAI Project: Automatic Essay Grading (Kaggle task: <a target="_blank" rel="noopener" href="https://www.kaggle.com/c/asap-aes">https://www.kaggle.com/c/asap-aes</a>)</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/madhavthaker/AES">madhavthaker&#x2F;AES</a>“Developed an Automatic Essay Grading tool in Python that utilizes TensorFlow to build a Four-Layer feed-forward neural network. Additionally, by utilizing the Natural Language Tool Kit (NLTK) package, I built a regression model that incorporates features such as grammar and sentiment to grade test essay sets.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/siyuanzhao/automated-essay-grading">siyuanzhao&#x2F;automated-essay-grading</a>Source code for the paper A Memory-Augmented Neural Model for Automated Grading</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/benhamner/ASAP-AES">benhamner&#x2F;ASAP-AES</a>Evaluation Metrics for the Hewlett Foundation’s Automated Essay Scoring competition</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/rlistengr/automated-essay-scoring">rlistengr&#x2F;automated-essay-scoring</a>作文自动打分系统</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/mankadronit/Automated-Essay--Scoring">mankadronit&#x2F;Automated-Essay–Scoring</a>Automatically Score essays using Deep Learning</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/michaelgfeldman/BachelorProject">michaelgfeldman&#x2F;BachelorProject</a>Automated Essay Scoring System</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/wangqi1996/Essay_Scoring">wangqi1996&#x2F;Essay_Scoring</a>nlp homework</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/kigawas/essai">kigawas&#x2F;essai</a>Essay scoring system web application.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/AndrejHafner/EssayScoring">AndrejHafner&#x2F;EssayScoring</a>“Extracting features from essay with NLP, training models and scoring essays.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/eeshagoyal/ScoreEasy">eeshagoyal&#x2F;ScoreEasy</a>Automated Essay Scoring</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ZhuoyueWang/AutomatedEssayScoring_ml">ZhuoyueWang&#x2F;AutomatedEssayScoring_ml</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/tingwei3931/EssayScore_FYP">tingwei3931&#x2F;EssayScore_FYP</a>Final Year Project: Automated Essay Scoring using Neural Networks</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zlliang/essaysense">zlliang&#x2F;essaysense</a>An experiment on Automated Essay Scoring</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/keras-team/keras">keras-team&#x2F;keras</a>Deep Learning for humans</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/nusnlp/nea">nusnlp&#x2F;nea</a>Neural Essay Assessor: An Automated Essay Scoring System Based on Deep Neural Networks</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/yeayee/joyful-pandas">yeayee&#x2F;joyful-pandas</a>Pandas中文教程</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/BrunoHu/wexin_robot">BrunoHu&#x2F;wexin_robot</a>可以自动保存以及重发撤回消息，并且可以检测到美女无聊的时候自动开启聊天机器人</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/cixingguangming55555/wechat-bot">cixingguangming55555&#x2F;wechat-bot</a>带二次开发接口的PC微信聊天机器人</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/hellowHuaairen/kuaidi">hellowHuaairen&#x2F;kuaidi</a>现在周围的人都在做微商，如果每天订单量大的话，大量的时间会花费在给顾客快递单号的事情上。现在只需要你录入快递单号，让客户自己查询。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/freelamb/simple_http_server">freelamb&#x2F;simple_http_server</a>simple http server for upload and download</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/eyson/wechat-solita">eyson&#x2F;wechat-solita</a>一个基于微信的接龙小程序，开箱即用。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/user1121114685/koolproxyR">user1121114685&#x2F;koolproxyR</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/koolproxy/merlin-koolproxy">koolproxy&#x2F;merlin-koolproxy</a>a powerfull ad remove software for merlin xiaobao firmware</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/reorx/httpstat">reorx&#x2F;httpstat</a>curl statistics made simple</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/rufengsuixing/luci-app-onliner">rufengsuixing&#x2F;luci-app-onliner</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/pymumu/openwrt-smartdns">pymumu&#x2F;openwrt-smartdns</a>smartdns for openwrt</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/pymumu/luci-app-smartdns">pymumu&#x2F;luci-app-smartdns</a>luci for smartdns</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/pymumu/smartdns">pymumu&#x2F;smartdns</a>“A local DNS server to obtain the fastest website IP for the best Internet experience, support DoT, DoH. 一个本地DNS服务器，获取最快的网站IP，获得最佳上网体验，支持DoH，DoT。”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/fw876/helloworld">fw876&#x2F;helloworld</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Genymobile/scrcpy">Genymobile&#x2F;scrcpy</a>Display and control your Android device</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/roger-/luci-app-mjpg-streamer">roger-&#x2F;luci-app-mjpg-streamer</a>LuCI support for mjpg-streamer</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/MacManas/luci-app-tcpdump">MacManas&#x2F;luci-app-tcpdump</a>LuCI App to capture live TCP traffic for analysis.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/AlexZhuo/luci-app-bandwidthd">AlexZhuo&#x2F;luci-app-bandwidthd</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/privacy-protection-tools/anti-AD">privacy-protection-tools&#x2F;anti-AD</a>致力于成为中文区命中率最高的广告过滤列表，实现精确的广告屏蔽和隐私保护。anti-AD现已支持AdGuardHome，dnsmasq， Surge，Pi-Hole，smartdns等网络组件。完全兼容常见的广告过滤工具所支持的各种广告过滤列表格式</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/rufengsuixing/luci-app-adguardhome">rufengsuixing&#x2F;luci-app-adguardhome</a>maybe the best AdGuardHome luci for openwrt</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/xiaoqingfengATGH/HomeLede">xiaoqingfengATGH&#x2F;HomeLede</a>An Openwrt firmware for home use scenarios.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zhengwh/captcha-tensorflow">zhengwh&#x2F;captcha-tensorflow</a>hack captcha by cnn with tensorflow</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/tty228/luci-app-wechatpush">tty228&#x2F;luci-app-wechatpush</a>A plugin for OpenWRT routers to send various information notifications to a mobile phone via WeChat or Telegram.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/koolshare/koolshare.github.io">koolshare&#x2F;koolshare.github.io</a>网站切换到：<a target="_blank" rel="noopener" href="https://www.koolcenter.com/">https://www.koolcenter.com</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/hq450/fancyss">hq450&#x2F;fancyss</a>fancyss is a project providing tools to across the GFW on asuswrt&#x2F;merlin based router.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/xiaorouji/openwrt-passwall">xiaorouji&#x2F;openwrt-passwall</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/wishinlife/SyncY">wishinlife&#x2F;SyncY</a>Sync tools for Baidu netdisk.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/chendong12/nextcloud">chendong12&#x2F;nextcloud</a>nextcloud</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Besfim/iMC-Portal-Login">Besfim&#x2F;iMC-Portal-Login</a>The iMC Portal login tool of GDPU</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/xiyouant/H3C_Auto_regist">xiyouant&#x2F;H3C_Auto_regist</a>H3C iMC Portal 登录脚本</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/a1094174619/crack_web">a1094174619&#x2F;crack_web</a>实现openwrt下的校园网web认证</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/destan19/OpenAppFilter">destan19&#x2F;OpenAppFilter</a>“OAF is a parental control plug-in based on OpenWrt, which supports app filtering for games, videos, chats, downloads, such as Tiktok, Youtube, Telegram,etc.”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/esirplayground/AutoBuild-OpenWrt">esirplayground&#x2F;AutoBuild-OpenWrt</a>Build OpenWrt using GitHub Actions | 使用 GitHub Actions 编译 OpenWrt | 感谢P3TERX的项目源码|感谢KFERMercer的项目源码</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/rssnsj/openwrt-hc5x61">rssnsj&#x2F;openwrt-hc5x61</a>OpenWrt Patch for HiWiFi HC5661 &#x2F; HC5761 &#x2F; HC5861</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/theJaxon/unlocker">theJaxon&#x2F;unlocker</a>VMware Workstation macOS </li>
-<li><a target="_blank" rel="noopener" href="https://github.com/boizz/PPTP-L2TP-IPSec-VPN-auto-installation-script-for-CentOS-7">boizz&#x2F;PPTP-L2TP-IPSec-VPN-auto-installation-script-for-CentOS-7</a>“auto install the PPTP, L2TP and IPSec in your CentOS 7 server”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/oldj/SwitchHosts">oldj&#x2F;SwitchHosts</a>Switch hosts quickly!</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/coolsnowwolf/lede">coolsnowwolf&#x2F;lede</a>Lean’s LEDE source</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Zachary-YL/Google2">Zachary-YL&#x2F;Google2</a>不翻墙访问谷歌的方法 作为程序员，是经常需要用到谷歌的，每次用的话如果都得打开VPN或者翻墙软件不免觉得麻烦，在这里介绍一种通过修改hosts文件来访问谷歌的方法，可以访问Gmail，YouTube等众多谷歌旗下产品。  ‘windows’可以通过开始——运行，输入C:\WINDOWS\system32\drivers\etc\hosts  ‘mac os X’ 可以通过快捷键组合 Shift+Command+G 三个组合按键查找文件，并输入 Hosts 文件的所在路径：&#x2F;etc&#x2F;hosts  打开hosts文件，在文件下方粘贴由github下载下来的txt文件的内容，保存即可使用  请使用国际版google. 防止google本地化重定向: 访问一下<a target="_blank" rel="noopener" href="https://www.google.com/ncr">https://www.google.com/ncr</a> 请使用https替代http访问. 这里推荐几个反代google的网站，可以直接搜索做备用哦~  <a target="_blank" rel="noopener" href="http://173.194.14.53/">http://173.194.14.53/</a> <a target="_blank" rel="noopener" href="http://209.116.186.231/">http://209.116.186.231/</a> <a target="_blank" rel="noopener" href="http://210.242.125.83/">http://210.242.125.83/</a> <a target="_blank" rel="noopener" href="https://g.ttlsa.com/">https://g.ttlsa.com/</a> <a target="_blank" rel="noopener" href="https://www.glgoo.com/">https://www.glgoo.com/</a> <a target="_blank" rel="noopener" href="https://www.glgoo.com/">https://www.glgoo.com/</a> <a target="_blank" rel="noopener" href="https://scholar.glgoo.com/">https://scholar.glgoo.com/</a> <a target="_blank" rel="noopener" href="https://xie.lu/">https://xie.lu/</a> <a target="_blank" rel="noopener" href="https://wen.lu/">https://wen.lu/</a> <a target="_blank" rel="noopener" href="https://g.conn.cc/">https://g.conn.cc/</a> <a target="_blank" rel="noopener" href="http://google.0zv.net/">http://google.0zv.net/</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/lyp741/BaiduyunDownload">lyp741&#x2F;BaiduyunDownload</a>一款可以不限速下载百度云网盘的macOS客户端</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/hwdsl2/setup-ipsec-vpn">hwdsl2&#x2F;setup-ipsec-vpn</a>“Scripts to build your own IPsec VPN server, with IPsec&#x2F;L2TP, Cisco IPsec and IKEv2”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/inuyasha2012/pypsy">inuyasha2012&#x2F;pypsy</a>“psychometrics package, including  MIRT(multidimension item response theory), IRT(item response theory),GRM(grade response theory),CAT(computerized adaptive testing), CDM(cognitive diagnostic model), FA(factor analysis), SEM(Structural Equation Modeling) .”</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/inuyasha2012/answer-sheet-scan">inuyasha2012&#x2F;answer-sheet-scan</a>answersheet scan or recognition by computer camera 电脑摄像头识别答题卡，可能是最灵活准确率最高的摄像头答题卡扫描开源实现</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/chestnut-egg/GoMine">chestnut-egg&#x2F;GoMine</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/nkc3g4/wtg-assistant">nkc3g4&#x2F;wtg-assistant</a>Deploy Windows To Go on USB devices.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/mcdona1d/RaspberryWechatPi">mcdona1d&#x2F;RaspberryWechatPi</a>基于树莓派的智能家居控制平台 微信服务端 发布版</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/oneheartyang/image_sys">oneheartyang&#x2F;image_sys</a>用来图片合成以及上传本地服务器的 Flask 框架</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/william10240/imgservpy">william10240&#x2F;imgservpy</a>Python 图片服务</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zhangsheng377/yolo">zhangsheng377&#x2F;yolo</a>客户端发送图片给服务器，服务器调用yolo算法解析图片，返回json</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/wxBoyce/dgimg_service">wxBoyce&#x2F;dgimg_service</a>图片服务： flask  mongodb</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/AdultScraperX/AdultScraperX.bundle">AdultScraperX&#x2F;AdultScraperX.bundle</a>plex adult scraper</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/mvdctop/Movie_Data_Capture">mvdctop&#x2F;Movie_Data_Capture</a>Local Movies Organizer</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ilinxiao/record-camera-and-screen">ilinxiao&#x2F;record-camera-and-screen</a>录制摄像头和录制屏幕，两者之间可以轻易切换</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Billwilliams1952/PiCameraApp">Billwilliams1952&#x2F;PiCameraApp</a>A graphical interface for programming the Raspberry Pi PiCamera. Written in Python using Tkinter.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/isaaxug/study-picamera-examples">isaaxug&#x2F;study-picamera-examples</a>:camera: A collection of picamera examples based on OpenCV</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/alduxvm/rpi-opencv">alduxvm&#x2F;rpi-opencv</a>“openCV + Python tests using raspberry pi, camera module and usb cameras “</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/raspberrypi-tw/camera-python-opencv">raspberrypi-tw&#x2F;camera-python-opencv</a>Two days workshop for Raspberry Pi Camera + Python + OpenCV</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/heanuea/Mnist-Digit-Reader-">heanuea&#x2F;Mnist-Digit-Reader-</a>A Web Application Built with Flask and Python that reads images containing numbers with the Help of Tensor-flow should recognize each digit from 0 to 9  </li>
-<li><a target="_blank" rel="noopener" href="https://github.com/kiba518/DevelopHelpTools">kiba518&#x2F;DevelopHelpTools</a>开发帮助工具——比较文件工具，反编译C#dll工具，查询C++dll函数工具</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/dvf/blockchain">dvf&#x2F;blockchain</a>A simple Blockchain in Python</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/taizilongxu/interview_python">taizilongxu&#x2F;interview_python</a>关于Python的面试题</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/SkyStonePan/ArcfaceDemo_Python_2.2">SkyStonePan&#x2F;ArcfaceDemo_Python_2.2</a>ArcSoft Face SDK Demo</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2317,7 +2052,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
