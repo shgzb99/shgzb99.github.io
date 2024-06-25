@@ -178,6 +178,115 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/25/%E5%A6%82%E4%BD%95%E5%9C%A8-etc-fstab%E4%B8%AD%E6%AD%A3%E7%A1%AE%E6%8C%82%E8%BD%BDNTFS%E5%88%86%E5%8C%BA%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="英雄本色">
+      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="英雄本色的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/06/25/%E5%A6%82%E4%BD%95%E5%9C%A8-etc-fstab%E4%B8%AD%E6%AD%A3%E7%A1%AE%E6%8C%82%E8%BD%BDNTFS%E5%88%86%E5%8C%BA%EF%BC%9F/" class="post-title-link" itemprop="url">如何在/etc/fstab中正确挂载NTFS分区？</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-06-25 09:00:10 / 修改时间：09:09:22" itemprop="dateCreated datePublished" datetime="2024-06-25T09:00:10+08:00">2024-06-25</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>原文 <a target="_blank" rel="noopener" href="https://ubuntuqa.com/article/1575.html">https://ubuntuqa.com/article/1575.html</a></p>
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>经过一个令人讨厌的事件(我的第二个，你认为我已经学习)由无监督的自动播客下载填充我的整个分区后，我终于将~&#x2F;Music移动到它自己的分区。我正在使用的分区已经格式化为NTFS(这是天才部分：当我三年前买这台电脑时，我实际上是用20G音乐分区设置的，因为我之前遇到过这个问题，但我从来没有我把自己组织起来存放音乐。这就是我的背景故事。这就是我现在所需要的：</p>
+<p>我有两个分区，我想在启动时开始安装：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/dev/sda3   /mnt/devel  ext4    defaults    0   2</span><br><span class="line">/dev/sda2   /mnt/excess ntfs    defaults    0   2</span><br></pre></td></tr></table></figure>
+<p>ext4 partion安装得很好(由我拥有，只能由我写)，但是root拥有的ntfs挂载具有读写权限。我不知道如何解决这个问题。有没有关于ntfs的古怪或者我在其他地方做了什么导致这个问题？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">drwxr-xr-x  7 amanda amanda 4096 2012-03-14 19:07 devel</span><br><span class="line">drwxrwxrwx  1 root   root   4096 2012-03-14 22:38 excess</span><br></pre></td></tr></table></figure>
+<h3 id="最佳解决办法"><a href="#最佳解决办法" class="headerlink" title="最佳解决办法"></a>最佳解决办法</h3><p>必须使用dmask，fmask和umask选项设置ntfs和vfat文件系统的权限。 dmask控制目录的权限，fmask控制文件的权限，umask控制两者。由于这些选项设置了掩码，因此它们应该是您想要的权限的补充。例如，所有者的rwx和其他人的rx是022而不是755。</p>
+<p>要设置所有者，请分别为用户和组使用uid和gid选项。您可以使用命令id -u找到您的UID。要查找您的GID，请使用id -g。这些值通常都是1000。</p>
+<p>ntfs的一组常见挂载选项是uid&#x3D;1000,gid&#x3D;1000,dmask&#x3D;027,fmask&#x3D;137。这会将您设置为驱动器的所有者，并将权限设置为drwxr-x—。</p>
+<p>这是我&#x2F;etc &#x2F;fstab工作的两行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UUID=EEA2B69CA2B668AB        /WIN_C     ntfs-3g   defaults,nls=utf8,umask=000,dmask=027,fmask=137,uid=1000,gid=1000,windows_names 0 0 </span><br><span class="line">UUID=65AEC0E830EA0497        /WIN_D     ntfs-3g   rw 0 0</span><br></pre></td></tr></table></figure>
+
+<p>如果在重新启动后没有可见的错误，并且分区保持只读或者您收到类似于以下内容的错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Error mounting /dev/sda6 at /media/WindowsDrive: </span><br><span class="line">Command-line `mount -t &quot;ntfs&quot; -o &quot;uhelper=udisks2,nodev,nosuid,uid=1000,gid=1000,dmask=0077,fmask=0177&quot; &quot;/dev/sda6&quot; &quot;/media/rolindroy/Media Center&quot;&#x27; exited with non-zero exit status 14: The disk contains an unclean file system (0, 0). </span><br><span class="line">Metadata kept in Windows cache, refused to mount. </span><br><span class="line">Failed to mount &#x27;/dev/sda6&#x27;: Operation not permitted The NTFS partition is in an unsafe state. </span><br><span class="line">Please resume and shutdown Windows fully (no hibernation or fast restarting), or mount the volume read-only with the &#x27;ro&#x27; mount option</span><br></pre></td></tr></table></figure>
+<p>这是因为Windows 8和10提供了”Fast Startup”选项，该选项取决于”non-complete”关闭。您可以通过在”Power Options”下执行这些steps来禁用快速启动。</p>
+<h3 id="次佳解决办法"><a href="#次佳解决办法" class="headerlink" title="次佳解决办法"></a>次佳解决办法</h3><p>如果使用permissions选项挂载ntfs分区，则chmod &#x2F;chown将起作用</p>
+<p>&#x2F;dev&#x2F;sda2   &#x2F;mnt&#x2F;excess ntfs-3g    permissions,locale&#x3D;en_US.utf8    0   2<br>那你可以</p>
+<p>sudo chown your_user:your_user &#x2F;mnt&#x2F;excess<br>比uid，dmask，fmask更容易。</p>
+<h3 id="第三种解决办法"><a href="#第三种解决办法" class="headerlink" title="第三种解决办法"></a>第三种解决办法</h3><p>我有一些麻烦，因为当我重新启动磁盘名称更改…(sda0到sdb2)</p>
+<p>我通过在fstab中通过UUID安装它来修复问题，您可以通过输入以下命令查看硬盘的UUID：sudo blkid</p>
+<p>制作fstab文件的back-up：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cp /etc/fstab /etc/fstab.orig</span><br></pre></td></tr></table></figure>
+<p>如果您放置一个&gt;，请务必检查&gt;&amp;gt ;.你覆盖你的fstab！</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo blkid &gt;&gt; /etc/fstab</span><br></pre></td></tr></table></figure>
+<p>如果你仍然搞砸了，你可以用原来的fstab替换你的fstab：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cp /etc/fstab.orig /etc/fstab</span><br></pre></td></tr></table></figure>
+<p>接下来做一个文件夹：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir /media/mydrivename</span><br></pre></td></tr></table></figure>
+<p>配置fstab：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/fstab</span><br></pre></td></tr></table></figure>
+<p>不要忘记在行开头用’#’评论blkid的输出！</p>
+<p>将其添加到fstab文件中，您可以使用上面的命令在您插入的底部的块中找到UUID。 media &#x2F;mydrivename是应该挂载分区的位置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UUID=xxxxxxxxxxxxxxxxx   /media/mydrivename ntfs    permissions,locale=en_US.utf8    0   2</span><br></pre></td></tr></table></figure>
+<p>这是我的fstab文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"># /etc/fstab: static file system information.</span><br><span class="line">#</span><br><span class="line"># Use &#x27;blkid&#x27; to print the universally unique identifier for a</span><br><span class="line"># device; this may be used with UUID= as a more robust way to name devices</span><br><span class="line"># that works even if disks are added and removed. See fstab(5).</span><br><span class="line">#</span><br><span class="line"># &lt;file system&gt; &lt;mount point&gt;   &lt;type&gt;  &lt;options&gt;       &lt;dump&gt;  &lt;pass&gt;</span><br><span class="line"># / was on /dev/sda2 during installation</span><br><span class="line">UUID=5d4940cf-5cf5-443a-be11-1f7e551962d1 /               ext4    errors=remount-ro 0       1</span><br><span class="line"># swap was on /dev/sda1 during installation</span><br><span class="line">UUID=84b7e5e9-08c3-4641-b28b-99e0255e604d none            swap    sw              0       0</span><br><span class="line"></span><br><span class="line"># 500 GB Webserver harddisk from lr-serv-01</span><br><span class="line">UUID=BA9A48D39A488E37 /media/hdd1 ntfs permissions,locale=en_US.utf8 0 2</span><br><span class="line"></span><br><span class="line"># 2 TB Movie share harddisk from lr-serv-01</span><br><span class="line">UUID=7EB09666B09624A5 /media/hdd2 ntfs permissions,locale-en_US.utf8 0 2</span><br><span class="line"></span><br><span class="line">#/dev/sda1: UUID=&quot;10EC004DEC003010&quot; TYPE=&quot;ntfs&quot; </span><br><span class="line">#/dev/sda2: LABEL=&quot;system&quot; UUID=&quot;88A4FE47A4FE3772&quot; TYPE=&quot;ntfs&quot; </span><br><span class="line">#/dev/sda3: LABEL=&quot;storage_01&quot; UUID=&quot;BA9A48D39A488E37&quot; TYPE=&quot;ntfs&quot; </span><br><span class="line">#/dev/sdb1: LABEL=&quot;storage_02&quot; UUID=&quot;7EB09666B09624A5&quot; TYPE=&quot;ntfs&quot; </span><br><span class="line">#/dev/sdc1: UUID=&quot;84b7e5e9-08c3-4641-b28b-99e0255e604d&quot; TYPE=&quot;swap&quot; </span><br><span class="line">#/dev/sdc2: UUID=&quot;5d4940cf-5cf5-443a-be11-1f7e551962d1&quot; TYPE=&quot;ext4&quot; </span><br><span class="line">#/dev/sdd1: LABEL=&quot;storage_spotnet&quot; UUID=&quot;EC6E8F416E8F0394&quot; TYPE=&quot;ntfs&quot; </span><br><span class="line">#/dev/sdd2: LABEL=&quot;storage_backup_pcs&quot; UUID=&quot;6C2699D026999BA0&quot; TYPE=&quot;ntfs&quot; </span><br><span class="line">#/dev/sdd5: LABEL=&quot;storage_series&quot; UUID=&quot;7670ABF770ABBC6D&quot; TYPE=&quot;ntfs&quot; </span><br><span class="line">#/dev/sdd6: LABEL=&quot;storage_winmx&quot; UUID=&quot;564AB81B4AB7F5B9&quot; TYPE=&quot;ntfs&quot; </span><br></pre></td></tr></table></figure>
+<p>键入以下命令重启系统：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo reboot</span><br></pre></td></tr></table></figure>
+<p>要检查是否已安装分区，可以键入df -k。</p>
+<p>拥有自己的所有权：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chown -R USERNAME:USERNAME /media/mydrivename</span><br></pre></td></tr></table></figure>
+<p>这是在Ubuntu Server 14.04.01上做的！</p>
+<p>希望这个答案有助于某人;-)</p>
+<h3 id="第四种办法"><a href="#第四种办法" class="headerlink" title="第四种办法"></a>第四种办法</h3><p>可能不是一个好的解决方案，但您始终可以将用户ID映射到您自己的ID或组ID：</p>
+<p>这里只是一个例子，我的用户ID是1000</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/dev/sda5 /mnt/excess ntfs defaults,uid=1000,rw 0 0</span><br></pre></td></tr></table></figure>
+
+<p>在这种情况下，所有安装的文件都由用户ided 1000拥有</p>
+<h3 id="第五种办法"><a href="#第五种办法" class="headerlink" title="第五种办法"></a>第五种办法</h3><p>您可以使用ntfs-config GUI实用程序在fstab中安装NTFS分区。并且可以轻松启用&#x2F;禁用read-write功能。</p>
+<p><img src="https://ubuntuqa.com/wp-content/uploads/2018/11/271211d813f0018bef81bd497d243f1c.gif"></p>
+<p>更详细的指南：<a target="_blank" rel="noopener" href="http://www.reversiblean.com/mount-ntfs-partition-on-boot/">Mounting Windows Partitions in Ubuntu at Startup</a></p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p><a target="_blank" rel="noopener" href="https://askubuntu.com/questions/113733/how-do-i-correctly-mount-a-ntfs-partition-in-etc-fstab">How do I correctly mount a NTFS partition in &#x2F;etc&#x2F;fstab?</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/20/2024%E5%B9%B4%E4%B8%8A%E6%B5%B7%E9%AB%98%E6%8B%9B%E8%AE%A1%E5%88%92%E7%9A%84%E5%8F%98%E5%8C%96%E5%92%8C%E6%B4%9E%E5%AF%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -203,7 +312,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2024-06-20 09:02:33 / 修改时间：09:11:53" itemprop="dateCreated datePublished" datetime="2024-06-20T09:02:33+08:00">2024-06-20</time>
+              <time title="创建时间：2024-06-20 09:02:33 / 修改时间：09:21:39" itemprop="dateCreated datePublished" datetime="2024-06-20T09:02:33+08:00">2024-06-20</time>
             </span>
 
           
@@ -217,7 +326,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>原文 <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/IHPxgq6SLeArfxwOuk6_gQ">2024年上海高招计划的变化和洞察</a></p>
+          <p>原文 <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/IHPxgq6SLeArfxwOuk6_gQ"> G大成长论 2024年上海高招计划的变化和洞察</a></p>
 <p>这两天我们高考志愿规划的许老师在紧张核对招生计划，并预测变化的影响，所以这篇本该由他撰写的文章，临时改成许老师搭建大纲，我来代笔。</p>
 <p>我写了一半和他讲，完了呀，我把你的严肃专业文章写成了娱乐文章。所以各位记住这篇是我写的，不是许老师写的，不要降低他在各位心中的专业形象。</p>
 <p>以下高招信息来自上海市教育考试院志愿模拟填报系统，可能与最终付印的高招计划有细微差异。</p>
@@ -1057,93 +1166,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/14/linux%E4%B8%AD%E6%8C%82%E8%BD%BDIMG%E6%96%87%E4%BB%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="英雄本色">
-      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="英雄本色的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/06/14/linux%E4%B8%AD%E6%8C%82%E8%BD%BDIMG%E6%96%87%E4%BB%B6/" class="post-title-link" itemprop="url">linux中挂载IMG文件</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2024-06-14 17:17:35 / 修改时间：17:18:25" itemprop="dateCreated datePublished" datetime="2024-06-14T17:17:35+08:00">2024-06-14</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>原文：<a target="_blank" rel="noopener" href="http://www.linuxsir.org/bbs/thread334903.html">http://www.linuxsir.org/bbs/thread334903.html</a></p>
-<ol>
-<li><p>先查看第一个空闲loop设备<br>Shell代码<br>sudo losetup -f<br>&#x2F;dev&#x2F;loop0  </p>
-</li>
-<li><p>使用上一步得到的设备名，第一次创建loop设备<br>Shell代码<br>sudo losetup &#x2F;dev&#x2F;loop0 archlinux-2008.06-core-i686.img  </p>
-</li>
-<li><p>查看信息<br>Shell代码<br>sudo fdisk -lu &#x2F;dev&#x2F;loop0</p>
-</li>
-</ol>
-<p>Disk &#x2F;dev&#x2F;loop0: 322 MB, 322469376 bytes<br>53 heads, 12 sectors&#x2F;track, 990 cylinders, total 629823 sectors<br>Units &#x3D; sectors of 1 * 512 &#x3D; 512 bytes<br>Disk identifier: 0x00000000  </p>
-<pre><code>  Device Boot      Start         End      Blocks   Id  System  
-</code></pre>
-<p>&#x2F;dev&#x2F;loop0p1   *          63      629822      314880   83  Linux<br>Partition 1 has different physical&#x2F;logical beginnings (non-Linux?):<br>     phys&#x3D;(0, 1, 1) logical&#x3D;(0, 5, 4)<br>Partition 1 has different physical&#x2F;logical endings:<br>     phys&#x3D;(39, 52, 12) logical&#x3D;(990, 15, 3)  </p>
-<p>我们可以看到，该镜像只有一个分区(loop0p1)，从第63扇区开始(Start列)，每扇区512字节(Units &#x3D; sectors of 1 * 512 &#x3D; 512 bytes)，我们算出offset，下面mout命令会用到：<br>Shell代码<br>63*512&#x3D;32256  </p>
-<ol start="4">
-<li>mout<br>Shell代码<br>sudo losetup -o 32256 &#x2F;dev&#x2F;loop1 archlinux-2008.06-core-i686.img<br>sudo mount -o loop &#x2F;dev&#x2F;loop1 &#x2F;mnt&#x2F;<br>ls &#x2F;mnt&#x2F;<br>addons  archlive.sqfs  boot  lost+found</li>
-</ol>
-<p>事实上，fdisk可以直接查看img文件(虽然功能不全，下面会说到)，mount可以自动创建loop设备，所以上面步骤可以简化为：<br>I. 查看信息<br>Shell代码<br>sudo fdisk -lu archlinux-2008.06-core-i686.img<br>You must set cylinders.<br>You can do this from the extra functions menu.  </p>
-<p>Disk archlinux-2008.06-core-i686.img: 0 MB, 0 bytes<br>53 heads, 12 sectors&#x2F;track, 0 cylinders, total 0 sectors<br>Units &#x3D; sectors of 1 * 512 &#x3D; 512 bytes<br>Disk identifier: 0x00000000  </p>
-<pre><code>                      Device Boot      Start         End      Blocks   Id  System  
-</code></pre>
-<p>archlinux-2008.06-core-i686.img1   *          63      629822      314880   83  Linux<br>Partition 1 has different physical&#x2F;logical beginnings (non-Linux?):<br>     phys&#x3D;(0, 1, 1) logical&#x3D;(0, 5, 4)<br>Partition 1 has different physical&#x2F;logical endings:<br>     phys&#x3D;(39, 52, 12) logical&#x3D;(990, 15, 3)  </p>
-<p>第一行抱怨不能得到cylinders，原因是普通文件上没有实现ioctl操作，我们可以看到0 cylinders，但这对我们不重要，关键是我们依然可以得到第一个分区（archlinux-2008.06-core-i686.img1）的偏移值</p>
-<p>II. 直接mount<br>Shell代码<br>sudo mount -o loop,offset&#x3D;32256 archlinux-2008.06-core-i686.img &#x2F;mnt&#x2F;<br>ls &#x2F;mnt&#x2F;<br>addons  archlive.sqfs  boot  lost+found  </p>
-<p>参考Loop-mounting partitions from a disk image</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1209,7 +1235,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
