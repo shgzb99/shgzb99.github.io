@@ -178,6 +178,77 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/10/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E7%AE%A1%E7%90%86-GitHub-%E4%B8%8A-star-%E7%9A%84%E9%A1%B9%E7%9B%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="英雄本色">
+      <meta itemprop="description" content="英雄本色的博客，记录生活，分享感悟。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="英雄本色的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/06/10/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E7%AE%A1%E7%90%86-GitHub-%E4%B8%8A-star-%E7%9A%84%E9%A1%B9%E7%9B%AE/" class="post-title-link" itemprop="url">如何优雅地管理 GitHub 上 star 的项目</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-06-10 09:48:03 / 修改时间：16:30:58" itemprop="dateCreated datePublished" datetime="2024-06-10T09:48:03+08:00">2024-06-10</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>转载 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/150889781">https://zhuanlan.zhihu.com/p/150889781</a></p>
+<h3 id="如何优雅地管理-GitHub-上-star-的项目"><a href="#如何优雅地管理-GitHub-上-star-的项目" class="headerlink" title="如何优雅地管理 GitHub 上 star 的项目"></a>如何优雅地管理 GitHub 上 star 的项目</h3><p>GitHub Star管理工具很多,或是插件,或是网站.我想,纯文本还是最简单的方法,如果把它以一定格式导出来,发布到知乎专栏上可能更方便查看和分享,下面谈做法.</p>
+<h3 id="安装PyGithub"><a href="#安装PyGithub" class="headerlink" title="安装PyGithub"></a>安装PyGithub</h3><p>pip install PyGithub</p>
+<h3 id="导出stars-csv"><a href="#导出stars-csv" class="headerlink" title="导出stars.csv"></a>导出stars.csv</h3><p>这里使用github上的export-stars项目来导出. <a target="_blank" rel="noopener" href="https://github.com/JeffCarpenter/export-stars">github.com&#x2F;JeffCarpenter&#x2F;export-stars</a></p>
+<p>GH_USER&#x3D;yourGithubusername python3 export_stars.py &gt; stars.csv</p>
+<h3 id="由csv文本转markdown格式并用split分割"><a href="#由csv文本转markdown格式并用split分割" class="headerlink" title="由csv文本转markdown格式并用split分割"></a>由csv文本转markdown格式并用split分割</h3><p>stars.csv内容例如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/TheAlgorithms/C,All Algorithms implemented in C </span><br><span class="line">https://github.com/TheAlgorithms/C-Plus-Plus,All Algorithms implemented in C++</span><br><span class="line">https://github.com/mitmath/1806,18.06 course at MIT</span><br><span class="line">用sed过滤器将其转换为markdown的链接形式,这里用了捕获组这点小知识.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed &quot;s#\(https://github.com/\)\([^,]*\),#- [\2](\1\2)#g&quot; test.txt</span><br></pre></td></tr></table></figure>
+<p>转换之后</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- [TheAlgorithms/C](https://github.com/TheAlgorithms/C)All Algorithms implemented in C </span><br><span class="line">- [TheAlgorithms/C-Plus-Plus](https://github.com/TheAlgorithms/C-Plus-Plus)All Algorithms implemented in C++</span><br><span class="line">- [mitmath/1806](https://github.com/mitmath/1806)18.06 course at MIT</span><br></pre></td></tr></table></figure>
+<p>sed可以用-i选项直接改源文件.这里只列了三行,假设stars.csv里有1800行,那么-l参数设300可以把文件拆成 6份.我这样做了,一个个以markdown导出来,发在另一个专栏中,感兴趣的小伙伴可以看看.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sed -i &quot;s#\(https://github.com/\)\([^,]*\),#- [\2](\1\2)#g&quot; stars.csv </span><br><span class="line">split -l 300 stars.csv</span><br></pre></td></tr></table></figure>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p><a target="_blank" rel="noopener" href="https://github.com/JeffCarpenter/export-stars">github.com&#x2F;JeffCarpenter&#x2F;export-stars</a><br><a target="_blank" rel="noopener" href="https://github.com/PyGithub/PyGithub">PyGithub&#x2F;PyGithub</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/10/linux%20find%20-regex%20%E4%BD%BF%E7%94%A8%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -808,7 +879,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
